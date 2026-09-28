@@ -12,3 +12,15 @@ Medidas externas e desempenho vêm do catálogo geral JADD (NMRV 063). Dentes, r
 A carcaça é feita com operações booleanas (three-bvh-csg). Para gerar o `index.html` autocontido:
 
     npm install && npm run build
+
+## Desenho 2D
+
+A pasta `desenho/` tem o desenho técnico extraído do modelo 3D, em 2 folhas A3:
+
+- `NMRV063-desenho.pdf`: folha 1 com vistas frontal, lateral direita e superior, cortes A-A e B-B hachurados, cotas do catálogo e carimbo; folha 2 com vista explodida com balões, vista montada, lista de peças e dados técnicos.
+- `NMRV063-folha1-vistas.dxf` e `NMRV063-folha2-explodida.dxf`: as mesmas folhas em DXF (mm, 1º diedro, em camadas).
+
+Para gerar de novo (precisa de Playwright com Chromium, `pip install ezdxf pymupdf`):
+
+    node tools/extract2d.mjs desenho2d.json
+    python3 tools/make_drawing.py desenho2d.json desenho

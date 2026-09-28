@@ -2,8 +2,9 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { RoomEnvironment } from 'three/examples/jsm/environments/RoomEnvironment.js';
 import { RoundedBoxGeometry } from 'three/examples/jsm/geometries/RoundedBoxGeometry.js';
-import { toCreasedNormals } from 'three/examples/jsm/utils/BufferGeometryUtils.js';
+import { toCreasedNormals, mergeVertices } from 'three/examples/jsm/utils/BufferGeometryUtils.js';
 import { Brush, Evaluator, ADDITION, SUBTRACTION, INTERSECTION } from 'three-bvh-csg';
+import { MeshBVH } from 'three-mesh-bvh';
 
 /*
   Redutor coroa e rosca sem fim NMRV 063, i = 30:1.
@@ -712,5 +713,9 @@ setCut('none');
 setView('3d');
 new ResizeObserver(() => { document.documentElement.style.setProperty('--tb', $('toolbar').offsetHeight + 'px'); resize(); }).observe($('toolbar'));
 $('loading').hidden = true;
-window.redutor = { setView, setCut, setExplode, nextStep, assembleAll, select: id => select(byId[id] || null), step: dt => frame(dt) };
+window.redutor = {
+  setView, setCut, setExplode, nextStep, assembleAll, select: id => select(byId[id] || null), step: dt => frame(dt),
+  // usado pela extração do desenho 2D (tools/extract2d.mjs)
+  internals: { THREE, assembly, parts, renderer, mergeVertices, MeshBVH, CAT, state },
+};
 if (!CAPTURE) frame();
