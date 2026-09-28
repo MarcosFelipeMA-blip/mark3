@@ -316,6 +316,7 @@
     #credit { left: var(--gutter); right: auto; bottom: calc(env(safe-area-inset-bottom, 0px) + 58px); font-size: 9px; }
     #caption small { display: none; }
   }
+  .capture .lbl, .capture #caption, .capture .steps li { transition: none; }
   @media (prefers-reduced-motion: reduce) {
     .lbl, #caption, .steps li { transition: none; }
   }
@@ -1076,9 +1077,13 @@ function cutStep(t, dt) {
 /* ---------- Laço principal ---------- */
 const clock = new THREE.Clock();
 let flashUntil = 0;
-function frame() {
-  const dt = Math.min(clock.getDelta(), 0.05);
-  const now = clock.elapsedTime;
+// Modo captura (#captura): o tempo avança por window.step(dt), quadro a quadro, para gravar vídeo.
+const CAPTURE = location.hash === '#captura';
+let simNow = 0;
+function frame(fixedDt) {
+  const dt = fixedDt ?? Math.min(clock.getDelta(), 0.05);
+  simNow += dt;
+  const now = simNow;
   const ch = CHAPTERS[state.ch];
   const id = ch.id;
   if (state.playing) state.t += dt;
@@ -1181,7 +1186,7 @@ function frame() {
   keyLight.target.updateMatrixWorld();
   renderer.render(scene, camera);
   updateLabels();
-  requestAnimationFrame(frame);
+  if (!CAPTURE) requestAnimationFrame(() => frame());
 }
 
 /* ---------- Eventos ---------- */
@@ -1249,7 +1254,7 @@ goTo(0, true);
 orbit(V(0, 9, 0), 0.45, 0.3, 80);
 camera.position.copy(desired.pos); controls.target.copy(desired.target);
 resize();
-frame();
+if (CAPTURE) { window.step = dt => frame(dt); document.documentElement.classList.add('capture'); } else frame();
 </script>
 </body>
 </html>
