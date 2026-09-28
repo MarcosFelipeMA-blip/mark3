@@ -1,0 +1,65 @@
+<section class="page" id="fontes" data-title="Fontes consultadas">
+  <span class="kicker">Referências</span>
+  <h2>📚 Fontes consultadas</h2>
+  <p>As informações de saúde deste kit foram resumidas, com nossas palavras, a partir das obras e documentos abaixo. Recomendações mudam: sempre prevalece a orientação do profissional que acompanha vocês. Conteúdo revisado em setembro de 2026.</p>
+  <h3>Documentos oficiais brasileiros</h3>
+  <ol>
+    <li value="1">Brasil. Ministério da Saúde. <em>Caderneta da Gestante</em>. Edição mais recente.</li>
+    <li value="2">Brasil. Ministério da Saúde. <em>Caderneta da Criança — Passaporte da Cidadania</em>. Edição mais recente; e MS/OPAS, <em>Manual AIDPI Neonatal</em>.</li>
+    <li value="12">Brasil. Ministério da Saúde. <em>Saúde da criança: aleitamento materno e alimentação complementar</em>. Cadernos de Atenção Básica nº 23, 2ª ed., 2015; e <em>Guia Alimentar para Crianças Brasileiras Menores de 2 Anos</em>, 2019.</li>
+    <li value="13">Brasil. Ministério da Saúde. <em>Calendário Nacional de Vacinação</em> (gestante e criança) e <em>Estratégia de Vacinação contra o Vírus Sincicial Respiratório em Gestantes</em>, 2025.</li>
+    <li value="14">Brasil. Ministério da Saúde. <em>Programa Nacional de Triagem Neonatal</em>; Lei nº 12.303/2010 (triagem auditiva); Lei nº 13.002/2014 (teste da linguinha).</li>
+    <li value="15">Conselho Nacional de Trânsito. <em>Resolução CONTRAN nº 819/2021</em> — transporte de crianças em veículos.</li>
+    <li value="16">Legislação: Constituição Federal, art. 7º, XVIII, e ADCT, art. 10; CLT, arts. 392 e 396; Lei nº 11.770/2008 (Empresa Cidadã); Lei nº 15.371/2026 (licença e salário-paternidade); Lei nº 11.108/2005 (acompanhante); Lei nº 11.634/2007 (vinculação à maternidade); Lei nº 6.015/1973 e Lei nº 9.534/1997 (registro civil); Lei nº 9.656/1998, art. 12 (planos de saúde).</li>
+    <li value="19">Brasil. Ministério da Saúde. <em>Atenção ao pré-natal de baixo risco</em>. Cadernos de Atenção Básica nº 32. Brasília, 2012.</li>
+  </ol>
+  <h3>Organizações internacionais e sociedades médicas</h3>
+  <ol>
+    <li value="3">World Health Organization. <em>WHO recommendations on antenatal care for a positive pregnancy experience</em>. Genebra: WHO, 2016.</li>
+    <li value="4">World Health Organization. <em>WHO recommendations on maternal and newborn care for a positive postnatal experience</em>. Genebra: WHO, 2022.</li>
+    <li value="10">Moon RY, Carlin RF, Hand I; Task Force on Sudden Infant Death Syndrome. Sleep-Related Infant Deaths: Updated 2022 Recommendations for Reducing Infant Deaths in the Sleep Environment. <em>Pediatrics</em>. 2022;150(1):e2022057990. (American Academy of Pediatrics)</li>
+    <li value="11">Sociedade Brasileira de Pediatria. <em>Tratado de Pediatria</em>, 5ª ed. Manole, 2022; e documentos científicos e campanhas da SBP (sono seguro, transporte seguro, prevenção de acidentes).</li>
+    <li value="17">American College of Obstetricians and Gynecologists. Clinical Practice Guideline nº 4: Screening and Diagnosis of Mental Health Conditions During Pregnancy and Postpartum. <em>Obstet Gynecol</em>. 2023; Paulson JF, Bazemore SD. Prenatal and postpartum depression in fathers. <em>JAMA</em>. 2010;303(19):1961-9; Theme Filha MM et al. Factors associated with postpartum depressive symptomatology in Brazil: the Birth in Brazil study. <em>J Affect Disord</em>. 2016;194:159-67.</li>
+    <li value="18">FEBRASGO. Recomendações da vacina vírus sincicial respiratório para gestantes, 2025.</li>
+  </ol>
+  <h3>Livros-texto de medicina</h3>
+  <ol>
+    <li value="5">Cunningham FG, Leveno KJ, Dashe JS, Hoffman BL, Spong CY, Casey BM. <em>Williams Obstetrics</em>. 26th ed. McGraw Hill, 2022.</li>
+    <li value="6">Zugaib M, Francisco RPV (eds.). <em>Zugaib Obstetrícia</em>. 4ª ed. Manole, 2020.</li>
+    <li value="7">Montenegro CAB, Rezende Filho J. <em>Rezende Obstetrícia</em>. 13ª ed. Guanabara Koogan, 2017.</li>
+    <li value="8">Kliegman RM, St. Geme JW et al. <em>Nelson Textbook of Pediatrics</em>. 22nd ed. Elsevier, 2024.</li>
+    <li value="9">American Academy of Pediatrics. <em>Caring for Your Baby and Young Child: Birth to Age 5</em>. 7th ed. Bantam, 2019.</li>
+  </ol>
+  <div class="box lav"><p>💛 Feito com carinho para quem está esperando o primeiro filho. Respirem: vocês não precisam saber tudo — só precisam saber onde procurar.</p></div>
+</section>
+</main>
+<script>
+(function(){
+  var KEY='mpb-checks-v1', saved={};
+  try{ saved=JSON.parse(localStorage.getItem(KEY)||'{}')||{}; }catch(e){}
+  var items=document.querySelectorAll('ul.ck li');
+  items.forEach(function(li,i){
+    var id=(li.closest('section')||{}).id+':'+i;
+    li.setAttribute('role','checkbox');
+    li.tabIndex=0;
+    if(saved[id]) li.classList.add('done');
+    li.setAttribute('aria-checked', !!saved[id]);
+    function toggle(){
+      var on=li.classList.toggle('done');
+      li.setAttribute('aria-checked', on);
+      if(on) saved[id]=1; else delete saved[id];
+      try{ localStorage.setItem(KEY, JSON.stringify(saved)); }catch(e){}
+    }
+    li.addEventListener('click',toggle);
+    li.addEventListener('keydown',function(e){ if(e.key===' '||e.key==='Enter'){ e.preventDefault(); toggle(); }});
+  });
+  var sel=document.getElementById('jump');
+  document.querySelectorAll('section[data-title]').forEach(function(s){
+    var o=document.createElement('option'); o.value=s.id; o.textContent=s.dataset.title; sel.appendChild(o);
+  });
+  sel.addEventListener('change',function(){ if(sel.value) document.getElementById(sel.value).scrollIntoView({behavior:'smooth'}); sel.value=''; });
+  if(/[?&]mobilepdf/.test(location.search)) document.body.classList.add('mobile-pdf');
+})();
+</script>
+</body>
+</html>

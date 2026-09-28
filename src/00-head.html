@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Meu Primeiro Bebê</title>
+<style>
+@font-face{font-family:"Fraunces";font-weight:100 900;font-display:swap;src:url(fonts/fraunces-latin.woff2) format("woff2")}
+@font-face{font-family:"Nunito";font-weight:200 1000;font-display:swap;src:url(fonts/nunito-latin.woff2) format("woff2")}
+:root{
+  --bg:#fffaf5; --paper:#ffffff; --ink:#3a3340; --muted:#7a7080;
+  --peach:#f6b89b; --peach-soft:#fde9df; --sage:#9cc5a1; --sage-soft:#e6f2e7;
+  --lav:#b9a7e0; --lav-soft:#eee8fa; --sky:#9ec9e8; --sky-soft:#e5f1fa;
+  --sun:#f3cf6b; --sun-soft:#fdf4d8; --red:#e07a6f; --red-soft:#fbe3e0;
+  --line:#ece3dc; --accent:#d9826a;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#1f1b22; --paper:#29242d; --ink:#f1ebf2; --muted:#b8adbd;
+    --peach-soft:#4a3129; --sage-soft:#2a3b2c; --lav-soft:#352d48; --sky-soft:#243746;
+    --sun-soft:#433a1f; --red-soft:#4a2724; --line:#3d3542; --accent:#f0a48c;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#1f1b22; --paper:#29242d; --ink:#f1ebf2; --muted:#b8adbd;
+  --peach-soft:#4a3129; --sage-soft:#2a3b2c; --lav-soft:#352d48; --sky-soft:#243746;
+  --sun-soft:#433a1f; --red-soft:#4a2724; --line:#3d3542; --accent:#f0a48c;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 "Nunito",system-ui,sans-serif}
+main{max-width:860px;margin:0 auto;padding:0 16px 64px}
+h1,h2,h3{font-family:"Fraunces",Georgia,serif;line-height:1.2;margin:1.2em 0 .5em}
+h1{font-size:2.3rem} h2{font-size:1.7rem} h3{font-size:1.2rem}
+p{margin:.5em 0 .8em}
+a{color:var(--accent)}
+.page{background:var(--paper);border:1px solid var(--line);border-radius:22px;padding:28px 28px 20px;margin:24px 0;overflow-wrap:anywhere}
+.kicker{display:inline-block;font-weight:800;font-size:.78rem;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin-top:4px}
+.page > h2:first-of-type{margin-top:.2em}
+.lead{font-size:1.1rem;color:var(--muted)}
+.quote{font-family:"Fraunces",Georgia,serif;font-size:1.3rem;border-left:5px solid var(--peach);padding:6px 0 6px 16px;margin:14px 0}
+/* checklists */
+ul.ck{list-style:none;padding:0;margin:.4em 0 1em}
+ul.ck li{position:relative;padding:6px 8px 6px 36px;border-bottom:1px dashed var(--line);cursor:pointer;user-select:none}
+ul.ck li::before{content:"";position:absolute;left:6px;top:9px;width:18px;height:18px;border:2px solid var(--accent);border-radius:6px;background:var(--paper)}
+ul.ck li.done::after{content:"✓";position:absolute;left:10px;top:3px;font-weight:800;color:var(--accent)}
+ul.ck li.done{color:var(--muted);text-decoration:line-through}
+ul.ck.cols{columns:2;column-gap:24px} ul.ck.cols li{break-inside:avoid}
+/* boxes */
+.box{border-radius:16px;padding:14px 16px;margin:14px 0;break-inside:avoid}
+.box > :first-child{margin-top:0}
+.box h3,.box h4{margin:.1em 0 .4em;font-family:"Fraunces",Georgia,serif}
+.box.fonte{background:var(--sky-soft);border-left:6px solid var(--sky)}
+.box.fonte::before{content:"📚 O QUE DIZEM AS FONTES";display:block;font-weight:800;font-size:.75rem;letter-spacing:.1em;margin-bottom:6px}
+.box.alerta{background:var(--red-soft);border-left:6px solid var(--red)}
+.box.dica{background:var(--sun-soft);border-left:6px solid var(--sun)}
+.box.ok{background:var(--sage-soft);border-left:6px solid var(--sage)}
+.box.lav{background:var(--lav-soft);border-left:6px solid var(--lav)}
+.ref{font-size:.7em;color:var(--accent);text-decoration:none;font-weight:800}
+/* tables */
+.tw{overflow-x:auto;margin:10px 0 16px}
+table{border-collapse:collapse;width:100%;font-size:.93rem}
+th,td{border:1px solid var(--line);padding:7px 8px;text-align:left;vertical-align:top}
+th{background:var(--peach-soft);font-weight:800}
+table.fill td{height:34px}
+.tag{display:inline-block;border-radius:999px;padding:1px 10px;font-weight:800;font-size:.8rem}
+.t-g{background:var(--sage-soft)} .t-y{background:var(--sun-soft)} .t-b{background:var(--sky-soft)} .t-r{background:var(--red-soft)}
+.line{border-bottom:1.5px solid var(--line);height:30px;margin:4px 0}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.card{border:2px solid var(--line);border-radius:18px;padding:16px;text-align:center;break-inside:avoid}
+.card .big{font-size:2.2rem}
+.card p{font-family:"Fraunces",Georgia,serif;font-size:1.15rem;margin:.3em 0}
+.small{font-size:.85rem;color:var(--muted)}
+/* cover */
+.cover{text-align:center;padding:56px 24px;background:linear-gradient(160deg,var(--peach-soft),var(--lav-soft) 60%,var(--sky-soft))}
+.cover h1{font-size:3rem;margin:.2em 0}
+.cover .emoji{font-size:4rem}
+/* toc */
+ol.toc{padding-left:1.2em} ol.toc li{margin:3px 0}
+/* toolbar (screen only) */
+.toolbar{position:sticky;top:0;z-index:5;background:var(--bg);border-bottom:1px solid var(--line);padding:8px 16px;display:flex;gap:8px;align-items:center;justify-content:space-between}
+.toolbar select,.toolbar button{font:inherit;border:1px solid var(--line);background:var(--paper);color:var(--ink);border-radius:10px;padding:6px 10px;max-width:60vw}
+@media (max-width:600px){
+  body{font-size:15.5px}
+  .page{padding:20px 16px;border-radius:16px}
+  h1{font-size:1.9rem} h2{font-size:1.45rem}
+  .cover h1{font-size:2.2rem}
+  .grid2{grid-template-columns:1fr}
+  ul.ck.cols{columns:1}
+}
+/* print */
+@media print{
+  :root{--bg:#fff}
+  body{font-size:11pt}
+  .toolbar{display:none}
+  main{max-width:none;padding:0}
+  .page{border:none;border-radius:0;margin:0;padding:0;break-after:page}
+  .cover{min-height:92vh;display:flex;flex-direction:column;justify-content:center;padding:40px 24px;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .box,th,.tag,.cover{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  h2,h3{break-after:avoid}
+  tr,li{break-inside:avoid}
+  a{color:inherit;text-decoration:none}
+}
+body.mobile-pdf{font-size:15px}
+body.mobile-pdf .grid2{grid-template-columns:1fr}
+body.mobile-pdf ul.ck.cols{columns:1}
+body.mobile-pdf table{font-size:.78rem} body.mobile-pdf th,body.mobile-pdf td{padding:4px 5px}
+body.mobile-pdf h1{font-size:1.8rem} body.mobile-pdf h2{font-size:1.4rem}
+body.mobile-pdf .cover h1{font-size:2.1rem}
+</style>
+</head>
+<body>
+<div class="toolbar" id="toolbar">
+  <strong>👶 Meu Primeiro Bebê</strong>
+  <select id="jump" aria-label="Ir para"><option value="">Ir para…</option></select>
+</div>
+<main>
