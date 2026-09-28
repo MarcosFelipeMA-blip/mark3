@@ -66,6 +66,24 @@
     text-transform: uppercase;
   }
   .brand h1 span { color: var(--gold-ink); }
+  .partners {
+    display: flex; flex-wrap: wrap; align-items: center; gap: 4px 10px;
+    margin: 0 0 10px;
+    font: 700 15px/1.2 var(--display); font-stretch: 85%; letter-spacing: 0.04em; text-transform: uppercase;
+  }
+  .partners .sep { width: 1px; height: 16px; background: var(--line-strong); }
+  .partners small {
+    font: 500 10px/1.2 var(--mono); letter-spacing: 0.08em; color: var(--gold-ink);
+    padding: 3px 6px; border: 1px solid var(--gold); border-radius: 99px;
+  }
+  #credit {
+    position: absolute; margin: 0;
+    right: calc(var(--gutter) + var(--panel-w) + 16px);
+    bottom: calc(env(safe-area-inset-bottom, 0px) + 96px);
+    font: 500 11px/1.3 var(--mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted);
+    pointer-events: none;
+  }
+  #credit b { color: var(--ink); font-weight: 500; }
   .brand p.sub { margin: 4px 0 0; font-size: 15px; color: var(--ink-2); }
 
   /* Painel do capítulo */
@@ -253,7 +271,25 @@
   @media (max-width: 1100px) { :root { --panel-w: 300px; } .brand h1 { font-size: 38px; } }
   @media (max-width: 820px) {
     .brand h1 { font-size: 30px; }
-    .brand p.sub { font-size: 13px; }
+    .partners {
+    display: flex; flex-wrap: wrap; align-items: center; gap: 4px 10px;
+    margin: 0 0 10px;
+    font: 700 15px/1.2 var(--display); font-stretch: 85%; letter-spacing: 0.04em; text-transform: uppercase;
+  }
+  .partners .sep { width: 1px; height: 16px; background: var(--line-strong); }
+  .partners small {
+    font: 500 10px/1.2 var(--mono); letter-spacing: 0.08em; color: var(--gold-ink);
+    padding: 3px 6px; border: 1px solid var(--gold); border-radius: 99px;
+  }
+  #credit {
+    position: absolute; margin: 0;
+    right: calc(var(--gutter) + var(--panel-w) + 16px);
+    bottom: calc(env(safe-area-inset-bottom, 0px) + 96px);
+    font: 500 11px/1.3 var(--mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted);
+    pointer-events: none;
+  }
+  #credit b { color: var(--ink); font-weight: 500; }
+  .brand p.sub { font-size: 13px; }
     .brand { max-width: calc(100% - 2 * var(--gutter)); }
     #panel {
       top: auto; left: var(--gutter); right: var(--gutter);
@@ -269,13 +305,16 @@
     #play { width: 48px; }
     #caption {
       left: var(--gutter); right: var(--gutter); max-width: none;
-      top: calc(env(safe-area-inset-top, 0px) + 98px); bottom: auto;
+      top: calc(env(safe-area-inset-top, 0px) + 146px); bottom: auto;
       font-size: 18px;
     }
     .lbl { font-size: 11px; padding: 3px 6px 4px; }
     .lbl b { font-size: 11.5px; }
     .lbl.minor { display: none; }
     #flash { font-size: 14px; white-space: nowrap; }
+    .partners { font-size: 12px; margin-bottom: 6px; }
+    #credit { left: var(--gutter); right: auto; bottom: calc(env(safe-area-inset-bottom, 0px) + 58px); font-size: 9px; }
+    #caption small { display: none; }
   }
   @media (prefers-reduced-motion: reduce) {
     .lbl, #caption, .steps li { transition: none; }
@@ -289,10 +328,12 @@
   <div id="labels" aria-hidden="true"></div>
 
   <header class="brand">
-    <p class="eyebrow">Sandvik Coromant · CoroMill® MS20</p>
+    <p class="partners"><b>Sandvik Coromant</b><span class="sep" aria-hidden="true"></span><b>i9 Ferramentas</b><small>distribuidor autorizado</small></p>
+    <p class="eyebrow">CoroMill® MS20</p>
     <h1>MS20-R016A16-<span>10L</span></h1>
     <p class="sub">Fresa de topo para rebaixo a 90°</p>
   </header>
+  <p id="credit">Projeto <b>Marcos Felipe</b></p>
 
   <div id="caption" aria-live="polite"></div>
   <aside id="panel" aria-live="polite"></aside>
@@ -375,7 +416,7 @@ function resize() {
   // desloca o centro óptico para a área que o painel deixa livre
   const w = innerWidth, h = innerHeight, r = $('panel').getBoundingClientRect();
   let dx = 0, dy = 0;
-  if (isNarrow()) dy = h / 2 - (150 + r.top) / 2;
+  if (isNarrow()) dy = h / 2 - (170 + r.top) / 2;
   else dx = (r.width + 16) / 2;
   camera.setViewOffset(w, h, dx, dy, w, h);
   camera.updateProjectionMatrix();
@@ -857,7 +898,7 @@ function renderPanel() {
       </ul>
       <h3>Desenho técnico</h3>
       <div class="drawing">${drawingSVG}</div>
-      <p class="note">Corpo e pastilhas vêm do arquivo STEP oficial da ferramenta, e as cotas vêm do desenho DXF. Parafuso, bit e chave foram modelados a partir das imagens do catálogo, e o canal de refrigeração é ilustrativo. Apresentação independente; CoroMill é marca registrada da Sandvik Coromant.</p>`;
+      <p class="note">Corpo e pastilhas vêm do arquivo STEP oficial da ferramenta, e as cotas vêm do desenho DXF. Parafuso, bit e chave foram modelados a partir das imagens do catálogo, e o canal de refrigeração é ilustrativo. Apresentação da i9 Ferramentas, distribuidor autorizado Sandvik Coromant. Projeto e animação: Marcos Felipe. CoroMill é marca registrada da Sandvik Coromant.</p>`;
   } else if (c === 'cut') {
     const n = Math.round((1000 * 180) / (Math.PI * 16));
     const vf = Math.round(0.1 * 2 * n);
@@ -1058,7 +1099,7 @@ function frame() {
     const groups = [];
     if (t > 7 && t < 9.5 || t > 14.5) groups.push('intro', 'dims');
     if (t >= 9.5 && t <= 14.5) groups.push('xray', 'dims');
-    if (t < 7) caption('Sandvik Coromant · CoroMill® MS20', 'Pastilhas trocáveis, rebaixo a 90°');
+    if (t < 7) caption('Sandvik Coromant · i9 Ferramentas, distribuidor autorizado', 'Pastilhas trocáveis, rebaixo a 90°');
     else if (t < 9.5) caption('Dimensões do desenho técnico', 'Ø16 × 100 mm, até 9 mm de profundidade');
     else if (t < 14.5) caption('Por dentro', 'O fluido chega direto na aresta de corte');
     else caption('', '');
