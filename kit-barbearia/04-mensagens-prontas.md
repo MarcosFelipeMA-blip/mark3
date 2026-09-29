@@ -32,7 +32,7 @@ Antes de mandar: veja o perfil, escolha 1 coisa específica para elogiar.
 **Se disser sim:** envie 3 imagens com o nome da barbearia já trocado.
 **Depois de 2 dias:**
 > Conseguiu postar? Se quiser, tenho 30 dias prontos nesse estilo por R$ 47.
-> Ou, se preferir que eu faça tudo sob medida pra você, faço por [PREÇO MENSAL].
+> Ou, se preferir que eu faça tudo sob medida pra você, faço por R$ 300 por mês (€ 150 na Europa).
 
 > Regra: nunca mande a mesma mensagem copiada para todo mundo. Personalize a primeira linha. O Instagram bloqueia contas que mandam texto idêntico em massa.
 
@@ -56,4 +56,4 @@ Antes de mandar: veja o perfil, escolha 1 coisa específica para elogiar.
 > Te mandei 5 grátis justamente pra você testar antes. Posta essa semana e vê a resposta.
 
 **"Vocês fazem pra mim?"**
-> Faço! O serviço mensal sai por [PREÇO]. Quer que eu te explique como funciona?
+> Faço! O serviço mensal sai por R$ 300 (€ 150 na Europa), com 30 posts feitos com a cara da sua barbearia. Quer que eu te explique como funciona?
