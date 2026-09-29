@@ -23,7 +23,7 @@
 
 ## Dia 1: Reels "A dor"
 
-**Visual:** `imagens-ia/reels-barbeiro-ocupado.png` com zoom lento (use o efeito "Zoom" do CapCut ou do próprio Instagram).
+**Visual:** vídeo pronto `reels/reels-1-a-dor.mp4` (ou a imagem `imagens-ia/reels-barbeiro-ocupado.png` com zoom lento).
 **Texto na tela (aparece em 3 partes):**
 1. "Barbeiro, responde rápido:"
 2. "o que você vai postar amanhã?"

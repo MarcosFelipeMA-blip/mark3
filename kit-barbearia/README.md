@@ -14,6 +14,8 @@ com material de divulgação incluído.
 | `05-pagina-de-vendas.md` | Texto para colar na Hotmart/Kiwify |
 | `imagens/` | 5 posts em 1080×1350 (formato do feed) |
 | `06-calendario-semana-1.md` | O que postar em cada dia da 1ª semana no seu perfil de vendas |
+| `07-cadastro-kiwify.md` | O que colar em cada campo da Kiwify |
+| `reels/` | 3 Reels prontos em MP4 (1080×1920, sem música: adicione um áudio em alta no Instagram) |
 | `entregavel/Kit-30-Dias-Barbearia.pdf` | **O arquivo que o cliente recebe** (12 páginas, com capa) |
 | `templates/posts.html` | Fonte das imagens: edite os textos e rode `render.js` |
 

@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="pt-BR"><head><meta charset="utf-8">
+<!-- Cenas dos Reels (1080x1920). Cada <section> vira um PNG; reels.py junta em MP4.
+     Conteúdo fica entre y=250 e y=1450: a interface do Instagram cobre o rodapé e a lateral direita. -->
+<style>
+:root{--bg:#111;--ink:#f4efe6;--gold:#d4a24c;--mute:#9a948a}
+*{box-sizing:border-box;margin:0;padding:0}
+.s{width:1080px;height:1920px;background:var(--bg);color:var(--ink);font-family:Arial,sans-serif;
+  position:relative;overflow:hidden;display:flex;flex-direction:column;justify-content:center;
+  padding:250px 110px 470px 90px}
+.s::before{content:"";position:absolute;inset:0;background:
+  repeating-linear-gradient(135deg,transparent 0 50px,rgba(212,162,76,.05) 50px 100px)}
+.s>*{position:relative}
+.s>.pole{position:absolute;top:0;left:90px;width:30px;height:180px;
+  background:repeating-linear-gradient(180deg,#b3261e 0 30px,#f4efe6 30px 60px,#1d4e9e 60px 90px)}
+.k{color:var(--gold);font-weight:bold;letter-spacing:.25em;font-size:40px;text-transform:uppercase;margin-bottom:40px}
+.h{font-weight:bold;font-size:120px;line-height:1.02;text-transform:uppercase}
+.m{font-weight:bold;font-size:92px;line-height:1.1}
+.p{font-size:58px;line-height:1.3;margin-top:40px;color:var(--ink)}
+em{font-style:normal;color:var(--gold)}
+.cta{border:6px solid var(--gold);padding:60px;text-align:center}
+.cta .word{display:inline-block;background:var(--gold);color:#111;font-weight:bold;font-size:170px;
+  padding:10px 60px;margin:30px 0;letter-spacing:.05em}
+.shot{margin-top:50px;width:620px;box-shadow:0 30px 80px rgba(0,0,0,.7);border:4px solid #2a2622}
+.n{font-weight:bold;color:var(--gold);font-size:200px;line-height:.9}
+</style></head><body>
+
+<!-- ===== Reels 1: A dor (Dia 1) ===== -->
+<section class="s" id="r1-1"><div class="pole"></div>
+  <p class="k">Barbeiro,</p><p class="h">responde<br><em>rápido:</em></p></section>
+<section class="s" id="r1-2"><div class="pole"></div>
+  <p class="h">O que você vai <em>postar amanhã?</em></p></section>
+<section class="s" id="r1-3"><div class="pole"></div>
+  <p class="m">Você corta<br>o dia inteiro…</p><p class="m" style="margin-top:50px"><em>…e o Instagram<br>fica parado.</em></p></section>
+<section class="s" id="r1-4"><div class="pole"></div>
+  <p class="m">Enquanto isso, o cliente novo vai na barbearia que <em>posta todo dia.</em></p></section>
+<section class="s" id="r1-5"><div class="pole"></div>
+  <p class="k">Resolvi isso</p><p class="h"><em>30 posts</em><br>prontos</p>
+  <p class="p">Com legenda. É só trocar o nome da sua barbearia e postar.</p></section>
+<section class="s" id="r1-6"><div class="cta">
+  <p class="m">Comenta</p><div class="word">KIT</div><p class="p" style="margin-top:0">e ganhe <b>5 posts grátis</b> 👇</p></div></section>
+
+<!-- ===== Reels 2: 3 posts que toda barbearia deveria fazer (Dia 2 / Reels 4) ===== -->
+<section class="s" id="r2-1"><div class="pole"></div>
+  <p class="k">Salva esse vídeo</p><p class="h"><em>3 posts</em> que toda barbearia deveria fazer essa semana</p></section>
+<section class="s" id="r2-2"><p class="n">1</p><p class="m">Antes e depois</p>
+  <img class="shot" src="../imagens/post-1-antes-depois.png"></section>
+<section class="s" id="r2-3"><p class="n">2</p><p class="m">Tabela de preços</p>
+  <img class="shot" src="../imagens/post-2-precos.png"></section>
+<section class="s" id="r2-4"><p class="n">3</p><p class="m">Horários livres</p>
+  <img class="shot" src="../imagens/post-5-horarios.png"></section>
+<section class="s" id="r2-5"><div class="cta">
+  <p class="m">Quer os 3 prontos + 2 bônus?</p><div class="word">KIT</div><p class="p" style="margin-top:0">Comenta aqui 👇</p></div></section>
+
+<!-- ===== Reels 3: Barbeiro brasileiro na Europa (Dia 4) ===== -->
+<section class="s" id="r3-1"><div class="pole"></div>
+  <p class="k">Lisboa · Porto · Dublin · Madrid</p><p class="h">Barbeiro <em>brasileiro</em> na Europa</p></section>
+<section class="s" id="r3-2"><div class="pole"></div>
+  <p class="m">Seu corte é o <em>melhor da cidade…</em></p></section>
+<section class="s" id="r3-3"><div class="pole"></div>
+  <p class="m">…mas quem aparece mais é quem <em>posta todo dia.</em></p></section>
+<section class="s" id="r3-4"><div class="pole"></div>
+  <p class="h"><em>30 posts</em><br>prontos</p><p class="p">Com versão adaptada para Portugal. Você só troca o nome e posta.</p></section>
+<section class="s" id="r3-5"><div class="cta">
+  <p class="m">Comenta</p><div class="word">KIT</div><p class="p" style="margin-top:0">e receba <b>5 posts grátis</b> 👇</p></div></section>
+</body></html>
