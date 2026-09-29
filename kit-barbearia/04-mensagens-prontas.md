@@ -19,7 +19,7 @@ palavra-chave: `KIT` (marque também `kit` e `Kit`) → Ação: enviar DM.
 **DM 2 (24h depois, só se não respondeu):**
 > E aí, conseguiu usar algum dos posts?
 > Se curtiu, o Kit 30 Dias tem um mês inteiro pronto por R$ 47:
-> 👉 https://kiwify.app/yD7VIk6
+> 👉 https://pay.kiwify.com.br/csTpG8s
 
 ## 2. Abordagem direta (20 barbearias por dia)
 
