@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="pt-BR"><head><meta charset="utf-8">
+<!-- Templates dos posts. Edite os textos entre [colchetes] e rode render.js para gerar os PNGs. -->
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#111;--ink:#f4efe6;--gold:#d4a24c;--mute:#9a948a}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#333}
+.post{width:1080px;height:1350px;background:var(--bg);color:var(--ink);font-family:Inter,Arial,sans-serif;
+  position:relative;overflow:hidden;padding:90px;display:flex;flex-direction:column}
+.post::before{content:"";position:absolute;inset:0;background:
+  repeating-linear-gradient(135deg,transparent 0 40px,rgba(212,162,76,.04) 40px 80px)}
+.post>*{position:relative}
+.post>.stripe{position:absolute;top:0;right:90px;width:26px;height:220px;
+  background:repeating-linear-gradient(180deg,#b3261e 0 30px,#f4efe6 30px 60px,#1d4e9e 60px 90px)}
+.tag{font-weight:800;letter-spacing:.3em;color:var(--gold);font-size:30px;text-transform:uppercase}
+h1{font-family:Anton,Impact,sans-serif;font-weight:400;font-size:150px;line-height:.95;text-transform:uppercase;margin-top:30px}
+h1 em{font-style:normal;color:var(--gold)}
+.foot{margin-top:auto;display:flex;justify-content:space-between;align-items:flex-end;
+  border-top:3px solid var(--gold);padding-top:30px;font-size:34px;font-weight:600}
+.foot small{display:block;color:var(--mute);font-size:26px;font-weight:400;margin-top:6px}
+.list{margin-top:50px}
+.row{display:flex;justify-content:space-between;align-items:baseline;font-size:52px;font-weight:600;
+  padding:26px 0;border-bottom:2px dashed #3a3530}
+.row b{font-family:Anton,Impact,sans-serif;font-weight:400;color:var(--gold);font-size:64px}
+.frames{display:grid;grid-template-columns:1fr 1fr;gap:30px;margin-top:50px;flex:1;margin-bottom:40px}
+.frame{border:4px dashed var(--gold);display:flex;align-items:flex-end;padding:30px;
+  font-family:Anton,Impact,sans-serif;font-size:70px;text-transform:uppercase;background:rgba(255,255,255,.03)}
+.big{font-family:Anton,Impact,sans-serif;font-size:200px;color:var(--gold);line-height:1;margin-top:40px}
+.sub{font-size:48px;line-height:1.3;margin-top:30px}
+.pill{align-self:flex-start;background:var(--gold);color:#111;font-weight:800;font-size:40px;padding:20px 40px;border-radius:999px;margin-top:50px}
+.slots{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:60px}
+.slot{border:3px solid #3a3530;padding:26px;font-size:40px}
+.slot h3{font-family:Anton,Impact,sans-serif;font-weight:400;color:var(--gold);font-size:56px;margin-bottom:14px}
+.slot p{padding:12px 0;border-bottom:1px solid #2a2622}
+</style></head><body>
+
+<section class="post" id="post-1-antes-depois"><div class="stripe"></div>
+  <p class="tag">[Nome da Barbearia]</p>
+  <h1>Entrou assim,<br><em>saiu assim</em></h1>
+  <div class="frames"><div class="frame">Antes</div><div class="frame" style="border-style:solid">Depois</div></div>
+  <div class="foot"><span>Agende pelo WhatsApp<small>[WHATSAPP]</small></span><span>@[perfil]</span></div>
+</section>
+
+<section class="post" id="post-2-precos"><div class="stripe"></div>
+  <p class="tag">Tabela de serviços</p>
+  <h1>Nossos<br><em>preços</em></h1>
+  <div class="list">
+    <div class="row"><span>Corte</span><b>[R$]</b></div>
+    <div class="row"><span>Barba</span><b>[R$]</b></div>
+    <div class="row"><span>Corte + Barba</span><b>[R$]</b></div>
+    <div class="row"><span>Sobrancelha</span><b>[R$]</b></div>
+    <div class="row"><span>Infantil</span><b>[R$]</b></div>
+  </div>
+  <div class="foot"><span>Hora marcada, sem fila<small>[NOME DA BARBEARIA] · [BAIRRO]</small></span><span>Salve 📌</span></div>
+</section>
+
+<section class="post" id="post-3-dica"><div class="stripe"></div>
+  <p class="tag">Arraste para o lado →</p>
+  <h1 style="font-size:120px">5 erros que<br>estragam seu<br><em>corte em casa</em></h1>
+  <p class="sub">O 3º quase todo mundo comete.</p>
+  <div class="foot"><span>Salve e mande para um amigo<small>[NOME DA BARBEARIA]</small></span><span>💈</span></div>
+</section>
+
+<section class="post" id="post-4-promo"><div class="stripe"></div>
+  <p class="tag">Só terça e quarta</p>
+  <h1>Corte<br>+ <em>barba</em></h1>
+  <div class="big">[R$ XX]</div>
+  <p class="sub">Promoção válida nos dias mais tranquilos da semana.</p>
+  <span class="pill">Mande “PROMO” no WhatsApp</span>
+  <div class="foot"><span>[WHATSAPP]<small>[NOME DA BARBEARIA] · [BAIRRO]</small></span><span>✂️</span></div>
+</section>
+
+<section class="post" id="post-5-horarios"><div class="stripe"></div>
+  <p class="tag">Agenda da semana</p>
+  <h1>Últimos<br><em>horários</em></h1>
+  <div class="slots">
+    <div class="slot"><h3>Quinta</h3><p>[10:00]</p><p>[14:30]</p><p>[18:00]</p></div>
+    <div class="slot"><h3>Sexta</h3><p>[09:00]</p><p>[16:00]</p><p>[19:00]</p></div>
+    <div class="slot"><h3>Sábado</h3><p>[08:30]</p><p>[11:00]</p><p>[15:00]</p></div>
+  </div>
+  <div class="foot"><span>Garanta o seu antes que acabe<small>[WHATSAPP]</small></span><span>⏰</span></div>
+</section>
+</body></html>
