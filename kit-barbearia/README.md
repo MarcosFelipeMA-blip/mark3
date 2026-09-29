@@ -13,6 +13,7 @@ com material de divulgação incluído.
 | `04-mensagens-prontas.md` | Automação ManyChat, abordagem direta, grupos e objeções |
 | `05-pagina-de-vendas.md` | Texto para colar na Hotmart/Kiwify |
 | `imagens/` | 5 posts em 1080×1350 (formato do feed) |
+| `06-calendario-semana-1.md` | O que postar em cada dia da 1ª semana no seu perfil de vendas |
 | `entregavel/Kit-30-Dias-Barbearia.pdf` | **O arquivo que o cliente recebe** (12 páginas, com capa) |
 | `templates/posts.html` | Fonte das imagens: edite os textos e rode `render.js` |
 
