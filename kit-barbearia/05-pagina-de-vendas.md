@@ -55,4 +55,4 @@ Se não gostar, peça o reembolso em até 7 dias pela própria plataforma. Sem p
 
 ---
 
-👉 **[BOTÃO: QUERO MEU KIT]**
+👉 **Quero meu kit:** https://kiwify.app/yD7VIk6

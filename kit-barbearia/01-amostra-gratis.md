@@ -39,4 +39,4 @@ Curtiu? O **Kit 30 Dias** tem um mês inteiro assim: 30 posts com legenda,
 roteiros de Reels, templates editáveis e 10 prompts de IA para você nunca
 mais ficar sem ideia.
 
-👉 [LINK DA HOTMART/KIWIFY]
+👉 https://kiwify.app/yD7VIk6

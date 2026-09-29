@@ -48,9 +48,9 @@ A Kiwify pede o link de uma página de vendas. Você tem duas opções:
 Depois de publicar, copie o **link do checkout** e troque em:
 - `01-amostra-gratis.md` → `[LINK DA HOTMART/KIWIFY]`
 - `04-mensagens-prontas.md` → DM 2 → `[LINK DE VENDA]`
-- A bio do Instagram (link na bio)
+- A bio do Instagram (link na bio): **faça você**, colando https://kiwify.app/yD7VIk6
 
-**Me mande o link** que eu troco em todos os arquivos e gero o ZIP de novo.
+**Feito:** o link de checkout `https://kiwify.app/yD7VIk6` já está nesses arquivos.
 
 ## 6. Teste antes de divulgar
 
