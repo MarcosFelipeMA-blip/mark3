@@ -139,14 +139,21 @@ Estoque de segurança ≈ 72 cocos.
 
 ---
 
-## Resumo
+## Resumo – tópicos pedidos pelo professor
 
-| | Método 1 – Qtde fixa | Método 2 – Período fixo |
-|---|---|---|
-| Parâmetro 1 | Lote econômico **Q0 = 122** | Período **T = 2 dias** |
-| Parâmetro 2 | Ponto de pedido **PP = 180** | Estoque máximo **EM = 350** |
-| Estoque de segurança (95%) | 52,5 | 72,5 |
-| Custo mensal do ES | R$ 236,25 | R$ 326,25 |
+**Método 1 – Quantidade Fixa de Encomenda**
+
+- <mark>**Ponto de Pedido = 180 cocos**</mark>
+- <mark>**Quantidade do Lote (Q0) = 122 cocos**</mark>
+- <mark>**Estoque de Segurança = 52,5 cocos**</mark>
+
+**Método 2 – Período Fixo de Encomenda**
+
+- <mark>**Estoque Máximo = 350 cocos**</mark>
+- <mark>**Período Fixo de Encomenda = 2 dias**</mark>
+- <mark>**Estoque de Segurança = 72,5 cocos**</mark>
+
+Custo mensal do estoque de segurança: R$ 236,25 (método 1) e R$ 326,25 (método 2).
 
 O período fixo precisa de mais estoque de segurança porque tem de cobrir a incerteza de um
 intervalo maior (T + TR, em vez de só TR). É o mesmo resultado da aula: 30 contra 38 cocos.
