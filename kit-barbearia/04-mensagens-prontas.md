@@ -18,7 +18,7 @@ palavra-chave: `KIT` (marque também `kit` e `Kit`) → Ação: enviar DM.
 
 **DM 2 (24h depois, só se não respondeu):**
 > E aí, conseguiu usar algum dos posts?
-> Se curtiu, o Kit 30 Dias tem um mês inteiro pronto por [PREÇO]:
+> Se curtiu, o Kit 30 Dias tem um mês inteiro pronto por R$ 47:
 > 👉 https://kiwify.app/yD7VIk6
 
 ## 2. Abordagem direta (20 barbearias por dia)
@@ -31,7 +31,7 @@ Antes de mandar: veja o perfil, escolha 1 coisa específica para elogiar.
 
 **Se disser sim:** envie 3 imagens com o nome da barbearia já trocado.
 **Depois de 2 dias:**
-> Conseguiu postar? Se quiser, tenho 30 dias prontos nesse estilo por [PREÇO].
+> Conseguiu postar? Se quiser, tenho 30 dias prontos nesse estilo por R$ 47.
 > Ou, se preferir que eu faça tudo sob medida pra você, faço por [PREÇO MENSAL].
 
 > Regra: nunca mande a mesma mensagem copiada para todo mundo. Personalize a primeira linha. O Instagram bloqueia contas que mandam texto idêntico em massa.
