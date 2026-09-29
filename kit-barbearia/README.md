@@ -13,6 +13,7 @@ com material de divulgação incluído.
 | `04-mensagens-prontas.md` | Automação ManyChat, abordagem direta, grupos e objeções |
 | `05-pagina-de-vendas.md` | Texto para colar na Hotmart/Kiwify |
 | `imagens/` | 5 posts em 1080×1350 (formato do feed) |
+| `entregavel/Kit-30-Dias-Barbearia.pdf` | **O arquivo que o cliente recebe** (12 páginas, com capa) |
 | `templates/posts.html` | Fonte das imagens: edite os textos e rode `render.js` |
 
 ## O que só você pode fazer (em ordem)
@@ -20,7 +21,7 @@ com material de divulgação incluído.
 **Dia 1 — Montar a base (2 horas)**
 1. Criar um Instagram novo só para isso, ex.: `@kitbarbearia` ou `@postsparabarbeiro`.
 2. Criar conta na **Hotmart** (hotmart.com) ou **Kiwify** (kiwify.com.br). Precisa de CPF e conta bancária.
-3. Converter `02-kit-30-dias.md` em PDF (cole no Google Docs → Arquivo → Baixar → PDF).
+3. O PDF já está pronto em `entregavel/`. Se editar o kit, gere de novo com `python3 templates/build-pdf.py`.
 4. Subir no Google Drive: o PDF + a pasta `imagens/`. Crie uma pasta separada só com a amostra grátis.
 
 **Dia 2 — Deixar os templates editáveis no Canva**
