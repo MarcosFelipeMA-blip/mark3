@@ -10,3 +10,8 @@ O canal 5 é mostrado em tempo real; os outros 8 em modo acelerado. A peça apar
 - Perfil do canal lido do desenho de detalhe; o passo entre canais (46 mm) e a forma externa do anel são estimados.
 
 Gerar de novo: `tools/step_export.cjs` → `tools/silhouettes.py` → `tools/pack_tools.py` (gera `src/toolsdata.js`), depois `npm install && npm run build`.
+
+## Realidade aumentada
+
+`ar/canais-T.usdz` (iPhone, Quick Look) e `ar/canais-T.glb` (Android, Scene Viewer, com animação das 4 ferramentas no canal 5). Anel em tamanho real, com 60° removidos para mostrar os canais.
+Para gerar de novo: `node build-ar.mjs`, abrir `ar-export.html#captura` e chamar `exportAR()` (retorna os dois arquivos em base64).

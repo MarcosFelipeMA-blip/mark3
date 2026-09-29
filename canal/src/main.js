@@ -445,5 +445,5 @@ persp.position.copy(CAMS.geral.pos); controls.target.copy(CAMS.geral.target);
 new ResizeObserver(() => { document.documentElement.style.setProperty('--tb', $('toolbar').offsetHeight + 'px'); resize(); }).observe($('toolbar'));
 setView('auto'); syncPlay(); resize();
 $('loading').hidden = true;
-window.demo = { step: dt => frame(dt), seek: t => { state.t = t; }, state, TOTAL, setView, timeline, bands, sweep, pc, TOOLS };
+window.demo = { step: dt => frame(dt), seek: t => { state.t = t; }, state, TOTAL, setView, timeline, bands, sweep, pc, TOOLS, THREE, part, M, PATHS, OPS, R0, Y0, yc, FOCUS, bodyRing, PHI0, PHILEN, hatchTex };
 if (!CAPTURE) frame();
