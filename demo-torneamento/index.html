@@ -1,0 +1,928 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>body{margin:0}[hidden]{display:none!important}</style>
+</head>
+<body>
+<title>Bancada Virtual de Torneamento</title>
+<meta name="description" content="Demonstração 3D dos ensaios L9 de torneamento de alumínio com suporte DWLNR 2525M 06 e pastilha WNMG 06 04 12-WMX 4405: vibração e rugosidade.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: painel de instrumentos de bancada. Viewport 3D + leituras à direita; abaixo, perfil, matriz L9 e efeitos principais. */
+:root {
+  --bg: #eceff1;
+  --panel: #ffffff;
+  --panel-2: #f5f7f8;
+  --ink: #141a1f;
+  --ink-2: #4a545d;
+  --muted: #76818b;
+  --line: #d3d9de;
+  --accent: #b87a12;        /* dourado do revestimento da pastilha */
+  --accent-ink: #7f5200;
+  --viewport: #dfe4e8;
+  --series-ra: #2a78d6;     /* rugosidade */
+  --series-vib: #eb6834;    /* vibração */
+  --good: #1f8a4c;
+  --warn: #b27400;
+  --crit: #cf3a3a;
+  --f-display: "Barlow Condensed", "Arial Narrow", "Helvetica Neue", Arial, sans-serif;
+  --f-body: "IBM Plex Sans", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --f-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  --r: 6px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0f1316; --panel: #171d22; --panel-2: #1c242a; --ink: #e7ecf0; --ink-2: #a8b3bc;
+    --muted: #7c8892; --line: #2a343c; --accent: #d9a13a; --accent-ink: #e8b85c; --viewport: #12181c;
+    --series-ra: #3987e5; --series-vib: #d95926; --good: #3fb36e; --warn: #d9a13a; --crit: #e66767;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0f1316; --panel: #171d22; --panel-2: #1c242a; --ink: #e7ecf0; --ink-2: #a8b3bc;
+  --muted: #7c8892; --line: #2a343c; --accent: #d9a13a; --accent-ink: #e8b85c; --viewport: #12181c;
+  --series-ra: #3987e5; --series-vib: #d95926; --good: #3fb36e; --warn: #d9a13a; --crit: #e66767;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--ink); font-family: var(--f-body); font-size: 14px; line-height: 1.45; }
+.wrap { max-width: 1440px; margin: 0 auto; padding-inline: 16px; padding-block: 16px 40px; display: grid; gap: 16px; }
+h1, h2, h3 { font-family: var(--f-display); font-weight: 600; letter-spacing: .01em; margin: 0; text-wrap: balance; }
+h1 { font-size: 30px; line-height: 1.05; }
+h2 { font-size: 20px; }
+h3 { font-size: 15px; text-transform: uppercase; letter-spacing: .06em; color: var(--ink-2); font-weight: 600; }
+.mono, .num { font-family: var(--f-mono); font-variant-numeric: tabular-nums; }
+.eyebrow { font-family: var(--f-mono); font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+p { margin: 0; }
+.muted { color: var(--muted); }
+.small { font-size: 12px; }
+
+header.top { display: flex; flex-wrap: wrap; gap: 12px 24px; align-items: end; justify-content: space-between; }
+header.top .id { display: grid; gap: 4px; min-width: 0; }
+.spec { display: flex; flex-wrap: wrap; gap: 6px; }
+.tag { font-family: var(--f-mono); font-size: 11.5px; padding: 3px 8px; border: 1px solid var(--line); border-radius: 999px; background: var(--panel); color: var(--ink-2); white-space: nowrap; }
+.tag b { color: var(--ink); font-weight: 500; }
+
+.selector { display: flex; flex-wrap: wrap; gap: 10px 16px; align-items: center; background: var(--panel); border: 1px solid var(--line); border-radius: var(--r); padding: 10px 12px; }
+.chips { display: flex; flex-wrap: wrap; gap: 4px; }
+.chip { font-family: var(--f-mono); font-size: 13px; min-width: 36px; height: 32px; padding: 0 8px; border: 1px solid var(--line); background: var(--panel-2); color: var(--ink); border-radius: 4px; cursor: pointer; }
+.chip:hover { border-color: var(--ink-2); }
+.chip[aria-pressed="true"] { background: var(--ink); color: var(--panel); border-color: var(--ink); }
+.chip .st { display: inline-block; width: 6px; height: 6px; border-radius: 50%; margin-left: 5px; vertical-align: middle; background: transparent; }
+.sel-label { font-size: 12px; color: var(--muted); font-family: var(--f-mono); text-transform: uppercase; letter-spacing: .06em; }
+button.btn { font: 500 13px var(--f-body); height: 32px; padding: 0 12px; border-radius: 4px; border: 1px solid var(--line); background: var(--panel-2); color: var(--ink); cursor: pointer; display: inline-flex; align-items: center; gap: 6px; }
+button.btn:hover { border-color: var(--ink-2); }
+button.btn.primary { background: var(--accent); border-color: var(--accent); color: #1a1204; }
+button:focus-visible, input:focus-visible, select:focus-visible { outline: 2px solid var(--series-ra); outline-offset: 2px; }
+select, input[type="number"] { font: 13px var(--f-mono); height: 32px; border: 1px solid var(--line); border-radius: 4px; background: var(--panel-2); color: var(--ink); padding: 0 6px; }
+.spacer { flex: 1; }
+
+.main { display: grid; grid-template-columns: minmax(0, 1.65fr) minmax(0, 1fr); gap: 16px; }
+@media (max-width: 1020px) { .main { grid-template-columns: minmax(0, 1fr); } }
+
+.stage { position: relative; background: var(--viewport); border: 1px solid var(--line); border-radius: var(--r); overflow: hidden; min-height: 420px; height: 100%; }
+#three { position: absolute; inset: 0; display: block; width: 100%; height: 100%; touch-action: none; }
+.hud { position: absolute; left: 10px; top: 10px; right: 10px; display: flex; flex-wrap: wrap; gap: 6px; pointer-events: none; }
+.hud .tag { background: color-mix(in srgb, var(--panel) 88%, transparent); backdrop-filter: blur(4px); }
+.stage-bar { position: absolute; left: 10px; right: 10px; bottom: 10px; display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+.stage-bar .btn, .stage-bar select { background: color-mix(in srgb, var(--panel) 92%, transparent); }
+.progress { flex: 1 1 160px; min-width: 120px; height: 6px; background: color-mix(in srgb, var(--panel) 70%, transparent); border-radius: 3px; overflow: hidden; }
+.progress i { display: block; height: 100%; width: 0; background: var(--accent); }
+.loadmsg { position: absolute; inset: 0; display: grid; place-items: center; color: var(--muted); font-family: var(--f-mono); font-size: 12px; }
+
+.side { display: grid; gap: 12px; align-content: start; min-width: 0; }
+.card { background: var(--panel); border: 1px solid var(--line); border-radius: var(--r); padding: 12px; display: grid; gap: 8px; min-width: 0; }
+.card-head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; flex-wrap: wrap; }
+.tiles { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+.tile { border: 1px solid var(--line); border-radius: 4px; padding: 8px 10px; display: grid; gap: 2px; background: var(--panel-2); min-width: 0; }
+.tile .v { font-family: var(--f-mono); font-size: 22px; font-weight: 500; font-variant-numeric: tabular-nums; line-height: 1.1; }
+.tile .v small { font-size: 12px; color: var(--muted); font-weight: 400; margin-left: 2px; }
+.tile .k { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; }
+.tile .sub { font-size: 11px; color: var(--ink-2); font-family: var(--f-mono); }
+.pill { display: inline-flex; align-items: center; gap: 5px; font: 500 11px var(--f-mono); padding: 2px 8px; border-radius: 999px; border: 1px solid currentColor; white-space: nowrap; }
+.pill::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
+.pill.good { color: var(--good); } .pill.warn { color: var(--warn); } .pill.crit { color: var(--crit); } .pill.idle { color: var(--muted); }
+.pill.good::before { border-radius: 50%; } .pill.warn::before { border-radius: 1px; transform: rotate(45deg); } .pill.crit::before { border-radius: 0; }
+canvas.chart { width: 100%; display: block; }
+.legend { display: flex; flex-wrap: wrap; gap: 4px 14px; font-size: 12px; color: var(--ink-2); }
+.legend span { display: inline-flex; align-items: center; gap: 6px; }
+.legend i { width: 16px; height: 2px; background: currentColor; display: inline-block; }
+.legend i.dash { background: repeating-linear-gradient(90deg, currentColor 0 4px, transparent 4px 7px); }
+.note { font-size: 12px; color: var(--ink-2); border-left: 2px solid var(--accent); padding-left: 10px; }
+
+.lower { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 16px; }
+@media (max-width: 1020px) { .lower { grid-template-columns: minmax(0, 1fr); } }
+
+.table-wrap { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; font-size: 12.5px; }
+th, td { padding: 5px 6px; border-bottom: 1px solid var(--line); text-align: right; white-space: nowrap; }
+th { font: 500 11px var(--f-mono); color: var(--muted); text-transform: uppercase; letter-spacing: .04em; vertical-align: bottom; }
+th.l, td.l { text-align: left; }
+td { font-family: var(--f-mono); font-variant-numeric: tabular-nums; }
+tbody tr { cursor: pointer; }
+tbody tr:hover { background: var(--panel-2); }
+tbody tr.on { background: color-mix(in srgb, var(--accent) 14%, transparent); }
+td input { width: 62px; height: 26px; font-size: 12px; text-align: right; }
+.lvl { color: var(--muted); }
+.group-h { border-bottom: 0; text-align: center; color: var(--ink-2); }
+.levels { display: grid; grid-template-columns: auto repeat(3, minmax(0, 1fr)); gap: 6px 8px; align-items: center; }
+.levels input { width: 100%; }
+.levels .h { font: 500 11px var(--f-mono); color: var(--muted); text-transform: uppercase; }
+.row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.effects-toggle { display: inline-flex; border: 1px solid var(--line); border-radius: 4px; overflow: hidden; }
+.effects-toggle button { font: 500 12px var(--f-body); border: 0; background: var(--panel-2); color: var(--ink-2); padding: 5px 10px; cursor: pointer; }
+.effects-toggle button[aria-pressed="true"] { background: var(--ink); color: var(--panel); }
+.tip { position: fixed; pointer-events: none; background: var(--panel); color: var(--ink); border: 1px solid var(--line); border-radius: 4px; padding: 6px 8px; font: 12px var(--f-mono); box-shadow: 0 4px 14px rgba(0,0,0,.14); z-index: 10; }
+footer { font-size: 12px; color: var(--muted); display: grid; gap: 4px; }
+footer a { color: var(--ink-2); }
+@media (max-width: 520px) { .tiles { grid-template-columns: minmax(0,1fr) minmax(0,1fr); } h1 { font-size: 24px; } .stage { min-height: 340px; } }
+@media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto; } }
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <div class="id">
+      <span class="eyebrow">UniSENAI · Projeto Integrador · Tecnologia em Fabricação Mecânica</span>
+      <h1>Bancada Virtual de Torneamento</h1>
+      <p class="muted">Rotação, avanço e profundidade de corte × vibração e rugosidade no torneamento cilíndrico externo de alumínio.</p>
+    </div>
+    <div class="spec">
+      <span class="tag">Suporte <b>DWLNR 2525M 06</b></span>
+      <span class="tag">Pastilha <b>WNMG 06 04 12-WMX 4405</b></span>
+      <span class="tag">r<sub>ε</sub> <b>1,2 mm</b></span>
+      <span class="tag">κ<sub>r</sub> <b>95°</b></span>
+      <span class="tag">Material <b>Alumínio (ISO N)</b></span>
+    </div>
+  </header>
+
+  <section class="selector" aria-label="Seleção do ensaio">
+    <span class="sel-label">Ensaio L9</span>
+    <div class="chips" id="ensChips"></div>
+    <span class="sel-label">Repetição</span>
+    <div class="chips" id="repChips"></div>
+    <span class="spacer"></span>
+    <button class="btn" id="btnRunAll" type="button" title="Executa os 9 ensaios em sequência">Rodar sequência L9</button>
+  </section>
+
+  <section class="main">
+    <div class="stage" id="stage">
+      <canvas id="three" aria-label="Modelo 3D do torno com tarugo, suporte e pastilha"></canvas>
+      <div class="loadmsg" id="loadmsg">Carregando modelo 3D…</div>
+      <div class="hud" id="hud"></div>
+      <div class="stage-bar">
+        <button class="btn primary" id="btnPlay" type="button">Pausar</button>
+        <button class="btn" id="btnRestart" type="button">Reiniciar passe</button>
+        <select id="viewSel" aria-label="Vista da câmera">
+          <option value="free">Vista geral</option>
+          <option value="tool">Detalhe da pastilha</option>
+          <option value="top">Vista superior</option>
+          <option value="front">Vista frontal</option>
+        </select>
+        <select id="speedSel" aria-label="Velocidade da animação">
+          <option value="0.1">Rotação 10 %</option>
+          <option value="0.25" selected>Rotação 25 %</option>
+          <option value="1">Rotação real</option>
+        </select>
+        <select id="turretSel" aria-label="Posição da torre"><option value="rear">Torre traseira</option><option value="front">Torre dianteira</option></select>
+        <label class="tag row" style="gap:4px;pointer-events:auto"><input type="checkbox" id="exag" checked> vibração ampliada</label>
+        <div class="progress" aria-label="Progresso do passe"><i id="prog"></i></div>
+      </div>
+    </div>
+
+    <div class="side">
+      <div class="card">
+        <div class="card-head">
+          <h3>Leituras do ensaio</h3>
+          <span id="statusPill" class="pill idle">parado</span>
+        </div>
+        <div class="tiles">
+          <div class="tile"><span class="k">Ra teórica</span><span class="v" id="tRaTh">–</span><span class="sub">f²/(18√3·rε)</span></div>
+          <div class="tile"><span class="k" id="kRa">Ra estimada</span><span class="v" id="tRa">–</span><span class="sub" id="sRa">modelo</span></div>
+          <div class="tile"><span class="k" id="kVib">Vibração RMS</span><span class="v" id="tVib">–</span><span class="sub" id="sVib">aceleração</span></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-head">
+          <h3>Sinal de vibração</h3>
+          <span class="small muted mono">acelerômetro no suporte · 40 ms</span>
+        </div>
+        <canvas class="chart" id="cWave" height="130" aria-label="Sinal de vibração no tempo"></canvas>
+      </div>
+
+      <div class="card">
+        <div class="card-head">
+          <h3>Espectro (FFT)</h3>
+          <span class="small muted mono">0–2,5 kHz</span>
+        </div>
+        <canvas class="chart" id="cFft" height="130" aria-label="Espectro de frequências da vibração"></canvas>
+        <p class="small muted" id="fftNote"></p>
+      </div>
+    </div>
+  </section>
+
+  <section class="lower">
+    <div class="card">
+      <div class="card-head">
+        <h3>Perfil de rugosidade</h3>
+        <span class="small muted mono">comprimento de amostragem 2,5 mm</span>
+      </div>
+      <canvas class="chart" id="cProf" height="190" aria-label="Perfil de rugosidade simulado"></canvas>
+      <div class="legend">
+        <span style="color:var(--series-ra)"><i></i>perfil com vibração</span>
+        <span style="color:var(--ink-2)"><i class="dash"></i>perfil geométrico (só avanço e rε)</span>
+      </div>
+      <p class="note">As cristas têm passo igual ao avanço f<sub>n</sub> e forma do raio de ponta r<sub>ε</sub> = 1,2 mm. A vibração soma ondulação e irregularidade, e por isso a Ra medida deve ficar acima da teórica.</p>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <h3>Efeitos principais</h3>
+        <div class="effects-toggle" role="group" aria-label="Resposta">
+          <button type="button" data-resp="ra" aria-pressed="true">Ra</button>
+          <button type="button" data-resp="vib" aria-pressed="false">Vibração</button>
+        </div>
+      </div>
+      <canvas class="chart" id="cEff" height="190" aria-label="Gráfico de efeitos principais"></canvas>
+      <p class="small muted" id="effNote"></p>
+    </div>
+  </section>
+
+  <section class="card">
+    <div class="card-head">
+      <h2>Matriz de ensaios L9 (Taguchi) com resultados</h2>
+      <div class="row">
+        <button class="btn" type="button" id="btnCsv">Copiar CSV</button>
+        <button class="btn" type="button" id="btnClear">Limpar medições</button>
+      </div>
+    </div>
+    <p class="small muted">Clique numa linha para ver o ensaio no torno. Digite a Ra do rugosímetro e a vibração medida (m/s² RMS) nas duas repetições: os indicadores e os efeitos principais passam a usar os dados medidos. Os valores ficam salvos neste navegador.</p>
+    <div class="table-wrap">
+      <table id="tbl">
+        <thead>
+          <tr>
+            <th class="l" rowspan="2">Ensaio</th>
+            <th rowspan="2">n<br>rpm</th>
+            <th rowspan="2">f<sub>n</sub><br>mm/rot</th>
+            <th rowspan="2">a<sub>p</sub><br>mm</th>
+            <th rowspan="2">v<sub>c</sub><br>m/min</th>
+            <th rowspan="2">v<sub>f</sub><br>mm/min</th>
+            <th rowspan="2">Ra teór.<br>µm</th>
+            <th rowspan="2">Ra est.<br>µm</th>
+            <th class="group-h" colspan="2">Ra medida µm</th>
+            <th class="group-h" colspan="2">Vibração m/s²</th>
+          </tr>
+          <tr><th>R1</th><th>R2</th><th>R1</th><th>R2</th></tr>
+        </thead>
+        <tbody id="tbody"></tbody>
+      </table>
+    </div>
+    <div class="card" style="background:var(--panel-2)">
+      <div class="card-head"><h3>Níveis dos fatores</h3><span class="small muted">Sugestão inicial, ajuste conforme a capacidade do torno e a recomendação do fabricante</span></div>
+      <div class="levels" id="levels">
+        <span></span><span class="h">Nível 1 (baixo)</span><span class="h">Nível 2 (médio)</span><span class="h">Nível 3 (alto)</span>
+      </div>
+      <div class="row small">
+        <label for="d0">Diâmetro inicial do tarugo (mm)</label><input type="number" id="d0" min="10" max="120" step="1" value="50" style="width:80px">
+        <label for="lcut">Comprimento usinado (mm)</label><input type="number" id="lcut" min="20" max="120" step="5" value="80" style="width:80px">
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <p><b>Sobre os dados:</b> até os ensaios serem realizados, vibração e “Ra estimada” vêm de um modelo ilustrativo (força de corte k<sub>c</sub>·a<sub>p</sub>·f<sub>n</sub>, excitação na frequência de rotação, modo do suporte em ~1,45 kHz e limite de estabilidade dependente da rotação). A Ra teórica segue Machado et al. (2015). A pastilha WMX tem geometria wiper, que segundo o fabricante pode reduzir a Ra abaixo do valor da fórmula clássica para o mesmo avanço.</p>
+    <p>Modelo 3D: montagem gerada no <a href="https://www.sandvik.coromant.com/pt-pt/tools/tool-assembly-builder#assemblyid=2c1da1d4-301f-4591-7071-08df1df10947" target="_blank" rel="noopener">Tool Assembly Builder da Sandvik Coromant</a> (STEP). Autores: Marcos Felipe Moreira dos Anjos, Petterson Albert Miguel Soares. Orientação: Roberto Giani Pattaro Junior, Renato Ludwig Pilan, Ricardo Favaro.</p>
+  </footer>
+</div>
+<div class="tip" id="tip" hidden></div>
+
+<script type="application/json" id="meshData">{"holder":{"v":[-10.21,2.0,-19.71,-8.34,1.92,-22.37,-6.11,2.26,-21.34,1.32,3.73,-14.79,-5.4,3.73,-8.07,-7.08,2.88,-14.47,-16.1,3.07,-3.66,-16.19,3.05,-3.75,-19.37,1.66,-13.82,-19.37,1.17,-18.44,-18.81,1.21,-18.64,-18.02,1.47,-16.94,-18.15,2.04,-11.45,-18.81,1.21,-18.64,-18.02,1.47,-16.94,-18.01,1.33,-16.92,-17.14,1.61,-15.05,-16.65,-3.1,-14.56,-18.57,-3.74,-18.73,1.32,3.73,-14.79,-5.4,3.73,-8.07,12.45,3.73,-4.99,12.45,3.73,-3.73,-9.74,3.73,-3.73,-9.5,3.73,-3.97,-7.57,3.73,-4.46,-5.09,3.73,-6.94,-16.08,2.92,-3.65,-15.49,3.05,-3.05,-12.44,0.0,0.0,-12.44,-24.88,0.0,-16.19,-24.88,-3.75,-16.19,3.05,-3.75,-16.1,3.07,-3.66,-10.94,1.89,-18.64,-10.2,1.86,-19.69,-10.21,2.0,-19.71,-8.34,1.92,-22.37,-7.87,-1.58,-22.15,-7.73,-2.94,-22.01,-10.44,-2.82,-18.14,-15.48,-2.94,-14.25,-15.98,1.77,-14.75,-12.11,1.89,-17.47,-11.61,-2.82,-16.97,-12.42,-3.31,-20.84,-12.42,-3.3,-20.7,-12.44,-3.28,-20.56,-12.47,-3.27,-20.42,-12.51,-3.26,-20.28,-12.55,-3.25,-20.15,-12.61,-3.24,-20.02,-12.68,-3.24,-19.89,-12.76,-3.23,-19.77,-12.84,-3.23,-19.66,-12.94,-3.23,-19.55,-13.04,-3.23,-19.45,-13.14,-3.23,-19.36,-13.26,-3.23,-19.27,-13.38,-3.24,-19.2,-13.51,-3.25,-19.13,-13.64,-3.25,-19.07,-13.77,-3.26,-19.03,-13.91,-3.27,-18.99,-14.05,-3.29,-18.96,-14.19,-3.3,-18.95,-14.33,-3.31,-18.94,-14.47,-3.33,-18.95,-14.61,-3.34,-18.96,-14.75,-3.36,-18.99,-14.89,-3.38,-19.03,-15.02,-3.4,-19.07,-15.15,-3.42,-19.13,-15.27,-3.44,-19.2,-15.39,-3.46,-19.27,-15.51,-3.48,-19.36,-15.61,-3.5,-19.45,-15.71,-3.52,-19.55,-15.8,-3.54,-19.66,-15.89,-3.56,-19.77,-15.96,-3.58,-19.89,-16.03,-3.6,-20.02,-16.08,-3.62,-20.15,-16.13,-3.64,-20.28,-16.16,-3.66,-20.42,-16.19,-3.68,-20.56,-16.2,-3.69,-20.7,-16.2,-3.71,-20.84,-16.2,-3.72,-20.98,-16.18,-3.74,-21.12,-16.15,-3.75,-21.26,-16.11,-3.76,-21.4,-16.07,-3.77,-21.53,-16.01,-3.77,-21.66,-15.94,-3.78,-21.78,-15.86,-3.79,-21.9,-15.78,-3.79,-22.02,-15.68,-3.79,-22.13,-15.58,-3.79,-22.23,-15.47,-3.79,-22.32,-15.36,-3.78,-22.4,-15.24,-3.78,-22.48,-15.11,-3.77,-22.54,-14.98,-3.77,-22.6,-14.85,-3.76,-22.65,-14.71,-3.75,-22.68,-14.57,-3.73,-22.71,-14.43,-3.72,-22.73,-14.29,-3.71,-22.73,-14.15,-3.69,-22.73,-14.01,-3.67,-22.71,-13.87,-3.66,-22.68,-13.73,-3.64,-22.65,-13.6,-3.62,-22.6,-13.47,-3.6,-22.54,-13.34,-3.58,-22.48,-13.23,-3.56,-22.4,-13.11,-3.54,-22.32,-13.01,-3.52,-22.23,-12.91,-3.5,-22.13,-12.82,-3.48,-22.02,-12.73,-3.46,-21.9,-12.66,-3.44,-21.78,-12.59,-3.42,-21.66,-12.54,-3.4,-21.53,-12.49,-3.38,-21.4,-12.46,-3.36,-21.26,-12.43,-3.34,-21.12,-12.42,-3.33,-20.98,-12.42,-3.31,-20.84,-12.91,1.4,-21.33,-12.91,1.4,-21.33,-12.92,1.41,-21.19,-12.93,1.42,-21.05,-12.96,1.44,-20.92,-13.0,1.45,-20.78,-13.05,1.46,-20.65,-13.1,1.46,-20.52,-13.17,1.47,-20.39,-13.24,1.47,-20.28,-13.33,1.48,-20.16,-13.42,1.48,-20.05,-13.52,1.48,-19.95,-13.63,1.48,-19.86,-13.74,1.47,-19.78,-13.86,1.47,-19.7,-13.98,1.46,-19.64,-14.11,1.46,-19.58,-14.24,1.45,-19.53,-14.38,1.44,-19.49,-14.51,1.43,-19.46,-14.65,1.41,-19.45,-14.79,1.4,-19.44,-14.93,1.38,-19.44,-15.07,1.37,-19.45,-15.21,1.35,-19.48,-15.35,1.33,-19.51,-15.48,1.31,-19.56,-15.61,1.3,-19.61,-15.73,1.28,-19.67,-15.85,1.26,-19.74,-15.97,1.24,-19.82,-16.07,1.21,-19.91,-16.18,1.19,-20.01,-16.27,1.17,-20.11,-16.35,1.15,-20.22,-16.43,1.13,-20.34,-16.5,1.11,-20.46,-16.56,1.09,-20.59,-16.6,1.07,-20.72,-16.64,1.06,-20.85,-16.67,1.04,-20.99,-16.69,1.02,-21.13,-16.7,1.01,-21.27,-16.7,0.99,-21.41,-16.68,0.98,-21.55,-16.7,1.13,-21.57,-16.68,1.12,-21.7,-16.65,1.1,-21.83,-16.61,1.1,-21.95,-16.56,1.09,-22.08,-16.5,1.08,-22.2,-16.44,1.08,-22.32,-16.37,1.07,-22.43,-16.28,1.07,-22.53,-16.2,1.07,-22.63,-16.1,1.07,-22.73,-16.09,0.92,-22.71,-15.98,0.92,-22.81,-15.86,0.92,-22.89,-15.74,0.93,-22.97,-15.62,0.93,-23.03,-15.49,0.94,-23.09,-15.35,0.95,-23.14,-15.22,0.96,-23.18,-15.08,0.97,-23.2,-14.94,0.99,-23.22,-14.79,1.0,-23.23,-14.65,1.02,-23.22,-14.51,1.03,-23.21,-14.37,1.05,-23.18,-14.39,1.2,-23.2,-14.26,1.22,-23.16,-14.13,1.23,-23.12,-14.01,1.25,-23.07,-13.89,1.27,-23.01,-13.78,1.29,-22.94,-13.67,1.31,-22.87,-13.57,1.33,-22.78,-13.47,1.35,-22.69,-13.38,1.37,-22.6,-13.3,1.39,-22.49,-13.28,1.24,-22.48,-13.21,1.26,-22.37,-13.14,1.28,-22.25,-13.08,1.3,-22.13,-13.02,1.32,-22.0,-12.98,1.33,-21.87,-12.95,1.35,-21.74,-12.93,1.37,-21.61,-12.91,1.38,-21.47,-17.14,1.61,-15.05,-16.65,-3.1,-14.56,-16.62,-3.09,-14.51,-16.59,-3.08,-14.46,-16.56,-3.07,-14.41,-16.52,-3.06,-14.37,-16.48,-3.05,-14.33,-16.44,-3.05,-14.29,-16.4,-3.04,-14.25,-16.35,-3.03,-14.22,-16.3,-3.02,-14.2,-16.25,-3.01,-14.17,-16.19,-3.0,-14.15,-16.14,-3.0,-14.13,-16.08,-2.99,-14.12,-16.03,-2.98,-14.11,-15.97,-2.98,-14.11,-15.91,-2.97,-14.11,-15.86,-2.97,-14.11,-15.8,-2.96,-14.12,-15.74,-2.96,-14.13,-15.69,-2.95,-14.15,-15.63,-2.95,-14.17,-15.58,-2.94,-14.19,-15.53,-2.94,-14.22,-15.48,-2.94,-14.25,-15.98,1.77,-14.75,-16.03,1.77,-14.72,-16.08,1.76,-14.69,-16.13,1.76,-14.66,-16.18,1.76,-14.64,-16.24,1.75,-14.63,-16.29,1.75,-14.62,-16.35,1.74,-14.61,-16.41,1.74,-14.6,-16.47,1.73,-14.6,-16.52,1.72,-14.61,-16.58,1.72,-14.62,-16.63,1.71,-14.63,-16.69,1.7,-14.65,-16.74,1.7,-14.67,-16.79,1.69,-14.69,-16.84,1.68,-14.72,-16.89,1.67,-14.75,-16.94,1.66,-14.78,-16.98,1.65,-14.82,-17.02,1.65,-14.86,-17.06,1.64,-14.91,-17.09,1.63,-14.95,-17.12,1.62,-15.0,-12.11,1.89,-17.47,-11.61,-2.82,-16.97,-11.35,-2.81,-17.17,-11.1,-2.81,-17.39,-10.86,-2.81,-17.63,-10.65,-2.81,-17.88,-10.44,-2.82,-18.14,-10.94,1.89,-18.64,-11.14,1.9,-18.37,-11.36,1.9,-18.12,-11.59,1.9,-17.89,-11.84,1.9,-17.67,-14.39,1.2,-23.2,-14.26,1.22,-23.16,-14.13,1.23,-23.12,-14.01,1.25,-23.07,-13.89,1.27,-23.01,-13.78,1.29,-22.94,-13.67,1.31,-22.87,-13.57,1.33,-22.78,-13.47,1.35,-22.69,-13.38,1.37,-22.6,-13.3,1.39,-22.49,-16.7,1.13,-21.57,-16.68,1.12,-21.7,-16.65,1.1,-21.83,-16.61,1.1,-21.95,-16.56,1.09,-22.08,-16.5,1.08,-22.2,-16.44,1.08,-22.32,-16.37,1.07,-22.43,-16.28,1.07,-22.53,-16.2,1.07,-22.63,-16.1,1.07,-22.73,-9.74,3.73,-3.73,-10.73,3.64,-3.64,-9.5,3.73,-3.97,-17.94,-24.88,-19.33,-18.4,-24.88,-18.79,-19.37,-24.88,-18.44,-19.37,-24.88,-13.82,-16.19,-24.88,-3.75,-12.44,-24.88,0.0,-12.44,-24.88,124.91,12.33,-24.88,124.91,12.33,-24.88,-5.1,-6.11,-24.88,-21.34,-12.9,-24.88,-24.48,-17.86,-24.88,-24.88,-18.36,-24.88,-24.39,-18.36,-4.31,-24.39,-17.86,-4.31,-24.88,-17.94,-3.73,-19.33,-18.4,-3.72,-18.79,-18.57,-3.74,-18.73,-16.65,-3.1,-14.56,-16.62,-3.09,-14.51,-16.59,-3.08,-14.46,-16.56,-3.07,-14.41,-16.52,-3.06,-14.37,-16.48,-3.05,-14.33,-16.44,-3.05,-14.29,-16.4,-3.04,-14.25,-16.35,-3.03,-14.22,-16.3,-3.02,-14.2,-16.25,-3.01,-14.17,-16.19,-3.0,-14.15,-16.14,-3.0,-14.13,-16.08,-2.99,-14.12,-16.03,-2.98,-14.11,-15.97,-2.98,-14.11,-15.91,-2.97,-14.11,-15.86,-2.97,-14.11,-15.8,-2.96,-14.12,-15.74,-2.96,-14.13,-15.69,-2.95,-14.15,-15.63,-2.95,-14.17,-15.58,-2.94,-14.19,-15.53,-2.94,-14.22,-15.48,-2.94,-14.25,-11.61,-2.82,-16.97,-11.35,-2.81,-17.17,-11.1,-2.81,-17.39,-10.86,-2.81,-17.63,-10.65,-2.81,-17.88,-10.44,-2.82,-18.14,-7.73,-2.94,-22.01,-7.71,-2.94,-22.03,-7.7,-2.94,-22.05,-7.69,-2.94,-22.07,-12.9,-3.74,-24.48,-12.42,-3.31,-20.84,-12.42,-3.3,-20.7,-12.44,-3.28,-20.56,-12.47,-3.27,-20.42,-12.51,-3.26,-20.28,-12.55,-3.25,-20.15,-12.61,-3.24,-20.02,-12.68,-3.24,-19.89,-12.76,-3.23,-19.77,-12.84,-3.23,-19.66,-12.94,-3.23,-19.55,-13.04,-3.23,-19.45,-13.14,-3.23,-19.36,-13.26,-3.23,-19.27,-13.38,-3.24,-19.2,-13.51,-3.25,-19.13,-13.64,-3.25,-19.07,-13.77,-3.26,-19.03,-13.91,-3.27,-18.99,-14.05,-3.29,-18.96,-14.19,-3.3,-18.95,-14.33,-3.31,-18.94,-14.47,-3.33,-18.95,-14.61,-3.34,-18.96,-14.75,-3.36,-18.99,-14.89,-3.38,-19.03,-15.02,-3.4,-19.07,-15.15,-3.42,-19.13,-15.27,-3.44,-19.2,-15.39,-3.46,-19.27,-15.51,-3.48,-19.36,-15.61,-3.5,-19.45,-15.71,-3.52,-19.55,-15.8,-3.54,-19.66,-15.89,-3.56,-19.77,-15.96,-3.58,-19.89,-16.03,-3.6,-20.02,-16.08,-3.62,-20.15,-16.13,-3.64,-20.28,-16.16,-3.66,-20.42,-16.19,-3.68,-20.56,-16.2,-3.69,-20.7,-16.2,-3.71,-20.84,-16.2,-3.72,-20.98,-16.18,-3.74,-21.12,-16.15,-3.75,-21.26,-16.11,-3.76,-21.4,-16.07,-3.77,-21.53,-16.01,-3.77,-21.66,-15.94,-3.78,-21.78,-15.86,-3.79,-21.9,-15.78,-3.79,-22.02,-15.68,-3.79,-22.13,-15.58,-3.79,-22.23,-15.47,-3.79,-22.32,-15.36,-3.78,-22.4,-15.24,-3.78,-22.48,-15.11,-3.77,-22.54,-14.98,-3.77,-22.6,-14.85,-3.76,-22.65,-14.71,-3.75,-22.68,-14.57,-3.73,-22.71,-14.43,-3.72,-22.73,-14.29,-3.71,-22.73,-14.15,-3.69,-22.73,-14.01,-3.67,-22.71,-13.87,-3.66,-22.68,-13.73,-3.64,-22.65,-13.6,-3.62,-22.6,-13.47,-3.6,-22.54,-13.34,-3.58,-22.48,-13.23,-3.56,-22.4,-13.11,-3.54,-22.32,-13.01,-3.52,-22.23,-12.91,-3.5,-22.13,-12.82,-3.48,-22.02,-12.73,-3.46,-21.9,-12.66,-3.44,-21.78,-12.59,-3.42,-21.66,-12.54,-3.4,-21.53,-12.49,-3.38,-21.4,-12.46,-3.36,-21.26,-12.43,-3.34,-21.12,-12.42,-3.33,-20.98,-12.9,-24.88,-24.48,-12.9,-3.74,-24.48,-17.86,-4.31,-24.88,-17.86,-24.88,-24.88,-6.11,-24.88,-21.34,-6.11,2.26,-21.34,-8.34,1.92,-22.37,-7.87,-1.58,-22.15,-7.69,-2.94,-22.07,-7.73,-2.6,-22.09,-7.78,-2.26,-22.11,-7.82,-1.92,-22.13,-12.9,-3.74,-24.48,-12.9,-24.88,-24.48,12.33,-24.88,124.91,12.33,-24.88,-5.1,12.44,0.0,124.91,12.44,0.0,0.0,12.45,3.73,-3.73,12.45,3.73,-4.99,-12.44,0.0,124.91,12.44,0.0,124.91,12.33,-24.88,124.91,-12.44,-24.88,124.91,12.44,0.0,124.91,12.44,0.0,0.0,-12.44,0.0,124.91,-12.44,0.0,0.0,-9.74,3.73,-3.73,12.45,3.73,-3.73,12.44,0.0,0.0,-12.44,0.0,0.0,-15.49,3.05,-3.05,-11.28,3.45,-3.45,-10.73,3.64,-3.64,-12.44,0.0,0.0,-12.44,0.0,124.91,-12.44,-24.88,124.91,-12.44,-24.88,0.0,-7.73,-2.94,-22.01,-7.71,-2.94,-22.03,-7.7,-2.94,-22.05,-7.69,-2.94,-22.07,-7.73,-2.6,-22.09,-7.78,-2.26,-22.11,-7.82,-1.92,-22.13,-7.87,-1.58,-22.15,-6.11,2.26,-21.34,1.32,3.73,-14.79,12.45,3.73,-4.99,12.33,-24.88,-5.1,-6.11,-24.88,-21.34,-17.94,-24.88,-19.33,-18.4,-24.88,-18.79,-18.4,-3.72,-18.79,-17.94,-3.73,-19.33,-19.37,1.17,-18.44,-19.37,-24.88,-18.44,-18.81,1.21,-18.64,-18.57,-3.74,-18.73,-18.4,-3.72,-18.79,-18.4,-24.88,-18.79,-18.36,-24.88,-24.39,-18.36,-4.31,-24.39,-17.94,-24.88,-19.33,-17.94,-3.73,-19.33,-19.37,1.17,-18.44,-19.37,-24.88,-18.44,-19.37,1.66,-13.82,-19.37,-24.88,-13.82,-16.19,3.05,-3.75,-16.19,-24.88,-3.75,-19.37,-24.88,-13.82,-19.37,1.66,-13.82,-17.86,-24.88,-24.88,-17.86,-4.31,-24.88,-18.36,-4.31,-24.39,-18.36,-24.88,-24.39,-17.96,1.11,-19.07,-18.01,1.33,-16.92,-18.03,1.75,-19.14,-18.2,2.53,-11.5,-18.15,2.04,-11.45,-18.02,1.47,-16.94,-4.81,3.88,-5.86,-5.09,3.73,-6.94,-5.1,4.4,-6.79,-5.09,4.41,-6.75,-5.08,4.41,-6.71,-5.07,4.41,-6.68,-5.06,4.4,-6.64,-5.05,4.4,-6.6,-5.04,4.39,-6.56,-5.03,4.38,-6.52,-5.02,4.36,-6.48,-5.0,4.35,-6.44,-4.99,4.33,-6.4,-4.98,4.31,-6.36,-4.96,4.28,-6.31,-4.94,4.24,-6.25,-4.92,4.19,-6.19,-4.9,4.14,-6.12,-4.88,4.09,-6.06,-4.85,4.0,-5.98,-4.83,3.94,-5.92,-7.14,3.38,-14.53,-7.08,2.88,-14.47,-5.4,3.73,-8.07,-7.57,3.73,-4.46,-9.5,3.73,-3.97,-5.88,3.86,-4.92,-6.92,5.74,-5.15,-13.98,5.2,-3.23,-14.48,3.2,-2.57,-11.28,3.45,-3.45,-10.73,3.64,-3.64,-18.2,2.53,-11.5,-16.17,3.56,-3.77,-15.87,3.03,-2.84,-15.91,3.15,-2.95,-15.95,3.26,-3.06,-15.98,3.34,-3.16,-16.01,3.41,-3.25,-16.04,3.46,-3.33,-16.06,3.49,-3.4,-16.08,3.52,-3.46,-16.1,3.54,-3.52,-16.11,3.55,-3.56,-16.12,3.56,-3.61,-16.13,3.56,-3.65,-16.15,3.56,-3.69,-16.16,3.56,-3.73,-16.08,2.92,-3.65,-16.1,3.07,-3.66,-18.15,2.04,-11.45,-11.03,2.28,-21.05,-7.14,3.38,-14.53,-10.96,1.64,-20.98,-10.2,1.86,-19.69,-10.21,2.0,-19.71,-7.08,2.88,-14.47,-4.81,3.88,-5.86,-4.85,3.88,-5.77,-4.89,3.89,-5.69,-4.94,3.89,-5.6,-4.99,3.89,-5.52,-5.06,3.89,-5.45,-5.12,3.89,-5.37,-5.19,3.89,-5.3,-5.27,3.89,-5.24,-5.35,3.89,-5.18,-5.43,3.89,-5.12,-5.52,3.88,-5.07,-5.61,3.88,-5.02,-5.7,3.87,-4.98,-5.79,3.87,-4.95,-5.88,3.86,-4.92,-5.09,3.73,-6.94,-7.57,3.73,-4.46,-16.08,2.92,-3.65,-15.87,3.03,-2.84,-14.48,3.2,-2.57,-14.6,3.19,-2.55,-14.71,3.18,-2.53,-14.83,3.17,-2.52,-14.94,3.16,-2.51,-15.06,3.15,-2.52,-15.17,3.14,-2.53,-15.28,3.12,-2.56,-15.39,3.11,-2.59,-15.5,3.09,-2.62,-15.59,3.08,-2.66,-15.67,3.07,-2.7,-15.75,3.05,-2.75,-15.81,3.04,-2.79,-11.28,3.45,-3.45,-15.49,3.05,-3.05,-14.37,1.05,-23.18,-14.69,0.99,-23.39,-15.91,0.9,-23.06,-16.09,0.92,-22.71,-15.98,0.92,-22.81,-15.86,0.92,-22.89,-15.74,0.93,-22.97,-15.62,0.93,-23.03,-15.49,0.94,-23.09,-15.35,0.95,-23.14,-15.22,0.96,-23.18,-15.08,0.97,-23.2,-14.94,0.99,-23.22,-14.79,1.0,-23.23,-14.65,1.02,-23.22,-14.51,1.03,-23.21,-11.33,7.95,-13.45,-11.98,7.77,-14.53,-14.7,7.56,-13.79,-14.73,7.69,-12.52,-13.52,8.31,-7.9,-10.12,8.57,-8.83,-14.79,2.67,-23.04,-15.18,2.28,-23.43,-14.41,3.02,-22.67,-14.04,3.32,-22.34,-13.7,3.54,-22.05,-13.41,3.7,-21.82,-13.18,3.8,-21.64,-13.0,3.87,-21.51,-12.84,3.91,-21.4,-12.7,3.93,-21.31,-12.58,3.95,-21.24,-12.47,3.95,-21.18,-12.38,3.94,-21.12,-12.29,3.93,-21.08,-12.21,3.91,-21.04,-12.14,3.89,-21.01,-12.08,3.87,-20.98,-12.01,3.84,-20.96,-11.95,3.81,-20.93,-11.89,3.77,-20.92,-11.85,3.74,-20.9,-11.8,3.71,-20.89,-11.75,3.67,-20.88,-11.71,3.63,-20.87,-11.67,3.58,-20.87,-11.63,3.54,-20.86,-11.59,3.49,-20.86,-11.55,3.44,-20.86,-11.51,3.38,-20.86,-11.48,3.33,-20.87,-11.44,3.27,-20.87,-11.41,3.2,-20.88,-11.38,3.14,-20.89,-11.35,3.07,-20.9,-11.03,2.28,-21.05,-14.76,1.64,-23.46,-17.79,2.58,-19.14,-18.03,1.75,-19.14,-17.75,2.7,-19.15,-17.72,2.81,-19.16,-17.68,2.9,-19.18,-17.65,2.98,-19.2,-17.62,3.06,-19.22,-17.58,3.12,-19.25,-17.55,3.17,-19.27,-17.52,3.22,-19.3,-17.49,3.27,-19.34,-17.46,3.32,-19.37,-17.43,3.36,-19.41,-17.4,3.4,-19.45,-17.36,3.43,-19.5,-17.33,3.47,-19.54,-17.29,3.49,-19.59,-17.26,3.52,-19.65,-17.22,3.54,-19.7,-17.19,3.56,-19.76,-17.15,3.58,-19.82,-17.11,3.59,-19.89,-17.07,3.6,-19.96,-17.04,3.61,-20.03,-17.0,3.61,-20.1,-16.94,3.61,-20.2,-16.88,3.6,-20.32,-16.82,3.58,-20.44,-16.76,3.56,-20.57,-16.7,3.53,-20.71,-16.61,3.48,-20.9,-16.51,3.4,-21.12,-16.42,3.31,-21.36,-16.28,3.17,-21.69,-16.13,2.97,-22.08,-16.01,2.79,-22.4,-15.89,2.59,-22.74,-15.69,2.24,-23.29,-15.98,1.54,-23.12,-13.3,1.39,-22.49,-14.39,1.2,-23.2,-13.28,1.24,-22.48,-10.96,1.64,-20.98,-11.03,2.28,-21.05,-14.76,1.64,-23.46,-14.69,0.99,-23.39,-14.37,1.05,-23.18,-15.98,1.54,-23.12,-15.91,0.9,-23.06,-14.69,0.99,-23.39,-14.76,1.64,-23.46,-15.18,2.28,-23.43,-15.69,2.24,-23.29,-16.17,3.56,-3.77,-15.41,6.54,-4.74,-17.31,5.58,-11.97,-18.2,2.53,-11.5,-16.1,1.07,-22.73,-16.7,1.13,-21.57,-16.09,0.92,-22.71,-15.91,0.9,-23.06,-15.98,1.54,-23.12,-18.03,1.75,-19.14,-17.96,1.11,-19.07,-16.68,0.98,-21.55,-16.68,0.98,-21.55,-17.96,1.11,-19.07,-18.01,1.33,-16.92,-17.14,1.61,-15.05,-15.98,1.77,-14.75,-16.03,1.77,-14.72,-16.08,1.76,-14.69,-16.13,1.76,-14.66,-16.18,1.76,-14.64,-16.24,1.75,-14.63,-16.29,1.75,-14.62,-16.35,1.74,-14.61,-16.41,1.74,-14.6,-16.47,1.73,-14.6,-16.52,1.72,-14.61,-16.58,1.72,-14.62,-16.63,1.71,-14.63,-16.69,1.7,-14.65,-16.74,1.7,-14.67,-16.79,1.69,-14.69,-16.84,1.68,-14.72,-16.89,1.67,-14.75,-16.94,1.66,-14.78,-16.98,1.65,-14.82,-17.02,1.65,-14.86,-17.06,1.64,-14.91,-17.09,1.63,-14.95,-17.12,1.62,-15.0,-12.11,1.89,-17.47,-10.94,1.89,-18.64,-11.14,1.9,-18.37,-11.36,1.9,-18.12,-11.59,1.9,-17.89,-11.84,1.9,-17.67,-10.2,1.86,-19.69,-10.96,1.64,-20.98,-13.28,1.24,-22.48,-13.21,1.26,-22.37,-13.14,1.28,-22.25,-13.08,1.3,-22.13,-13.02,1.32,-22.0,-12.98,1.33,-21.87,-12.95,1.35,-21.74,-12.93,1.37,-21.61,-12.91,1.38,-21.47,-12.91,1.4,-21.33,-12.92,1.41,-21.19,-12.93,1.42,-21.05,-12.96,1.44,-20.92,-13.0,1.45,-20.78,-13.05,1.46,-20.65,-13.1,1.46,-20.52,-13.17,1.47,-20.39,-13.24,1.47,-20.28,-13.33,1.48,-20.16,-13.42,1.48,-20.05,-13.52,1.48,-19.95,-13.63,1.48,-19.86,-13.74,1.47,-19.78,-13.86,1.47,-19.7,-13.98,1.46,-19.64,-14.11,1.46,-19.58,-14.24,1.45,-19.53,-14.38,1.44,-19.49,-14.51,1.43,-19.46,-14.65,1.41,-19.45,-14.79,1.4,-19.44,-14.93,1.38,-19.44,-15.07,1.37,-19.45,-15.21,1.35,-19.48,-15.35,1.33,-19.51,-15.48,1.31,-19.56,-15.61,1.3,-19.61,-15.73,1.28,-19.67,-15.85,1.26,-19.74,-15.97,1.24,-19.82,-16.07,1.21,-19.91,-16.18,1.19,-20.01,-16.27,1.17,-20.11,-16.35,1.15,-20.22,-16.43,1.13,-20.34,-16.5,1.11,-20.46,-16.56,1.09,-20.59,-16.6,1.07,-20.72,-16.64,1.06,-20.85,-16.67,1.04,-20.99,-16.69,1.02,-21.13,-16.7,1.01,-21.27,-16.7,0.99,-21.41,-18.2,2.53,-11.5,-17.31,5.58,-11.97,-18.03,1.75,-19.14,-17.79,2.58,-19.14,-17.22,5.2,-15.71,-8.56,6.25,-14.36,-7.14,3.38,-14.53,-6.66,7.21,-7.13,-5.1,4.4,-6.79,-11.03,2.28,-21.05,-7.14,3.38,-14.53,-8.56,6.25,-14.36,-10.47,5.72,-17.55,-11.35,3.07,-20.9,-15.69,2.24,-23.29,-15.89,2.59,-22.74,-15.18,2.28,-23.43,-14.79,2.67,-23.04,-13.79,5.66,-19.25,-15.25,5.55,-18.85,-13.52,8.31,-7.9,-10.12,8.57,-8.83,-13.73,8.31,-7.45,-13.94,8.29,-7.01,-14.13,8.23,-6.6,-14.29,8.16,-6.24,-14.44,8.06,-5.89,-14.58,7.94,-5.54,-14.7,7.8,-5.23,-14.8,7.66,-4.95,-14.89,7.51,-4.7,-14.96,7.35,-4.46,-14.9,7.2,-4.29,-14.83,7.05,-4.14,-14.76,6.89,-3.99,-14.68,6.73,-3.86,-14.59,6.55,-3.74,-14.51,6.37,-3.63,-14.42,6.19,-3.53,-14.33,6.0,-3.45,-14.24,5.8,-3.38,-14.15,5.6,-3.31,-14.06,5.4,-3.26,-13.98,5.2,-3.23,-6.92,5.74,-5.15,-6.89,6.02,-5.25,-6.87,6.3,-5.36,-6.85,6.57,-5.49,-6.84,6.84,-5.64,-6.85,7.06,-5.79,-6.86,7.26,-5.94,-6.88,7.45,-6.1,-6.91,7.62,-6.26,-6.95,7.79,-6.44,-6.98,7.87,-6.53,-7.01,7.95,-6.63,-7.26,8.12,-6.82,-7.51,8.26,-7.01,-7.77,8.37,-7.21,-8.05,8.47,-7.4,-8.32,8.54,-7.6,-8.6,8.59,-7.79,-8.89,8.63,-7.99,-9.17,8.64,-8.19,-9.46,8.64,-8.38,-9.75,8.62,-8.58,-9.93,8.6,-8.7,-6.66,7.21,-7.13,-5.1,4.4,-6.79,-6.74,7.45,-6.98,-6.85,7.67,-6.83,-6.92,7.82,-6.73,-7.01,7.95,-6.63,-6.92,5.74,-5.15,-6.89,6.02,-5.25,-6.87,6.3,-5.36,-6.85,6.57,-5.49,-6.84,6.84,-5.64,-6.85,7.06,-5.79,-6.86,7.26,-5.94,-6.88,7.45,-6.1,-6.91,7.62,-6.26,-6.95,7.79,-6.44,-6.98,7.87,-6.53,-5.88,3.86,-4.92,-4.81,3.88,-5.86,-4.85,3.88,-5.77,-4.89,3.89,-5.69,-4.94,3.89,-5.6,-4.99,3.89,-5.52,-5.06,3.89,-5.45,-5.12,3.89,-5.37,-5.19,3.89,-5.3,-5.27,3.89,-5.24,-5.35,3.89,-5.18,-5.43,3.89,-5.12,-5.52,3.88,-5.07,-5.61,3.88,-5.02,-5.7,3.87,-4.98,-5.79,3.87,-4.95,-5.09,4.41,-6.75,-5.08,4.41,-6.71,-5.07,4.41,-6.68,-5.06,4.4,-6.64,-5.05,4.4,-6.6,-5.04,4.39,-6.56,-5.03,4.38,-6.52,-5.02,4.36,-6.48,-5.0,4.35,-6.44,-4.99,4.33,-6.4,-4.98,4.31,-6.36,-4.96,4.28,-6.31,-4.94,4.24,-6.25,-4.92,4.19,-6.19,-4.9,4.14,-6.12,-4.88,4.09,-6.06,-4.85,4.0,-5.98,-4.83,3.94,-5.92,-6.66,7.21,-7.13,-6.74,7.45,-6.98,-6.85,7.67,-6.83,-6.92,7.82,-6.73,-7.01,7.95,-6.63,-8.56,6.25,-14.36,-11.33,7.95,-13.45,-11.17,7.96,-13.51,-11.01,7.95,-13.58,-10.85,7.94,-13.65,-10.69,7.91,-13.71,-10.53,7.88,-13.77,-10.37,7.83,-13.83,-10.21,7.78,-13.89,-10.06,7.72,-13.95,-9.91,7.64,-14.0,-9.76,7.56,-14.05,-9.62,7.47,-14.09,-9.48,7.38,-14.14,-9.35,7.27,-14.18,-9.22,7.16,-14.21,-9.1,7.04,-14.25,-8.99,6.91,-14.27,-8.88,6.77,-14.3,-8.78,6.63,-14.32,-8.69,6.49,-14.34,-8.62,6.37,-14.35,-10.12,8.57,-8.83,-7.26,8.12,-6.82,-7.51,8.26,-7.01,-7.77,8.37,-7.21,-8.05,8.47,-7.4,-8.32,8.54,-7.6,-8.6,8.59,-7.79,-8.89,8.63,-7.99,-9.17,8.64,-8.19,-9.46,8.64,-8.38,-9.75,8.62,-8.58,-9.93,8.6,-8.7,-11.96,7.03,-17.51,-11.8,6.95,-17.54,-11.65,6.87,-17.57,-11.5,6.77,-17.59,-11.36,6.67,-17.6,-11.22,6.56,-17.61,-11.09,6.44,-17.62,-10.96,6.32,-17.62,-10.83,6.19,-17.61,-10.72,6.05,-17.6,-10.61,5.91,-17.58,-10.54,5.81,-17.57,-10.47,5.72,-17.55,-11.96,7.26,-16.91,-11.96,7.44,-16.29,-11.97,7.6,-15.65,-11.98,7.7,-15.1,-11.98,7.77,-14.53,-11.33,7.95,-13.45,-11.17,7.96,-13.51,-11.01,7.95,-13.58,-10.85,7.94,-13.65,-10.69,7.91,-13.71,-10.53,7.88,-13.77,-10.37,7.83,-13.83,-10.21,7.78,-13.89,-10.06,7.72,-13.95,-9.91,7.64,-14.0,-9.76,7.56,-14.05,-9.62,7.47,-14.09,-9.48,7.38,-14.14,-9.35,7.27,-14.18,-9.22,7.16,-14.21,-9.1,7.04,-14.25,-8.99,6.91,-14.27,-8.88,6.77,-14.3,-8.78,6.63,-14.32,-8.69,6.49,-14.34,-8.62,6.37,-14.35,-8.56,6.25,-14.36,-13.79,5.66,-19.25,-14.79,2.67,-23.04,-13.36,6.03,-18.87,-12.93,6.37,-18.48,-12.51,6.68,-18.07,-12.23,6.86,-17.79,-11.96,7.03,-17.51,-11.8,6.95,-17.54,-11.65,6.87,-17.57,-11.5,6.77,-17.59,-11.36,6.67,-17.6,-11.22,6.56,-17.61,-11.09,6.44,-17.62,-10.96,6.32,-17.62,-10.83,6.19,-17.61,-10.72,6.05,-17.6,-10.61,5.91,-17.58,-10.54,5.81,-17.57,-10.47,5.72,-17.55,-11.35,3.07,-20.9,-14.41,3.02,-22.67,-14.04,3.32,-22.34,-13.7,3.54,-22.05,-13.41,3.7,-21.82,-13.18,3.8,-21.64,-13.0,3.87,-21.51,-12.84,3.91,-21.4,-12.7,3.93,-21.31,-12.58,3.95,-21.24,-12.47,3.95,-21.18,-12.38,3.94,-21.12,-12.29,3.93,-21.08,-12.21,3.91,-21.04,-12.14,3.89,-21.01,-12.08,3.87,-20.98,-12.01,3.84,-20.96,-11.95,3.81,-20.93,-11.89,3.77,-20.92,-11.85,3.74,-20.9,-11.8,3.71,-20.89,-11.75,3.67,-20.88,-11.71,3.63,-20.87,-11.67,3.58,-20.87,-11.63,3.54,-20.86,-11.59,3.49,-20.86,-11.55,3.44,-20.86,-11.51,3.38,-20.86,-11.48,3.33,-20.87,-11.44,3.27,-20.87,-11.41,3.2,-20.88,-11.38,3.14,-20.89,-14.96,7.35,-4.46,-14.9,7.2,-4.29,-14.83,7.05,-4.14,-14.76,6.89,-3.99,-14.68,6.73,-3.86,-14.59,6.55,-3.74,-14.51,6.37,-3.63,-14.42,6.19,-3.53,-14.33,6.0,-3.45,-14.24,5.8,-3.38,-14.15,5.6,-3.31,-14.06,5.4,-3.26,-13.98,5.2,-3.23,-15.1,7.14,-4.53,-15.23,6.92,-4.6,-15.33,6.73,-4.67,-15.41,6.54,-4.74,-16.17,3.56,-3.77,-15.87,3.03,-2.84,-15.91,3.15,-2.95,-15.95,3.26,-3.06,-15.98,3.34,-3.16,-16.01,3.41,-3.25,-16.04,3.46,-3.33,-16.06,3.49,-3.4,-16.08,3.52,-3.46,-16.1,3.54,-3.52,-16.11,3.55,-3.56,-16.12,3.56,-3.61,-16.13,3.56,-3.65,-16.15,3.56,-3.69,-16.16,3.56,-3.73,-14.48,3.2,-2.57,-14.6,3.19,-2.55,-14.71,3.18,-2.53,-14.83,3.17,-2.52,-14.94,3.16,-2.51,-15.06,3.15,-2.52,-15.17,3.14,-2.53,-15.28,3.12,-2.56,-15.39,3.11,-2.59,-15.5,3.09,-2.62,-15.59,3.08,-2.66,-15.67,3.07,-2.7,-15.75,3.05,-2.75,-15.81,3.04,-2.79,-13.52,8.31,-7.9,-13.73,8.31,-7.45,-13.94,8.29,-7.01,-14.13,8.23,-6.6,-14.29,8.16,-6.24,-14.44,8.06,-5.89,-14.58,7.94,-5.54,-14.7,7.8,-5.23,-14.8,7.66,-4.95,-14.89,7.51,-4.7,-14.96,7.35,-4.46,-14.73,7.69,-12.52,-17.31,5.58,-11.97,-17.26,5.75,-11.99,-17.2,5.91,-12.02,-17.13,6.06,-12.05,-17.04,6.21,-12.07,-16.96,6.36,-12.1,-16.86,6.5,-12.13,-16.75,6.63,-12.16,-16.64,6.76,-12.18,-16.52,6.88,-12.21,-16.39,7.0,-12.24,-16.26,7.1,-12.27,-16.12,7.2,-12.3,-15.97,7.29,-12.33,-15.82,7.38,-12.35,-15.67,7.45,-12.38,-15.51,7.52,-12.41,-15.35,7.57,-12.43,-15.18,7.62,-12.46,-15.01,7.65,-12.48,-14.87,7.68,-12.5,-15.41,6.54,-4.74,-15.1,7.14,-4.53,-15.23,6.92,-4.6,-15.33,6.73,-4.67,-14.7,7.56,-13.79,-14.73,7.69,-12.52,-15.0,7.46,-14.31,-15.29,7.33,-14.83,-15.57,7.16,-15.33,-15.84,6.97,-15.82,-15.98,6.85,-16.1,-16.12,6.72,-16.37,-17.22,5.2,-15.71,-17.15,5.41,-15.8,-17.06,5.61,-15.88,-16.96,5.8,-15.96,-16.84,5.99,-16.04,-16.71,6.17,-16.12,-16.56,6.34,-16.2,-16.4,6.49,-16.27,-16.26,6.61,-16.32,-17.31,5.58,-11.97,-17.26,5.75,-11.99,-17.2,5.91,-12.02,-17.13,6.06,-12.05,-17.04,6.21,-12.07,-16.96,6.36,-12.1,-16.86,6.5,-12.13,-16.75,6.63,-12.16,-16.64,6.76,-12.18,-16.52,6.88,-12.21,-16.39,7.0,-12.24,-16.26,7.1,-12.27,-16.12,7.2,-12.3,-15.97,7.29,-12.33,-15.82,7.38,-12.35,-15.67,7.45,-12.38,-15.51,7.52,-12.41,-15.35,7.57,-12.43,-15.18,7.62,-12.46,-15.01,7.65,-12.48,-14.87,7.68,-12.5,-17.22,5.2,-15.71,-17.15,5.41,-15.8,-17.06,5.61,-15.88,-16.96,5.8,-15.96,-16.84,5.99,-16.04,-16.71,6.17,-16.12,-16.56,6.34,-16.2,-16.4,6.49,-16.27,-16.26,6.61,-16.32,-16.12,6.72,-16.37,-15.93,6.47,-17.02,-15.72,6.2,-17.64,-15.49,5.89,-18.26,-15.25,5.55,-18.85,-15.89,2.59,-22.74,-17.79,2.58,-19.14,-17.75,2.7,-19.15,-17.72,2.81,-19.16,-17.68,2.9,-19.18,-17.65,2.98,-19.2,-17.62,3.06,-19.22,-17.58,3.12,-19.25,-17.55,3.17,-19.27,-17.52,3.22,-19.3,-17.49,3.27,-19.34,-17.46,3.32,-19.37,-17.43,3.36,-19.41,-17.4,3.4,-19.45,-17.36,3.43,-19.5,-17.33,3.47,-19.54,-17.29,3.49,-19.59,-17.26,3.52,-19.65,-17.22,3.54,-19.7,-17.19,3.56,-19.76,-17.15,3.58,-19.82,-17.11,3.59,-19.89,-17.07,3.6,-19.96,-17.04,3.61,-20.03,-17.0,3.61,-20.1,-16.94,3.61,-20.2,-16.88,3.6,-20.32,-16.82,3.58,-20.44,-16.76,3.56,-20.57,-16.7,3.53,-20.71,-16.61,3.48,-20.9,-16.51,3.4,-21.12,-16.42,3.31,-21.36,-16.28,3.17,-21.69,-16.13,2.97,-22.08,-16.01,2.79,-22.4,-14.7,7.56,-13.79,-15.0,7.46,-14.31,-15.29,7.33,-14.83,-15.57,7.16,-15.33,-15.84,6.97,-15.82,-15.98,6.85,-16.1,-16.12,6.72,-16.37,-11.98,7.77,-14.53,-11.96,7.03,-17.51,-11.96,7.26,-16.91,-11.96,7.44,-16.29,-11.97,7.6,-15.65,-11.98,7.7,-15.1,-13.79,5.66,-19.25,-13.36,6.03,-18.87,-12.93,6.37,-18.48,-12.51,6.68,-18.07,-12.23,6.86,-17.79,-15.25,5.55,-18.85,-15.93,6.47,-17.02,-15.72,6.2,-17.64,-15.49,5.89,-18.26],"i":[5,4,3,2,5,3,0,5,2,1,0,2,12,7,6,11,8,12,9,11,10,9,8,11,7,12,8,15,16,17,15,17,18,13,14,15,13,15,18,26,19,20,26,21,19,26,22,21,25,22,26,23,25,24,22,25,23,29,31,30,27,29,28,27,31,29,32,27,33,32,31,27,40,38,39,35,37,38,35,38,40,36,37,35,34,35,40,43,44,41,42,43,41,45,130,132,46,45,132,46,132,133,47,133,134,47,46,133,48,134,135,48,47,134,49,135,136,49,48,135,50,136,137,50,49,136,51,50,137,51,137,138,52,51,138,52,138,139,53,52,139,53,139,140,54,53,140,54,140,141,55,54,141,55,141,142,56,55,142,56,142,143,57,56,143,57,143,144,58,57,144,58,144,145,59,58,145,59,145,146,60,146,147,60,59,146,61,147,148,61,60,147,62,148,149,62,61,148,63,149,150,63,62,149,64,150,151,64,63,150,65,151,152,65,64,151,66,152,153,66,65,152,67,153,154,67,66,153,68,154,155,68,67,154,69,155,156,69,68,155,70,156,157,70,69,156,71,157,158,71,70,157,72,158,159,72,71,158,73,159,160,73,72,159,74,160,161,74,73,160,75,161,162,75,74,161,76,75,162,76,162,163,77,76,163,77,163,164,78,77,164,78,164,165,79,78,165,79,165,166,80,166,167,80,79,166,81,167,168,81,80,167,82,168,169,82,81,168,83,169,170,83,82,169,84,170,171,84,83,170,85,171,172,85,84,171,86,172,173,86,85,172,87,173,174,87,86,173,177,175,176,88,174,175,88,87,174,89,175,177,89,88,175,90,177,178,90,89,177,91,178,179,91,90,178,92,179,180,92,91,179,93,180,181,93,92,180,94,181,182,94,93,181,95,182,183,95,94,182,187,185,186,96,183,184,96,95,183,97,184,185,97,96,184,97,185,187,98,187,188,98,97,187,99,188,189,99,98,188,100,99,189,100,189,190,101,100,190,101,190,191,102,101,191,102,191,192,103,102,192,103,192,193,104,103,193,104,193,194,105,104,194,105,194,195,106,105,195,106,195,196,107,106,196,107,196,197,108,107,197,108,197,198,109,108,198,109,198,199,202,200,201,110,109,199,110,199,200,111,110,200,111,200,202,112,111,202,112,202,203,113,112,203,113,203,204,114,204,205,114,113,204,115,205,206,115,114,205,116,206,207,116,115,206,117,207,208,117,116,207,118,208,209,118,117,208,212,210,211,119,209,210,119,118,209,120,119,210,120,210,212,121,120,212,121,212,213,122,213,214,122,121,213,123,214,215,123,122,214,124,215,216,124,123,215,125,124,216,125,216,217,126,125,217,126,217,218,127,126,218,127,218,219,128,127,219,128,219,220,129,128,220,129,220,131,270,222,221,270,223,222,269,224,223,269,223,270,268,225,224,268,224,269,267,226,225,267,225,268,266,227,226,266,226,267,265,228,227,265,227,266,264,229,228,264,228,265,263,230,229,263,229,264,262,231,230,262,230,263,261,232,231,261,231,262,260,233,232,260,232,261,259,233,260,259,234,233,258,234,259,258,235,234,257,235,258,257,236,235,256,237,236,256,236,257,255,238,237,255,237,256,254,239,238,254,238,255,253,240,239,253,239,254,252,241,240,252,240,253,251,242,241,251,241,252,250,243,242,250,242,251,249,244,243,249,243,250,248,245,244,248,244,249,247,246,245,247,245,248,282,272,271,282,273,272,281,274,273,281,273,282,280,275,274,280,274,281,279,276,275,279,275,280,278,277,276,278,276,279,293,292,283,292,291,283,291,290,283,290,289,283,289,288,283,288,287,283,287,286,283,286,285,283,285,284,283,304,295,294,304,296,295,304,297,296,304,298,297,304,299,298,304,303,299,303,302,299,302,301,299,301,300,299,306,305,307,313,315,314,313,316,315,317,313,312,317,316,313,311,317,312,308,317,311,308,311,309,318,317,308,310,309,311,320,318,308,319,318,320,328,329,330,327,328,330,335,333,334,326,330,331,326,331,332,326,327,330,336,332,333,336,326,332,336,333,335,337,326,336,339,337,338,339,326,337,341,339,340,342,339,341,345,342,343,345,343,344,346,339,342,346,342,345,348,346,347,349,326,339,349,346,348,349,339,346,350,326,349,324,325,326,394,323,393,395,323,394,392,323,324,392,393,323,391,392,324,396,323,395,390,324,326,390,391,324,397,323,396,389,390,326,398,323,397,388,389,326,399,323,398,387,388,326,400,323,399,401,323,400,386,387,326,386,326,350,402,323,401,385,386,350,403,323,402,384,385,350,404,323,403,383,384,350,405,323,404,382,383,350,406,323,405,407,323,406,351,382,350,351,379,380,351,380,381,351,381,382,378,379,351,377,378,351,376,377,351,321,323,407,321,407,408,321,408,409,321,409,410,321,410,411,412,321,411,375,376,351,413,321,412,374,351,352,374,375,351,414,321,413,373,352,353,373,374,352,372,373,353,354,372,353,371,372,354,322,321,414,322,414,415,322,415,416,417,322,416,418,322,417,355,371,354,419,322,418,420,322,419,356,367,368,356,368,369,356,369,370,356,370,371,356,371,355,421,322,420,366,367,356,422,322,421,365,366,356,364,365,356,363,364,356,361,422,423,361,423,424,361,424,425,361,425,426,361,426,427,361,427,428,361,428,429,361,322,422,361,429,430,361,430,431,361,431,432,361,432,433,361,433,434,361,434,435,361,435,436,361,436,437,361,437,438,357,363,356,357,438,439,357,439,440,357,440,441,357,441,442,357,442,443,357,443,444,357,444,445,357,445,362,357,361,438,357,362,363,359,357,358,360,361,357,360,357,359,448,446,449,447,446,448,458,450,459,454,450,458,451,453,452,451,454,455,451,455,456,451,456,457,451,457,453,450,454,451,463,460,461,463,462,460,465,464,463,465,463,461,466,468,467,466,469,468,472,470,471,472,471,473,474,476,475,479,474,480,477,479,478,477,476,474,477,474,479,481,483,482,481,484,483,489,487,486,489,488,487,490,486,485,490,489,486,491,490,485,492,491,485,494,495,496,494,496,497,493,494,497,501,498,499,500,501,499,505,506,507,505,507,503,502,504,505,503,502,505,509,508,510,511,509,510,512,515,514,512,513,515,519,517,516,519,518,517,522,520,523,521,520,522,529,528,527,524,525,529,526,524,529,526,529,527,553,552,551,532,531,553,533,531,532,534,531,533,535,531,534,536,531,535,537,531,536,538,531,537,539,531,538,540,531,539,541,531,540,542,531,541,550,530,531,543,531,542,549,550,531,544,531,543,548,549,531,545,531,544,547,548,531,546,531,545,546,547,531,532,553,551,557,554,556,555,554,557,561,555,557,558,559,560,558,560,561,558,561,557,578,564,565,578,565,566,578,566,567,579,567,568,579,568,569,579,578,567,570,579,569,571,579,570,572,579,571,573,579,572,574,579,573,575,579,574,576,579,575,577,579,576,563,579,577,562,580,563,579,563,580,585,583,581,585,584,583,582,586,585,582,585,581,588,603,587,589,603,588,590,603,589,591,603,590,592,603,591,593,603,592,594,603,593,595,603,594,596,603,595,597,603,596,598,603,597,599,603,598,600,603,599,601,603,600,602,603,601,604,603,602,622,607,608,609,622,608,610,622,609,611,622,610,612,622,611,613,622,612,614,622,613,615,622,614,606,605,622,616,622,615,620,606,622,617,622,616,619,620,622,618,622,617,618,619,622,621,607,622,638,624,623,637,624,638,636,624,637,635,624,636,634,624,635,633,624,634,625,630,629,625,631,630,625,632,631,625,633,632,625,624,633,628,625,629,627,625,628,626,625,627,642,639,640,642,640,641,644,639,642,643,644,642,680,646,645,680,645,647,680,647,648,666,663,664,666,664,665,667,662,663,667,663,666,668,661,662,668,662,667,669,661,668,670,660,661,670,661,669,671,659,660,671,660,670,672,658,659,672,659,671,673,658,672,674,657,658,674,658,673,675,656,657,675,657,674,676,656,675,677,655,656,677,656,676,678,651,652,678,652,653,678,653,654,678,654,655,678,655,677,679,648,649,679,651,678,679,649,650,679,650,651,679,680,648,717,718,719,716,717,719,715,716,719,714,715,719,682,711,712,682,712,713,682,713,714,682,714,719,710,711,682,681,705,706,681,706,707,681,707,708,681,708,709,681,709,710,681,710,682,704,705,681,683,703,704,683,704,681,702,703,683,684,702,683,701,702,684,685,700,701,685,701,684,699,700,685,686,699,685,698,699,686,687,698,686,697,698,687,688,697,687,696,697,688,689,696,688,695,696,689,690,695,689,694,695,690,691,694,690,693,694,691,692,693,691,721,727,726,725,721,726,720,721,725,723,722,720,724,723,720,724,720,725,729,731,730,728,732,731,728,731,729,733,732,728,735,736,737,734,735,737,739,744,743,739,745,744,741,740,738,742,738,739,742,741,738,742,739,743,781,783,782,781,784,783,785,784,781,786,785,781,787,786,781,788,787,781,789,788,781,790,789,781,791,790,781,792,791,781,793,792,781,794,793,781,795,794,781,796,795,781,797,796,781,775,797,781,775,781,780,775,798,797,775,799,798,775,800,799,776,800,775,776,801,800,777,801,776,777,802,801,778,802,777,779,802,778,779,803,802,774,804,803,774,805,804,774,806,805,774,807,806,774,808,807,774,809,808,774,810,809,774,811,810,774,803,779,747,819,818,747,820,819,747,821,820,747,822,821,747,823,822,747,824,823,747,825,824,747,826,825,747,827,826,747,828,827,747,829,828,747,830,829,747,831,830,747,832,831,747,833,832,747,834,833,747,746,834,748,816,815,748,817,816,748,818,817,748,747,818,750,811,774,750,812,811,750,813,812,750,814,813,750,815,814,750,748,815,752,750,751,753,750,752,754,750,753,755,750,754,756,750,755,757,750,756,749,748,750,758,750,757,773,749,750,759,750,758,760,750,759,771,772,773,771,773,750,761,750,760,770,771,750,762,750,761,769,770,750,763,750,762,764,750,763,767,768,769,767,769,750,765,750,764,766,767,750,766,750,765,839,837,835,839,838,837,836,839,835,841,840,842,841,842,843,847,846,845,844,847,845,848,847,844,850,851,849,850,852,851,854,853,852,854,852,850,901,856,855,901,855,857,900,901,857,899,857,858,899,900,857,898,858,859,898,899,858,897,859,860,897,898,859,896,897,860,895,860,861,895,896,860,894,861,862,894,895,861,893,862,863,893,894,862,892,863,864,892,893,863,891,864,865,891,892,864,890,865,866,890,891,865,889,866,867,889,890,866,888,889,867,888,867,868,887,888,868,887,868,869,886,887,869,886,869,870,885,870,871,885,886,870,884,885,871,884,871,872,883,872,873,883,884,872,882,873,874,882,874,875,882,883,873,881,882,875,881,875,876,880,876,877,880,881,876,879,877,878,879,880,877,908,919,934,909,933,932,909,934,933,909,908,934,910,931,930,910,932,931,910,909,932,911,929,928,911,930,929,911,910,930,912,927,926,912,928,927,912,911,928,913,925,924,913,926,925,913,912,926,914,924,923,914,913,924,915,922,921,915,923,922,915,914,923,916,915,921,916,921,920,916,920,952,917,916,952,917,951,950,917,952,951,918,917,950,918,950,949,907,918,949,907,948,947,907,949,948,906,907,947,906,946,945,906,947,946,905,906,945,905,942,941,905,943,942,905,944,943,905,945,944,904,905,941,904,937,936,904,938,937,904,939,938,904,940,939,904,941,940,902,935,903,902,936,935,902,904,936,959,980,991,960,991,990,960,959,991,961,990,989,961,960,990,962,961,989,963,989,988,963,962,989,964,988,987,964,963,988,965,987,986,965,964,987,966,965,986,967,986,985,967,966,986,968,985,984,968,967,985,969,968,984,970,984,983,970,969,984,971,983,982,971,970,983,972,982,981,972,971,982,973,972,981,974,981,957,974,973,981,975,974,957,975,957,956,976,956,955,976,975,956,977,955,954,977,976,955,978,977,954,979,954,953,979,978,954,958,979,953,1011,1009,1010,1008,1011,1012,1008,1009,1011,1013,1008,1012,1007,1013,1014,1007,1008,1013,1015,1007,1014,1006,1015,1016,1006,1016,1017,1006,1007,1015,1005,1017,1018,1005,1006,1017,992,1018,1019,992,1019,1020,992,1005,1018,993,1020,1021,993,992,1020,994,1021,1022,994,993,1021,995,1022,1023,995,994,1022,996,1023,1024,996,995,1023,997,1024,1025,997,996,1024,998,1025,1026,998,997,1025,999,998,1026,999,1026,1027,1000,999,1027,1000,1027,1028,1001,1000,1028,1001,1028,1029,1002,1001,1029,1002,1029,1030,1003,1002,1030,1003,1030,1031,1004,1003,1031,1050,1051,1082,1049,1081,1080,1049,1082,1081,1049,1050,1082,1048,1079,1078,1048,1080,1079,1048,1049,1080,1047,1076,1075,1047,1077,1076,1047,1078,1077,1047,1048,1078,1046,1073,1072,1046,1074,1073,1046,1075,1074,1046,1047,1075,1045,1070,1069,1045,1071,1070,1045,1072,1071,1045,1046,1072,1044,1068,1067,1044,1069,1068,1044,1045,1069,1043,1065,1064,1043,1066,1065,1043,1067,1066,1043,1044,1067,1042,1063,1062,1042,1064,1063,1042,1043,1064,1041,1042,1062,1041,1061,1060,1041,1062,1061,1040,1041,1060,1040,1060,1059,1039,1059,1058,1039,1040,1059,1038,1057,1056,1038,1058,1057,1038,1039,1058,1037,1056,1055,1037,1038,1056,1036,1055,1054,1036,1037,1055,1035,1054,1053,1035,1036,1054,1034,1053,1052,1034,1035,1053,1032,1052,1033,1032,1034,1052,1099,1114,1113,1099,1100,1114,1098,1111,1110,1098,1112,1111,1098,1113,1112,1098,1099,1113,1097,1108,1107,1097,1109,1108,1097,1110,1109,1097,1098,1110,1096,1106,1105,1096,1107,1106,1096,1097,1107,1083,1104,1103,1083,1105,1104,1083,1096,1105,1084,1103,1102,1084,1083,1103,1085,1102,1101,1085,1101,1128,1085,1084,1102,1086,1127,1126,1086,1128,1127,1086,1085,1128,1087,1126,1125,1087,1086,1126,1088,1087,1125,1088,1124,1123,1088,1125,1124,1089,1088,1123,1089,1123,1122,1090,1089,1122,1090,1122,1121,1091,1090,1121,1091,1120,1119,1091,1121,1120,1092,1091,1119,1092,1119,1118,1093,1092,1118,1093,1118,1117,1094,1093,1117,1094,1117,1116,1095,1116,1115,1095,1094,1116,1129,1140,1161,1130,1160,1159,1130,1161,1160,1130,1129,1161,1131,1158,1157,1131,1159,1158,1131,1130,1159,1132,1156,1155,1132,1157,1156,1132,1131,1157,1133,1155,1154,1133,1132,1155,1134,1153,1152,1134,1154,1153,1134,1133,1154,1135,1152,1151,1135,1134,1152,1136,1150,1149,1136,1151,1150,1136,1135,1151,1137,1149,1148,1137,1136,1149,1138,1147,1146,1138,1148,1147,1138,1137,1148,1139,1146,1145,1139,1138,1146,1163,1145,1144,1163,1139,1145,1164,1163,1144,1164,1144,1143,1165,1164,1143,1165,1143,1142,1162,1142,1141,1162,1165,1142,1203,1167,1166,1203,1166,1168,1202,1203,1168,1201,1168,1169,1201,1202,1168,1200,1201,1169,1199,1169,1170,1199,1200,1169,1198,1199,1170,1197,1170,1171,1197,1198,1170,1196,1171,1172,1196,1197,1171,1195,1172,1173,1195,1196,1172,1194,1173,1182,1194,1195,1173,1193,1182,1181,1193,1194,1182,1192,1181,1180,1192,1193,1181,1191,1192,1180,1190,1180,1179,1190,1191,1180,1189,1179,1178,1189,1190,1179,1188,1178,1177,1188,1189,1178,1187,1188,1177,1186,1187,1177,1186,1177,1176,1185,1176,1175,1185,1186,1176,1184,1175,1174,1184,1185,1175,1183,1184,1174,1220,1204,1205,1220,1219,1204,1221,1220,1205,1222,1221,1205,1223,1205,1206,1223,1222,1205,1224,1223,1206,1225,1224,1206,1226,1206,1207,1226,1225,1206,1227,1226,1207,1228,1227,1207,1229,1207,1208,1229,1228,1207,1230,1229,1208,1231,1230,1208,1232,1231,1208,1233,1208,1209,1233,1232,1208,1234,1233,1209,1235,1234,1209,1236,1209,1210,1236,1235,1209,1237,1236,1210,1238,1237,1210,1239,1238,1210,1240,1210,1211,1240,1239,1210,1241,1240,1211,1242,1211,1212,1242,1241,1211,1243,1242,1212,1244,1212,1213,1244,1243,1212,1245,1244,1213,1246,1245,1213,1247,1213,1214,1247,1246,1213,1248,1247,1214,1249,1214,1215,1249,1248,1214,1250,1249,1215,1251,1215,1216,1251,1250,1215,1252,1251,1216,1253,1216,1217,1253,1252,1216,1218,1253,1217,1254,1261,1266,1255,1266,1265,1255,1254,1266,1256,1265,1264,1256,1255,1265,1257,1256,1264,1258,1264,1263,1258,1257,1264,1259,1263,1262,1259,1258,1263,1260,1262,1271,1260,1259,1262,1273,1271,1270,1273,1260,1271,1274,1270,1269,1274,1273,1270,1275,1269,1268,1275,1274,1269,1272,1268,1267,1272,1275,1268]},"insert":{"v":[-19.47,0.82,-20.27,-19.46,0.83,-20.19,-19.45,0.84,-20.11,-19.43,0.85,-20.03,-19.4,0.86,-19.95,-19.37,0.87,-19.87,-19.87,0.27,-25.11,-18.58,0.27,-26.4,-18.67,0.26,-26.4,-18.75,0.25,-26.4,-18.84,0.24,-26.39,-18.92,0.24,-26.38,-19.01,0.23,-26.36,-19.09,0.22,-26.33,-19.17,0.22,-26.3,-19.25,0.21,-26.26,-19.32,0.21,-26.21,-19.39,0.21,-26.17,-19.46,0.21,-26.11,-19.52,0.21,-26.05,-19.58,0.21,-25.99,-19.64,0.21,-25.92,-19.69,0.21,-25.85,-19.73,0.21,-25.78,-19.77,0.22,-25.7,-19.8,0.22,-25.62,-19.83,0.23,-25.54,-19.85,0.24,-25.45,-19.86,0.24,-25.37,-19.87,0.25,-25.28,-19.88,0.26,-25.2,-13.74,0.82,-26.0,-13.35,0.87,-25.9,-13.42,0.86,-25.93,-13.5,0.85,-25.96,-13.58,0.84,-25.98,-13.66,0.83,-25.99,-8.95,1.55,-23.87,-8.49,1.78,-22.12,-8.44,1.78,-22.19,-8.4,1.77,-22.27,-8.37,1.77,-22.34,-8.34,1.76,-22.43,-8.31,1.76,-22.51,-8.29,1.75,-22.59,-8.28,1.74,-22.68,-8.27,1.73,-22.76,-8.28,1.73,-22.85,-8.28,1.72,-22.94,-8.29,1.71,-23.02,-8.31,1.69,-23.1,-8.34,1.68,-23.19,-8.37,1.67,-23.27,-8.41,1.66,-23.34,-8.45,1.65,-23.42,-8.49,1.64,-23.49,-8.55,1.62,-23.56,-8.6,1.61,-23.62,-8.67,1.6,-23.68,-8.73,1.58,-23.74,-8.8,1.57,-23.78,-8.88,1.56,-23.83,-11.3,1.9,-18.12,-11.59,1.9,-17.83,-11.53,1.91,-17.88,-11.46,1.91,-17.93,-11.41,1.91,-17.99,-11.35,1.91,-18.06,-15.59,1.78,-15.02,-17.34,1.55,-15.48,-17.3,1.56,-15.4,-17.26,1.57,-15.33,-17.21,1.58,-15.26,-17.15,1.6,-15.19,-17.09,1.61,-15.13,-17.03,1.62,-15.08,-16.96,1.64,-15.02,-16.89,1.65,-14.98,-16.82,1.66,-14.93,-16.74,1.67,-14.9,-16.66,1.68,-14.87,-16.58,1.69,-14.84,-16.49,1.71,-14.82,-16.41,1.72,-14.81,-16.32,1.73,-14.8,-16.24,1.73,-14.8,-16.15,1.74,-14.81,-16.06,1.75,-14.82,-15.98,1.76,-14.84,-15.9,1.76,-14.86,-15.82,1.77,-14.89,-15.74,1.77,-14.93,-15.66,1.78,-14.97,-16.14,0.92,-22.66,-16.23,0.92,-22.56,-16.32,0.92,-22.45,-16.4,0.93,-22.33,-16.47,0.93,-22.21,-16.54,0.94,-22.08,-16.59,0.95,-21.95,-16.63,0.96,-21.81,-16.66,0.97,-21.67,-16.69,0.98,-21.53,-16.7,0.99,-21.39,-16.7,1.01,-21.25,-16.69,1.02,-21.11,-16.67,1.04,-20.97,-16.64,1.06,-20.83,-16.6,1.08,-20.7,-16.55,1.1,-20.57,-16.48,1.12,-20.44,-16.41,1.14,-20.32,-16.34,1.16,-20.2,-16.25,1.18,-20.09,-16.15,1.2,-19.99,-16.05,1.22,-19.89,-15.94,1.24,-19.8,-15.82,1.26,-19.72,-15.7,1.28,-19.65,-15.57,1.3,-19.59,-15.44,1.32,-19.54,-15.3,1.34,-19.5,-15.17,1.36,-19.47,-15.03,1.37,-19.45,-14.89,1.39,-19.44,-14.74,1.4,-19.44,-14.6,1.42,-19.45,-14.46,1.43,-19.47,-14.32,1.44,-19.51,-14.19,1.45,-19.55,-14.06,1.46,-19.6,-13.93,1.47,-19.66,-13.81,1.47,-19.73,-13.69,1.48,-19.81,-13.58,1.48,-19.9,-13.47,1.48,-20.0,-13.38,1.48,-20.1,-13.29,1.48,-20.22,-13.21,1.47,-20.33,-13.13,1.47,-20.46,-13.07,1.46,-20.58,-13.02,1.45,-20.72,-12.98,1.44,-20.85,-12.94,1.43,-20.99,-12.92,1.42,-21.13,-12.91,1.4,-21.27,-12.91,1.39,-21.41,-12.92,1.37,-21.55,-12.94,1.36,-21.69,-12.97,1.34,-21.83,-13.01,1.32,-21.97,-13.06,1.3,-22.1,-13.12,1.28,-22.23,-13.19,1.26,-22.35,-13.27,1.24,-22.47,-13.36,1.22,-22.58,-13.46,1.2,-22.68,-13.56,1.18,-22.78,-13.67,1.16,-22.86,-13.79,1.14,-22.94,-13.91,1.12,-23.01,-14.04,1.1,-23.07,-14.17,1.08,-23.12,-14.3,1.06,-23.17,-14.44,1.04,-23.2,-14.58,1.02,-23.22,-14.72,1.01,-23.23,-14.87,0.99,-23.23,-15.01,0.98,-23.21,-15.15,0.97,-23.19,-15.28,0.96,-23.16,-15.42,0.95,-23.12,-15.55,0.94,-23.06,-15.68,0.93,-23.0,-15.8,0.93,-22.93,-15.92,0.92,-22.85,-16.03,0.92,-22.76,-10.81,-2.81,-17.63,-10.86,-2.8,-17.56,-10.91,-2.8,-17.5,-10.97,-2.8,-17.44,-11.03,-2.8,-17.38,-11.1,-2.81,-17.33,-8.0,-2.93,-21.62,-8.46,-3.16,-23.37,-8.38,-3.15,-23.33,-8.31,-3.14,-23.29,-8.24,-3.13,-23.24,-8.17,-3.11,-23.19,-8.11,-3.1,-23.13,-8.05,-3.09,-23.06,-8.0,-3.08,-23.0,-7.95,-3.06,-22.92,-7.91,-3.05,-22.85,-7.87,-3.04,-22.77,-7.84,-3.03,-22.69,-7.82,-3.02,-22.61,-7.8,-3.01,-22.53,-7.79,-2.99,-22.44,-7.78,-2.99,-22.36,-7.78,-2.98,-22.27,-7.79,-2.97,-22.18,-7.8,-2.96,-22.1,-7.82,-2.95,-22.01,-7.84,-2.95,-21.93,-7.87,-2.94,-21.85,-7.91,-2.94,-21.77,-7.95,-2.93,-21.7,-12.85,-3.84,-25.4,-13.25,-3.89,-25.51,-13.17,-3.88,-25.5,-13.08,-3.87,-25.48,-13.0,-3.86,-25.46,-12.93,-3.85,-25.43,-18.09,-4.44,-25.9,-19.38,-4.44,-24.61,-19.38,-4.45,-24.7,-19.38,-4.46,-24.79,-19.37,-4.47,-24.87,-19.35,-4.48,-24.96,-19.33,-4.48,-25.04,-19.31,-4.49,-25.12,-19.27,-4.49,-25.2,-19.24,-4.5,-25.28,-19.19,-4.5,-25.35,-19.14,-4.5,-25.43,-19.09,-4.5,-25.49,-19.03,-4.5,-25.56,-18.97,-4.5,-25.62,-18.9,-4.5,-25.67,-18.83,-4.5,-25.72,-18.75,-4.5,-25.76,-18.67,-4.49,-25.8,-18.6,-4.49,-25.83,-18.51,-4.48,-25.86,-18.43,-4.48,-25.88,-18.34,-4.47,-25.9,-18.26,-4.46,-25.91,-18.17,-4.45,-25.91,-18.98,-3.89,-19.78,-18.87,-3.84,-19.38,-18.91,-3.85,-19.45,-18.93,-3.86,-19.53,-18.95,-3.87,-19.61,-18.97,-3.88,-19.69,-16.85,-3.16,-14.98,-15.1,-2.93,-14.52,-15.17,-2.93,-14.48,-15.24,-2.94,-14.44,-15.32,-2.94,-14.4,-15.4,-2.95,-14.37,-15.49,-2.95,-14.34,-15.57,-2.96,-14.33,-15.66,-2.97,-14.31,-15.74,-2.98,-14.31,-15.83,-2.99,-14.31,-15.91,-2.99,-14.31,-16.0,-3.01,-14.33,-16.08,-3.02,-14.35,-16.16,-3.03,-14.37,-16.24,-3.04,-14.4,-16.32,-3.05,-14.44,-16.4,-3.06,-14.48,-16.47,-3.08,-14.53,-16.54,-3.09,-14.58,-16.6,-3.1,-14.64,-16.66,-3.11,-14.7,-16.71,-3.13,-14.77,-16.76,-3.14,-14.84,-16.81,-3.15,-14.91,-15.64,-3.79,-22.17,-15.74,-3.79,-22.07,-15.83,-3.79,-21.95,-15.91,-3.79,-21.84,-15.98,-3.78,-21.71,-16.04,-3.77,-21.59,-16.09,-3.76,-21.45,-16.14,-3.75,-21.32,-16.17,-3.74,-21.18,-16.19,-3.73,-21.04,-16.2,-3.72,-20.9,-16.2,-3.7,-20.76,-16.19,-3.69,-20.61,-16.17,-3.67,-20.47,-16.14,-3.65,-20.34,-16.1,-3.63,-20.2,-16.05,-3.61,-20.07,-15.99,-3.59,-19.94,-15.92,-3.57,-19.82,-15.84,-3.55,-19.7,-15.75,-3.53,-19.59,-15.66,-3.51,-19.49,-15.55,-3.49,-19.39,-15.44,-3.47,-19.31,-15.33,-3.45,-19.23,-15.2,-3.43,-19.16,-15.08,-3.41,-19.1,-14.95,-3.39,-19.05,-14.81,-3.37,-19.0,-14.67,-3.35,-18.97,-14.53,-3.34,-18.95,-14.39,-3.32,-18.94,-14.25,-3.31,-18.94,-14.11,-3.29,-18.96,-13.97,-3.28,-18.98,-13.83,-3.27,-19.01,-13.69,-3.26,-19.05,-13.56,-3.25,-19.1,-13.43,-3.24,-19.17,-13.31,-3.24,-19.24,-13.19,-3.24,-19.32,-13.08,-3.23,-19.41,-12.98,-3.23,-19.5,-12.88,-3.23,-19.61,-12.79,-3.24,-19.72,-12.71,-3.24,-19.84,-12.64,-3.24,-19.96,-12.58,-3.25,-20.09,-12.52,-3.26,-20.22,-12.48,-3.27,-20.36,-12.45,-3.28,-20.5,-12.43,-3.29,-20.64,-12.42,-3.31,-20.78,-12.42,-3.32,-20.92,-12.43,-3.34,-21.06,-12.45,-3.35,-21.2,-12.48,-3.37,-21.34,-12.52,-3.39,-21.47,-12.57,-3.41,-21.6,-12.63,-3.43,-21.73,-12.7,-3.45,-21.85,-12.78,-3.47,-21.97,-12.87,-3.49,-22.08,-12.96,-3.51,-22.18,-13.07,-3.53,-22.28,-13.18,-3.55,-22.37,-13.29,-3.57,-22.45,-13.42,-3.59,-22.52,-13.54,-3.61,-22.58,-13.67,-3.63,-22.63,-13.81,-3.65,-22.67,-13.95,-3.67,-22.7,-14.09,-3.69,-22.72,-14.23,-3.7,-22.73,-14.37,-3.72,-22.73,-14.51,-3.73,-22.72,-14.65,-3.74,-22.7,-14.79,-3.75,-22.66,-14.93,-3.76,-22.62,-15.06,-3.77,-22.57,-15.19,-3.78,-22.51,-15.31,-3.79,-22.44,-15.43,-3.79,-22.36,-15.54,-3.79,-22.27,-8.95,1.55,-23.87,-13.35,0.87,-25.9,-8.46,-3.16,-23.37,-12.85,-3.84,-25.4,-18.09,-4.44,-25.9,-13.25,-3.89,-25.51,-18.58,0.27,-26.4,-13.74,0.82,-26.0,-18.98,-3.89,-19.78,-19.38,-4.44,-24.61,-19.47,0.82,-20.27,-19.87,0.27,-25.11,-16.85,-3.16,-14.98,-18.87,-3.84,-19.38,-17.34,1.55,-15.48,-19.37,0.87,-19.87,-15.59,1.78,-15.02,-11.59,1.9,-17.83,-15.1,-2.93,-14.52,-11.1,-2.81,-17.33,-11.3,1.9,-18.12,-8.49,1.78,-22.12,-10.81,-2.81,-17.63,-8.0,-2.93,-21.62,-15.1,-2.93,-14.52,-15.17,-2.93,-14.48,-15.24,-2.94,-14.44,-15.32,-2.94,-14.4,-15.4,-2.95,-14.37,-15.49,-2.95,-14.34,-15.57,-2.96,-14.33,-15.66,-2.97,-14.31,-15.74,-2.98,-14.31,-15.83,-2.99,-14.31,-15.91,-2.99,-14.31,-16.0,-3.01,-14.33,-16.08,-3.02,-14.35,-16.16,-3.03,-14.37,-16.24,-3.04,-14.4,-16.32,-3.05,-14.44,-16.4,-3.06,-14.48,-16.47,-3.08,-14.53,-16.54,-3.09,-14.58,-16.6,-3.1,-14.64,-16.66,-3.11,-14.7,-16.71,-3.13,-14.77,-16.76,-3.14,-14.84,-16.81,-3.15,-14.91,-16.85,-3.16,-14.98,-15.59,1.78,-15.02,-17.34,1.55,-15.48,-17.3,1.56,-15.4,-17.26,1.57,-15.33,-17.21,1.58,-15.26,-17.15,1.6,-15.19,-17.09,1.61,-15.13,-17.03,1.62,-15.08,-16.96,1.64,-15.02,-16.89,1.65,-14.98,-16.82,1.66,-14.93,-16.74,1.67,-14.9,-16.66,1.68,-14.87,-16.58,1.69,-14.84,-16.49,1.71,-14.82,-16.41,1.72,-14.81,-16.32,1.73,-14.8,-16.24,1.73,-14.8,-16.15,1.74,-14.81,-16.06,1.75,-14.82,-15.98,1.76,-14.84,-15.9,1.76,-14.86,-15.82,1.77,-14.89,-15.74,1.77,-14.93,-15.66,1.78,-14.97,-10.81,-2.81,-17.63,-10.86,-2.8,-17.56,-10.91,-2.8,-17.5,-10.97,-2.8,-17.44,-11.03,-2.8,-17.38,-11.1,-2.81,-17.33,-11.3,1.9,-18.12,-11.59,1.9,-17.83,-11.53,1.91,-17.88,-11.46,1.91,-17.93,-11.41,1.91,-17.99,-11.35,1.91,-18.06,-8.46,-3.16,-23.37,-8.38,-3.15,-23.33,-8.31,-3.14,-23.29,-8.24,-3.13,-23.24,-8.17,-3.11,-23.19,-8.11,-3.1,-23.13,-8.05,-3.09,-23.06,-8.0,-3.08,-23.0,-7.95,-3.06,-22.92,-7.91,-3.05,-22.85,-7.87,-3.04,-22.77,-7.84,-3.03,-22.69,-7.82,-3.02,-22.61,-7.8,-3.01,-22.53,-7.79,-2.99,-22.44,-7.78,-2.99,-22.36,-7.78,-2.98,-22.27,-7.79,-2.97,-22.18,-7.8,-2.96,-22.1,-7.82,-2.95,-22.01,-7.84,-2.95,-21.93,-7.87,-2.94,-21.85,-7.91,-2.94,-21.77,-7.95,-2.93,-21.7,-8.0,-2.93,-21.62,-8.95,1.55,-23.87,-8.49,1.78,-22.12,-8.44,1.78,-22.19,-8.4,1.77,-22.27,-8.37,1.77,-22.34,-8.34,1.76,-22.43,-8.31,1.76,-22.51,-8.29,1.75,-22.59,-8.28,1.74,-22.68,-8.27,1.73,-22.76,-8.28,1.73,-22.85,-8.28,1.72,-22.94,-8.29,1.71,-23.02,-8.31,1.69,-23.1,-8.34,1.68,-23.19,-8.37,1.67,-23.27,-8.41,1.66,-23.34,-8.45,1.65,-23.42,-8.49,1.64,-23.49,-8.55,1.62,-23.56,-8.6,1.61,-23.62,-8.67,1.6,-23.68,-8.73,1.58,-23.74,-8.8,1.57,-23.78,-8.88,1.56,-23.83,-18.87,-3.84,-19.38,-18.91,-3.85,-19.45,-18.93,-3.86,-19.53,-18.95,-3.87,-19.61,-18.97,-3.88,-19.69,-18.98,-3.89,-19.78,-19.37,0.87,-19.87,-19.47,0.82,-20.27,-19.46,0.83,-20.19,-19.45,0.84,-20.11,-19.43,0.85,-20.03,-19.4,0.86,-19.95,-19.38,-4.44,-24.61,-19.38,-4.45,-24.7,-19.38,-4.46,-24.79,-19.37,-4.47,-24.87,-19.35,-4.48,-24.96,-19.33,-4.48,-25.04,-19.31,-4.49,-25.12,-19.27,-4.49,-25.2,-19.24,-4.5,-25.28,-19.19,-4.5,-25.35,-19.14,-4.5,-25.43,-19.09,-4.5,-25.49,-19.03,-4.5,-25.56,-18.97,-4.5,-25.62,-18.9,-4.5,-25.67,-18.83,-4.5,-25.72,-18.75,-4.5,-25.76,-18.67,-4.49,-25.8,-18.6,-4.49,-25.83,-18.51,-4.48,-25.86,-18.43,-4.48,-25.88,-18.34,-4.47,-25.9,-18.26,-4.46,-25.91,-18.17,-4.45,-25.91,-18.09,-4.44,-25.9,-19.87,0.27,-25.11,-18.58,0.27,-26.4,-18.67,0.26,-26.4,-18.75,0.25,-26.4,-18.84,0.24,-26.39,-18.92,0.24,-26.38,-19.01,0.23,-26.36,-19.09,0.22,-26.33,-19.17,0.22,-26.3,-19.25,0.21,-26.26,-19.32,0.21,-26.21,-19.39,0.21,-26.17,-19.46,0.21,-26.11,-19.52,0.21,-26.05,-19.58,0.21,-25.99,-19.64,0.21,-25.92,-19.69,0.21,-25.85,-19.73,0.21,-25.78,-19.77,0.22,-25.7,-19.8,0.22,-25.62,-19.83,0.23,-25.54,-19.85,0.24,-25.45,-19.86,0.24,-25.37,-19.87,0.25,-25.28,-19.88,0.26,-25.2,-13.25,-3.89,-25.51,-13.17,-3.88,-25.5,-13.08,-3.87,-25.48,-13.0,-3.86,-25.46,-12.93,-3.85,-25.43,-12.85,-3.84,-25.4,-13.74,0.82,-26.0,-13.35,0.87,-25.9,-13.42,0.86,-25.93,-13.5,0.85,-25.96,-13.58,0.84,-25.98,-13.66,0.83,-25.99,-15.64,-3.79,-22.17,-15.74,-3.79,-22.07,-15.83,-3.79,-21.95,-15.91,-3.79,-21.84,-15.98,-3.78,-21.71,-16.04,-3.77,-21.59,-16.09,-3.76,-21.45,-16.14,-3.75,-21.32,-16.17,-3.74,-21.18,-16.19,-3.73,-21.04,-16.2,-3.72,-20.9,-16.2,-3.7,-20.76,-16.19,-3.69,-20.61,-16.17,-3.67,-20.47,-16.14,-3.65,-20.34,-16.1,-3.63,-20.2,-16.05,-3.61,-20.07,-15.99,-3.59,-19.94,-15.92,-3.57,-19.82,-15.84,-3.55,-19.7,-15.75,-3.53,-19.59,-15.66,-3.51,-19.49,-15.55,-3.49,-19.39,-15.44,-3.47,-19.31,-15.33,-3.45,-19.23,-15.2,-3.43,-19.16,-15.08,-3.41,-19.1,-14.95,-3.39,-19.05,-14.81,-3.37,-19.0,-14.67,-3.35,-18.97,-14.53,-3.34,-18.95,-14.39,-3.32,-18.94,-14.25,-3.31,-18.94,-14.11,-3.29,-18.96,-13.97,-3.28,-18.98,-13.83,-3.27,-19.01,-13.69,-3.26,-19.05,-13.56,-3.25,-19.1,-13.43,-3.24,-19.17,-13.31,-3.24,-19.24,-13.19,-3.24,-19.32,-13.08,-3.23,-19.41,-12.98,-3.23,-19.5,-12.88,-3.23,-19.61,-12.79,-3.24,-19.72,-12.71,-3.24,-19.84,-12.64,-3.24,-19.96,-12.58,-3.25,-20.09,-12.52,-3.26,-20.22,-12.48,-3.27,-20.36,-12.45,-3.28,-20.5,-12.43,-3.29,-20.64,-12.42,-3.31,-20.78,-12.42,-3.32,-20.92,-12.43,-3.34,-21.06,-12.45,-3.35,-21.2,-12.48,-3.37,-21.34,-12.52,-3.39,-21.47,-12.57,-3.41,-21.6,-12.63,-3.43,-21.73,-12.7,-3.45,-21.85,-12.78,-3.47,-21.97,-12.87,-3.49,-22.08,-12.96,-3.51,-22.18,-13.07,-3.53,-22.28,-13.18,-3.55,-22.37,-13.29,-3.57,-22.45,-13.42,-3.59,-22.52,-13.54,-3.61,-22.58,-13.67,-3.63,-22.63,-13.81,-3.65,-22.67,-13.95,-3.67,-22.7,-14.09,-3.69,-22.72,-14.23,-3.7,-22.73,-14.37,-3.72,-22.73,-14.51,-3.73,-22.72,-14.65,-3.74,-22.7,-14.79,-3.75,-22.66,-14.93,-3.76,-22.62,-15.06,-3.77,-22.57,-15.19,-3.78,-22.51,-15.31,-3.79,-22.44,-15.43,-3.79,-22.36,-15.54,-3.79,-22.27,-15.64,-3.79,-22.17,-16.14,0.92,-22.66,-16.14,0.92,-22.66,-16.23,0.92,-22.56,-16.32,0.92,-22.45,-16.4,0.93,-22.33,-16.47,0.93,-22.21,-16.54,0.94,-22.08,-16.59,0.95,-21.95,-16.63,0.96,-21.81,-16.66,0.97,-21.67,-16.69,0.98,-21.53,-16.7,0.99,-21.39,-16.7,1.01,-21.25,-16.69,1.02,-21.11,-16.67,1.04,-20.97,-16.64,1.06,-20.83,-16.6,1.08,-20.7,-16.55,1.1,-20.57,-16.48,1.12,-20.44,-16.41,1.14,-20.32,-16.34,1.16,-20.2,-16.25,1.18,-20.09,-16.15,1.2,-19.99,-16.05,1.22,-19.89,-15.94,1.24,-19.8,-15.82,1.26,-19.72,-15.7,1.28,-19.65,-15.57,1.3,-19.59,-15.44,1.32,-19.54,-15.3,1.34,-19.5,-15.17,1.36,-19.47,-15.03,1.37,-19.45,-14.89,1.39,-19.44,-14.74,1.4,-19.44,-14.6,1.42,-19.45,-14.46,1.43,-19.47,-14.32,1.44,-19.51,-14.19,1.45,-19.55,-14.06,1.46,-19.6,-13.93,1.47,-19.66,-13.81,1.47,-19.73,-13.69,1.48,-19.81,-13.58,1.48,-19.9,-13.47,1.48,-20.0,-13.38,1.48,-20.1,-13.29,1.48,-20.22,-13.21,1.47,-20.33,-13.13,1.47,-20.46,-13.07,1.46,-20.58,-13.02,1.45,-20.72,-12.98,1.44,-20.85,-12.94,1.43,-20.99,-12.92,1.42,-21.13,-12.91,1.4,-21.27,-12.91,1.39,-21.41,-12.92,1.37,-21.55,-12.94,1.36,-21.69,-12.97,1.34,-21.83,-13.01,1.32,-21.97,-13.06,1.3,-22.1,-13.12,1.28,-22.23,-13.19,1.26,-22.35,-13.27,1.24,-22.47,-13.36,1.22,-22.58,-13.46,1.2,-22.68,-13.56,1.18,-22.78,-13.67,1.16,-22.86,-13.79,1.14,-22.94,-13.91,1.12,-23.01,-14.04,1.1,-23.07,-14.17,1.08,-23.12,-14.3,1.06,-23.17,-14.44,1.04,-23.2,-14.58,1.02,-23.22,-14.72,1.01,-23.23,-14.87,0.99,-23.23,-15.01,0.98,-23.21,-15.15,0.97,-23.19,-15.28,0.96,-23.16,-15.42,0.95,-23.12,-15.55,0.94,-23.06,-15.68,0.93,-23.0,-15.8,0.93,-22.93,-15.92,0.92,-22.85,-16.03,0.92,-22.76],"i":[7,8,9,10,7,9,11,7,10,14,12,13,15,11,12,15,7,11,15,12,14,17,15,16,17,7,15,18,7,17,20,7,18,20,18,19,32,33,34,32,34,35,32,35,36,32,36,31,22,20,21,23,7,20,23,20,22,25,23,24,26,7,23,26,23,25,30,27,28,30,28,29,6,7,26,6,26,27,6,27,30,60,61,37,58,59,60,56,58,60,56,60,37,56,57,58,54,56,37,54,55,56,167,166,31,165,31,166,168,167,31,164,31,165,169,168,31,163,32,31,163,31,164,170,169,31,162,32,163,171,31,7,171,170,31,50,51,52,50,52,53,161,32,162,172,171,7,160,32,161,173,172,7,159,32,160,174,173,7,158,32,159,175,174,7,47,48,49,47,49,50,47,53,54,47,54,37,47,50,53,157,32,158,176,175,7,156,32,157,93,176,7,93,7,6,45,46,47,45,47,37,155,32,156,155,37,32,94,93,6,43,44,45,154,37,155,95,94,6,42,43,45,153,37,154,96,95,6,40,42,45,40,41,42,97,96,6,152,37,153,39,45,37,39,40,45,98,97,6,151,37,152,38,39,37,99,98,6,150,37,151,149,38,37,149,37,150,148,38,149,147,38,148,146,38,147,145,38,146,144,38,145,143,38,144,0,101,100,0,102,101,0,103,102,0,104,103,0,105,104,0,106,105,0,107,106,0,99,6,0,100,99,3,1,2,5,1,3,5,0,1,5,3,4,5,108,107,5,109,108,5,110,109,5,111,110,5,112,111,5,113,112,5,114,113,5,107,0,115,114,5,62,136,135,62,137,136,62,138,137,62,139,138,62,140,139,62,141,140,62,142,141,62,143,142,62,38,143,63,128,127,63,129,128,63,130,129,63,131,130,63,62,135,63,132,131,63,133,132,63,134,133,63,135,134,63,64,65,63,65,66,63,66,67,63,67,62,69,115,5,69,116,115,69,117,116,69,118,117,69,119,118,69,120,119,69,121,120,71,69,70,72,69,71,73,69,72,74,69,73,75,69,74,76,69,75,68,122,121,68,123,122,68,124,123,68,125,124,68,126,125,68,127,126,68,121,69,68,63,127,77,69,76,78,69,77,91,92,68,79,69,78,90,91,68,90,68,69,80,69,79,81,69,80,88,89,90,87,90,69,87,88,90,84,69,81,84,81,82,84,82,83,85,69,84,85,87,69,85,86,87,184,185,186,184,186,187,184,187,188,184,188,189,184,189,190,184,190,191,184,191,192,184,192,193,184,193,194,184,194,195,184,195,196,184,196,197,184,197,198,184,198,199,184,199,200,184,200,201,184,201,202,184,202,203,184,203,204,184,204,205,184,205,206,184,206,207,184,207,183,179,177,178,180,177,179,182,180,181,182,177,180,322,323,183,324,183,323,321,322,183,325,183,324,320,183,177,320,321,183,326,184,183,326,183,325,319,320,177,327,184,326,318,319,177,328,184,327,317,318,177,329,184,328,316,317,177,330,184,329,315,316,177,331,184,330,314,315,177,332,184,331,313,314,177,208,184,332,333,208,332,312,177,182,312,313,177,334,208,333,311,312,182,335,208,334,310,311,182,209,210,211,209,211,212,209,212,213,209,213,208,336,208,335,309,310,182,308,309,182,337,208,336,307,308,182,338,208,337,306,307,182,339,208,338,305,306,182,340,208,339,340,209,208,304,305,182,341,209,340,342,209,341,343,209,342,344,209,343,345,209,344,346,209,345,347,209,346,348,209,347,246,304,182,246,298,299,246,299,300,246,300,301,246,301,302,246,302,303,246,303,304,251,249,250,252,247,248,252,248,249,252,249,251,254,247,252,254,252,253,255,247,254,256,247,255,259,256,257,259,257,258,260,256,259,261,247,256,261,256,260,264,262,263,266,264,265,267,264,266,267,262,264,267,247,261,267,261,262,269,267,268,245,292,293,245,293,294,245,294,295,245,295,296,245,296,297,245,297,298,245,298,246,245,247,267,245,267,269,245,246,247,214,209,348,214,348,349,214,349,350,214,350,351,214,351,352,214,352,353,214,353,270,235,236,237,234,237,238,234,238,214,234,235,237,233,234,214,231,232,233,230,231,233,240,284,285,240,285,286,240,286,287,240,287,288,240,288,289,240,289,290,240,290,291,240,291,292,240,292,245,242,240,241,244,240,242,244,242,243,239,277,278,239,278,279,239,279,280,239,280,281,239,281,282,239,282,283,239,283,284,239,240,244,239,284,240,239,276,277,228,229,230,228,233,214,228,230,233,226,227,228,226,228,214,225,226,214,223,224,225,222,223,225,222,225,214,221,222,214,218,221,214,218,219,220,218,220,221,215,276,239,215,270,271,215,214,270,215,271,272,215,272,273,215,273,274,215,274,275,215,275,276,216,214,215,216,218,214,216,217,218,355,354,356,355,356,357,358,361,359,360,361,358,364,363,362,364,365,363,368,367,366,368,369,367,371,370,372,371,372,373,375,374,376,375,376,377,404,402,401,405,404,401,406,401,400,406,405,401,407,400,399,407,406,400,408,399,398,408,407,399,409,397,396,409,398,397,409,408,398,410,409,396,411,396,395,411,410,396,412,395,394,412,411,395,413,394,393,413,412,394,414,393,392,414,413,393,415,391,390,415,392,391,415,414,392,416,415,390,417,416,390,417,389,388,417,390,389,418,417,388,419,388,387,419,418,388,420,387,386,420,419,387,421,385,384,421,386,385,421,420,386,422,421,384,423,384,383,423,422,384,424,382,381,424,383,382,424,423,383,425,424,381,426,380,379,426,381,380,426,425,381,427,426,379,403,379,378,403,427,379,436,433,432,436,435,433,437,432,431,437,436,432,438,431,430,438,437,431,439,430,429,439,438,430,434,429,428,434,439,429,466,464,463,467,463,462,467,466,463,468,462,461,468,467,462,469,461,460,469,468,461,470,460,459,470,469,460,471,459,458,471,470,459,472,458,457,472,471,458,473,457,456,473,472,457,474,456,455,474,473,456,475,455,454,475,474,455,476,454,453,476,475,454,477,453,452,477,476,453,478,452,451,478,477,452,479,478,451,479,451,450,480,450,449,480,479,450,481,449,448,481,480,449,482,448,447,482,481,448,483,447,446,483,482,447,484,446,445,484,483,446,485,445,444,485,484,445,486,444,443,486,485,444,487,443,442,487,486,443,488,442,441,488,487,442,489,441,440,489,488,441,465,489,440,497,495,494,498,494,493,498,497,494,499,493,492,499,498,493,500,492,491,500,499,492,501,491,490,501,500,491,496,501,490,528,526,525,529,525,524,529,528,525,530,524,523,530,529,524,531,523,522,531,530,523,532,522,521,532,531,522,533,521,520,533,532,521,534,520,519,534,533,520,535,519,518,535,534,519,536,518,517,536,535,518,537,517,516,537,536,517,538,516,515,538,537,516,539,515,514,539,538,515,540,514,513,540,539,514,541,540,513,541,513,512,542,512,511,542,541,512,543,511,510,543,542,511,544,510,509,544,543,510,545,509,508,545,544,509,546,508,507,546,545,508,547,507,506,547,546,507,548,506,505,548,547,506,549,505,504,549,548,505,550,504,503,550,549,504,551,503,502,551,550,503,527,551,502,560,557,556,560,559,557,561,556,555,561,560,556,562,555,554,562,561,555,563,554,553,563,562,554,558,553,552,558,563,553,651,565,564,651,564,650,652,566,565,652,565,651,653,567,566,653,568,567,653,566,652,654,568,653,655,569,568,655,568,654,656,570,569,656,569,655,657,571,570,657,570,656,658,571,657,658,572,571,659,573,572,659,572,658,660,574,573,660,575,574,660,573,659,661,576,575,661,575,660,662,576,661,663,576,662,663,577,576,663,578,577,664,578,663,665,579,578,665,578,664,666,580,579,666,579,665,667,581,580,667,580,666,668,582,581,668,583,582,668,581,667,669,583,668,670,584,583,670,585,584,670,583,669,671,586,585,671,585,670,672,586,671,673,587,586,673,586,672,674,588,587,674,587,673,675,589,588,675,588,674,676,590,589,676,591,590,676,589,675,677,591,676,678,592,591,678,591,677,679,593,592,679,592,678,680,594,593,680,593,679,681,595,594,681,596,595,681,594,680,682,596,681,683,596,682,683,597,596,684,597,683,684,598,597,685,598,684,685,599,598,686,599,685,686,600,599,687,600,686,687,601,600,688,601,687,688,602,601,689,602,688,689,603,602,690,603,689,690,604,603,691,604,690,691,605,604,692,606,605,692,605,691,693,607,606,693,606,692,694,607,693,694,608,607,694,609,608,695,609,694,696,610,609,696,609,695,697,611,610,697,610,696,698,612,611,698,613,612,698,611,697,699,613,698,700,614,613,700,613,699,701,615,614,701,614,700,702,616,615,702,615,701,703,617,616,703,618,617,703,616,702,704,618,703,705,619,618,705,620,619,705,618,704,706,620,705,707,620,706,707,621,620,707,622,621,708,622,707,709,622,708,709,623,622,710,623,709,710,624,623,710,625,624,711,625,710,712,625,711,712,626,625,712,627,626,713,627,712,713,628,627,714,628,713,715,628,714,715,629,628,716,629,715,716,630,629,716,631,630,717,631,716,718,631,717,718,632,631,719,632,718,719,633,632,720,633,719,720,634,633,721,634,720,721,635,634,721,636,635,722,636,721,723,636,722,723,637,636,724,637,723,724,638,637,725,638,724,725,639,638,725,640,639,726,640,725,727,641,640,727,640,726,728,642,641,728,643,642,728,641,727,729,644,643,729,643,728,730,644,729,731,645,644,731,646,645,731,644,730,732,646,731,732,647,646,733,647,732,649,647,733,649,648,647]}}</script>
+
+<script type="importmap">
+{ "imports": {
+  "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+} }
+</script>
+
+<script type="module">
+import * as THREE from "three";
+import { OrbitControls } from "three/addons/controls/OrbitControls.js";
+
+/* ---------------- Dados do experimento ---------------- */
+const L9 = [[1,1,1],[1,2,2],[1,3,3],[2,1,2],[2,2,3],[2,3,1],[3,1,3],[3,2,1],[3,3,2]];
+const R_EPS = 1.2;        // mm, raio de ponta
+const KC = 500;           // N/mm², força específica de corte (alumínio 350–700)
+const F_NAT = 1450;       // Hz, modo dominante do suporte (ilustrativo)
+const FS = 8192;          // Hz, taxa de amostragem simulada
+const STORE = "bancada-torneamento-v1";
+
+const S = {
+  levels: { n: [1000, 1500, 2000], f: [0.10, 0.20, 0.30], ap: [0.5, 1.0, 1.5] },
+  D0: 50, Lcut: 80,
+  meas: Array.from({ length: 9 }, () => ({ ra: [null, null], vib: [null, null] })),
+  ens: 4, rep: 0, resp: "ra", rear: true,
+};
+try {
+  const saved = JSON.parse(localStorage.getItem(STORE) || "null");
+  if (saved) { Object.assign(S.levels, saved.levels || {}); if (typeof saved.rear === "boolean") S.rear = saved.rear; S.meas = saved.meas || S.meas; S.D0 = saved.D0 || S.D0; S.Lcut = saved.Lcut || S.Lcut; }
+} catch (e) {}
+function save() { try { localStorage.setItem(STORE, JSON.stringify({ levels: S.levels, meas: S.meas, D0: S.D0, Lcut: S.Lcut, rear: S.rear })); } catch (e) {} }
+
+const clamp = (x, a, b) => Math.max(a, Math.min(b, x));
+const fmt = (x, d = 2) => (x == null || isNaN(x)) ? "–" : x.toLocaleString("pt-BR", { minimumFractionDigits: d, maximumFractionDigits: d });
+const mean = a => { const v = a.filter(x => x != null && !isNaN(x)); return v.length ? v.reduce((s, x) => s + x, 0) / v.length : null; };
+
+// Limite de estabilidade ilustrativo: a_p limite oscila com a rotação (lóbulos)
+function apLim(n) { return 0.95 + 0.65 * (0.5 + 0.5 * Math.cos(2 * Math.PI * (n - 1000) / 760)); }
+
+function params(i) {
+  const [a, b, c] = L9[i];
+  const n = +S.levels.n[a - 1], f = +S.levels.f[b - 1], ap = +S.levels.ap[c - 1];
+  const vc = Math.PI * S.D0 * n / 1000;
+  const vf = f * n;
+  const raTh = f * f / (18 * Math.sqrt(3) * R_EPS) * 1000;
+  const Fc = KC * ap * f;
+  const chatter = clamp((ap - apLim(n)) / 0.45, 0, 1);
+  const aForced = 0.018 * Fc * (0.6 + 0.4 * n / 1500);
+  const aChat = chatter * (6 + 5 * ap);
+  const aNoise = 0.25 + 0.004 * Fc;
+  const vibEst = Math.sqrt(aForced ** 2 / 2 + aChat ** 2 / 2 + aNoise ** 2);
+  const bue = 0.35 * Math.exp(-vc / 180);                 // aresta postiça em vc baixa
+  const raEst = raTh * 1.12 + bue + 0.55 * chatter + 0.012 * aForced;
+  const m = S.meas[i];
+  const raMeas = mean(m.ra), vibMeas = mean(m.vib);
+  return { i, lv: [a, b, c], n, f, ap, vc, vf, raTh, Fc, chatter, aForced, aChat, aNoise, vibEst, raEst, raMeas, vibMeas };
+}
+function statusOf(vib, chatter) {
+  if (chatter > 0.35 || vib > 8) return ["crit", "chatter"];
+  if (chatter > 0.05 || vib > 4) return ["warn", "atenção"];
+  return ["good", "estável"];
+}
+
+/* ---------------- Tokens de cor (tema) ---------------- */
+let C = {};
+function readTokens() {
+  const cs = getComputedStyle(document.documentElement);
+  for (const k of ["bg","panel","panel-2","ink","ink-2","muted","line","accent","viewport","series-ra","series-vib","good","warn","crit"]) C[k] = cs.getPropertyValue("--" + k).trim();
+}
+readTokens();
+
+/* ---------------- Cena 3D ---------------- */
+const canvas = document.getElementById("three");
+const stage = document.getElementById("stage");
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
+renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.05;
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(35, 1, 1, 5000);
+const controls = new OrbitControls(camera, canvas);
+controls.enableDamping = true;
+
+// Ambiente simples para reflexos metálicos
+const pmrem = new THREE.PMREMGenerator(renderer);
+function envScene() {
+  const s = new THREE.Scene();
+  const g = new THREE.SphereGeometry(1000, 32, 16);
+  const m = new THREE.ShaderMaterial({ side: THREE.BackSide, uniforms: {}, vertexShader: "varying vec3 p; void main(){ p = position; gl_Position = projectionMatrix*modelViewMatrix*vec4(position,1.); }", fragmentShader: "varying vec3 p; void main(){ float h = normalize(p).y; vec3 c = mix(vec3(.18,.2,.22), vec3(1.), smoothstep(-.2,.9,h)); c += vec3(1.2)*smoothstep(.97,1.,dot(normalize(p),normalize(vec3(.4,.8,.3)))); gl_FragColor = vec4(c,1.); }" });
+  s.add(new THREE.Mesh(g, m));
+  return s;
+}
+scene.environment = pmrem.fromScene(envScene(), 0.02).texture;
+
+scene.add(new THREE.HemisphereLight(0xffffff, 0x556677, 1.4));
+const key = new THREE.DirectionalLight(0xffffff, 1.6); key.position.set(150, 260, 220); scene.add(key);
+const rim = new THREE.DirectionalLight(0xbfd6ff, 0.7); rim.position.set(-200, 120, -200); scene.add(rim);
+
+// Materiais
+const matSteel = new THREE.MeshStandardMaterial({ color: 0x8a939b, metalness: 0.5, roughness: 0.4 });
+const matDark = new THREE.MeshStandardMaterial({ color: 0x4d565e, metalness: 0.3, roughness: 0.6 });
+const matHolder = new THREE.MeshStandardMaterial({ color: 0x5a636c, metalness: 0.55, roughness: 0.35 });
+const matInsert = new THREE.MeshStandardMaterial({ color: 0xd9ad4c, metalness: 0.6, roughness: 0.3 });
+const matScrew = new THREE.MeshStandardMaterial({ color: 0x8a6f5a, metalness: 0.6, roughness: 0.4 });
+
+function stripeTexture(fine) {
+  const c = document.createElement("canvas"); c.width = 64; c.height = 256;
+  const g = c.getContext("2d");
+  const grd = g.createLinearGradient(0, 0, 0, 256);
+  for (let k = 0; k <= 8; k++) { const t = k / 8; const v = fine ? (k % 2 ? 190 : 235) : 212 + Math.random() * 8; grd.addColorStop(t, `rgb(${v},${v + 2},${v + 5})`); }
+  g.fillStyle = grd; g.fillRect(0, 0, 64, 256);
+  if (fine) for (let y = 0; y < 256; y++) { g.fillStyle = `rgba(0,0,0,${Math.random() * 0.08})`; g.fillRect(0, y, 64, 1); }
+  else for (let q = 0; q < 900; q++) { g.fillStyle = `rgba(0,0,0,${Math.random() * 0.06})`; g.fillRect(Math.random() * 64, Math.random() * 256, 1 + Math.random() * 3, 1); }
+  const t = new THREE.CanvasTexture(c); t.wrapS = t.wrapT = THREE.RepeatWrapping; t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 8;
+  return t;
+}
+const texRaw = stripeTexture(false);
+const texCut = stripeTexture(true);
+const matRaw = new THREE.MeshStandardMaterial({ color: 0xc8cdd1, metalness: 0.35, roughness: 0.6, map: texRaw });
+const matCut = new THREE.MeshStandardMaterial({ color: 0xeef1f3, metalness: 0.6, roughness: 0.22, map: texCut });
+
+// Referências do torno (em mm; eixo X = eixo da árvore, Y para cima, Z para o operador)
+const CHUCK_FACE = -60;
+const world = new THREE.Group(); scene.add(world);
+
+// Barramento e cabeçote
+const bed = new THREE.Mesh(new THREE.BoxGeometry(520, 30, 380), matDark); bed.position.set(20, -155, 0); world.add(bed);
+const head = new THREE.Mesh(new THREE.BoxGeometry(150, 220, 200), matDark); head.position.set(CHUCK_FACE - 60 - 75, -30, -10); world.add(head);
+
+// Placa de 3 castanhas (gira)
+const spindle = new THREE.Group(); spindle.position.x = CHUCK_FACE; world.add(spindle);
+const chuckBody = new THREE.Mesh(new THREE.CylinderGeometry(80, 80, 55, 64), matSteel); chuckBody.rotation.z = Math.PI / 2; chuckBody.position.x = -27.5 - 5; spindle.add(chuckBody);
+const chuckRim = new THREE.Mesh(new THREE.TorusGeometry(80, 2.5, 8, 64), matDark); chuckRim.rotation.y = Math.PI / 2; chuckRim.position.x = -5; spindle.add(chuckRim);
+for (let k = 0; k < 3; k++) {
+  const jaw = new THREE.Group(); jaw.rotation.x = k * 2 * Math.PI / 3; spindle.add(jaw);
+  const j1 = new THREE.Mesh(new THREE.BoxGeometry(22, 30, 18), matDark); j1.position.set(6, 42, 0); jaw.add(j1);
+  const j2 = new THREE.Mesh(new THREE.BoxGeometry(22, 18, 18), matDark); j2.position.set(6, 62, 0); jaw.add(j2);
+}
+
+// Tarugo: trecho bruto (Ø inicial) e trecho usinado (Ø inicial − 2·ap)
+const cylGeo = new THREE.CylinderGeometry(1, 1, 1, 96, 1, true);
+const capGeo = new THREE.CircleGeometry(1, 96);
+const rawBar = new THREE.Mesh(cylGeo, matRaw); rawBar.rotation.z = Math.PI / 2; world.add(rawBar);
+const cutBar = new THREE.Mesh(cylGeo, matCut); cutBar.rotation.z = Math.PI / 2; world.add(cutBar);
+const matFace = new THREE.MeshStandardMaterial({ color: 0xe6eaed, metalness: 0.55, roughness: 0.25 });
+const shoulder = new THREE.Mesh(new THREE.RingGeometry(0.5, 1, 96), matFace); shoulder.rotation.y = Math.PI / 2; world.add(shoulder);
+const endCap = new THREE.Mesh(capGeo, matFace); endCap.rotation.y = Math.PI / 2; world.add(endCap);
+const endMark = new THREE.Mesh(new THREE.BoxGeometry(0.6, 1, 2), matDark); world.add(endMark); // risco para ver a rotação
+
+// Torre / castelo porta-ferramenta
+const toolRig = new THREE.Group(); world.add(toolRig);   // posição de avanço
+const toolVib = new THREE.Group(); toolRig.add(toolVib); // deslocamento de vibração
+const tool = new THREE.Group(); toolVib.add(tool);
+
+// Ponta da ferramenta no sistema do STEP (Z mínimo da pastilha)
+let TIP = new THREE.Vector3(-18.7, 0.26, -26.4);
+function buildMesh(d, mat) {
+  const g = new THREE.BufferGeometry();
+  g.setAttribute("position", new THREE.Float32BufferAttribute(d.v, 3));
+  g.setIndex(d.i);
+  g.computeVertexNormals();
+  return new THREE.Mesh(g, mat);
+}
+try {
+  const M = JSON.parse(document.getElementById("meshData").textContent);
+  const holder = buildMesh(M.holder, matHolder);
+  const insert = buildMesh(M.insert, matInsert);
+  tool.add(holder, insert);
+  // encontra a ponta: vértice da pastilha com menor Z
+  const v = M.insert.v; let best = 0;
+  for (let k = 2; k < v.length; k += 3) if (v[k] < v[best + 2]) best = k - 2;
+  TIP.set(v[best], v[best + 1], v[best + 2]);
+  // parafuso de fixação estilizado sobre o grampo
+  const screw = new THREE.Mesh(new THREE.CylinderGeometry(3.2, 3.2, 6, 20), matScrew);
+  screw.position.set(-9.3, 11.5, -8.3); tool.add(screw);
+  document.getElementById("loadmsg").remove();
+} catch (e) {
+  document.getElementById("loadmsg").textContent = "Não foi possível carregar a geometria da ferramenta.";
+}
+tool.position.set(-TIP.x, -TIP.y, -TIP.z);
+// bloco da torre segurando a haste
+const turret = new THREE.Mesh(new THREE.BoxGeometry(40, 40, 46), matDark);
+turret.position.set(-TIP.x, -12.5 - TIP.y, 125 - TIP.z); toolVib.add(turret);   // envolve o fim da haste
+const carriage = new THREE.Mesh(new THREE.BoxGeometry(40, 1, 46), matDark); world.add(carriage); // coluna até o barramento
+
+// Cavacos (instanced)
+const CHIPS = 260;
+const chipGeo = new THREE.TorusGeometry(1, 0.18, 4, 10, Math.PI * 1.4);
+const chipMat = new THREE.MeshStandardMaterial({ color: 0xdfe3e6, metalness: 0.5, roughness: 0.3 });
+const chips = new THREE.InstancedMesh(chipGeo, chipMat, CHIPS); chips.instanceMatrix.setUsage(THREE.DynamicDrawUsage); world.add(chips);
+const chipState = Array.from({ length: CHIPS }, () => ({ life: 0, p: new THREE.Vector3(), v: new THREE.Vector3(), r: new THREE.Euler(), w: new THREE.Vector3(), s: 1 }));
+let chipIdx = 0;
+const dummy = new THREE.Object3D();
+
+// Setas de referência (n, fn)
+function arrow(dir, origin, len, color) { const a = new THREE.ArrowHelper(dir.clone().normalize(), origin, len, color, 8, 5); world.add(a); return a; }
+const feedArrow = arrow(new THREE.Vector3(-1, 0, 0), new THREE.Vector3(0, 40, 30), 40, 0x2a78d6);
+
+/* ---------------- Simulação ---------------- */
+const sim = { playing: true, x: 0, cutting: false, done: false, t: 0, speed: 0.25, exag: true, seq: false };
+const RING = 4096; const sig = new Float32Array(RING); let sigW = 0;
+let P = params(S.ens);
+let phaseCh = 0, noiseState = 0;
+let rngSeed = 12345;
+function rnd() { rngSeed = (rngSeed * 1664525 + 1013904223) >>> 0; return rngSeed / 4294967296; }
+function gauss() { let u = 0, v = 0; while (!u) u = rnd(); v = rnd(); return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v); }
+
+const X_START = () => BAR_END() + 4;   // início, 4 mm fora da peça
+const X_END = () => CHUCK_FACE + 30;                     // para antes das castanhas
+const BAR_END = () => CHUCK_FACE + 30 + S.Lcut;          // extremidade livre do tarugo
+
+function restartPass() { sim.x = X_START(); sim.done = false; sim.t = 0; }
+restartPass();
+
+function genSamples(dtReal) {
+  // gera amostras correspondentes ao tempo real simulado (limitado)
+  const nS = Math.min(Math.round(dtReal * FS), 1200);
+  const f1 = P.n / 60;
+  const cut = sim.cutting && sim.playing;
+  for (let k = 0; k < nS; k++) {
+    sim.t += 1 / FS;
+    const t = sim.t;
+    let s = 0.08 * gauss();                                         // ruído de fundo (máquina ligada)
+    if (sim.playing) s += 0.15 * Math.sin(2 * Math.PI * f1 * t);    // desbalanceamento da placa
+    if (cut) {
+      s += P.aForced * (Math.sin(2 * Math.PI * f1 * t) + 0.45 * Math.sin(2 * Math.PI * 2 * f1 * t + 0.7) + 0.2 * Math.sin(2 * Math.PI * 3 * f1 * t + 1.9));
+      s += P.aNoise * gauss() * 0.9;
+      // resposta do modo do suporte: sempre um pouco excitado; com chatter cresce e modula
+      const env = 0.35 + 0.65 * (0.5 + 0.5 * Math.sin(2 * Math.PI * f1 * t));
+      s += (0.12 * P.aForced + P.aChat * env) * Math.sin(2 * Math.PI * F_NAT * t + phaseCh);
+    }
+    phaseCh += 0.0004 * gauss();
+    sig[sigW] = s; sigW = (sigW + 1) % RING;
+  }
+}
+
+/* ---------------- Gráficos (canvas 2D) ---------------- */
+function prepCanvas(cv) {
+  const r = cv.getBoundingClientRect();
+  const dpr = Math.min(devicePixelRatio, 2);
+  const w = Math.max(10, Math.round(r.width)), h = +cv.getAttribute("height");
+  if (cv.width !== w * dpr || cv.height !== h * dpr) { cv.width = w * dpr; cv.height = h * dpr; cv.style.height = h + "px"; }
+  const g = cv.getContext("2d"); g.setTransform(dpr, 0, 0, dpr, 0, 0); g.clearRect(0, 0, w, h);
+  return { g, w, h };
+}
+function niceMax(v) { if (v <= 0) return 1; const p = Math.pow(10, Math.floor(Math.log10(v))); for (const m of [1, 2, 2.5, 5, 10]) if (m * p >= v) return m * p; return 10 * p; }
+function axisY(g, x0, y0, x1, y1, max, min, ticks, label, fmtD = 1) {
+  g.font = "10.5px 'IBM Plex Mono', monospace"; g.textAlign = "right"; g.textBaseline = "middle";
+  for (let k = 0; k <= ticks; k++) {
+    const v = min + (max - min) * k / ticks; const y = y1 - (y1 - y0) * k / ticks;
+    g.strokeStyle = C.line; g.lineWidth = 1; g.beginPath(); g.moveTo(x0, Math.round(y) + .5); g.lineTo(x1, Math.round(y) + .5); g.stroke();
+    g.fillStyle = C.muted; g.fillText(fmt(v, fmtD), x0 - 5, y);
+  }
+  if (label) { g.save(); g.translate(10, (y0 + y1) / 2); g.rotate(-Math.PI / 2); g.textAlign = "center"; g.fillStyle = C.muted; g.fillText(label, 0, 0); g.restore(); }
+}
+
+let waveScale = 2;
+function drawWave() {
+  const { g, w, h } = prepCanvas(document.getElementById("cWave"));
+  const n = Math.round(0.04 * FS);
+  const pad = { l: 44, r: 12, t: 10, b: 22 };
+  let pk = 0; for (let k = 0; k < n; k++) pk = Math.max(pk, Math.abs(sig[(sigW - n + k + RING) % RING]));
+  waveScale += (Math.max(niceMax(pk * 1.1), 1) - waveScale) * 0.08;
+  const M = niceMax(waveScale);
+  axisY(g, pad.l, pad.t, w - pad.r, h - pad.b, M, -M, 4, "m/s²", M < 5 ? 1 : 0);
+  g.strokeStyle = C["series-vib"]; g.lineWidth = 1.5; g.lineJoin = "round"; g.beginPath();
+  for (let k = 0; k < n; k++) {
+    const v = sig[(sigW - n + k + RING) % RING];
+    const x = pad.l + (w - pad.l - pad.r) * k / (n - 1), y = pad.t + (h - pad.t - pad.b) * (0.5 - v / (2 * M));
+    k ? g.lineTo(x, y) : g.moveTo(x, y);
+  }
+  g.stroke();
+  g.fillStyle = C.muted; g.textAlign = "center"; g.textBaseline = "top"; g.font = "10.5px 'IBM Plex Mono', monospace";
+  for (const ms of [0, 10, 20, 30, 40]) g.fillText(ms + " ms", pad.l + (w - pad.l - pad.r) * ms / 40, h - pad.b + 4);
+}
+
+function fft(re, im) {
+  const n = re.length;
+  for (let i = 1, j = 0; i < n; i++) { let bit = n >> 1; for (; j & bit; bit >>= 1) j ^= bit; j ^= bit; if (i < j) { [re[i], re[j]] = [re[j], re[i]]; [im[i], im[j]] = [im[j], im[i]]; } }
+  for (let len = 2; len <= n; len <<= 1) {
+    const ang = -2 * Math.PI / len, wr = Math.cos(ang), wi = Math.sin(ang);
+    for (let i = 0; i < n; i += len) { let cr = 1, ci = 0; for (let j = 0; j < len / 2; j++) { const a = i + j, b = a + len / 2; const tr = re[b] * cr - im[b] * ci, ti = re[b] * ci + im[b] * cr; re[b] = re[a] - tr; im[b] = im[a] - ti; re[a] += tr; im[a] += ti; const nr = cr * wr - ci * wi; ci = cr * wi + ci * wr; cr = nr; } }
+  }
+}
+let specSmooth = null, fftMax = 1;
+function drawFft() {
+  const N = 2048; const re = new Float32Array(N), im = new Float32Array(N);
+  for (let k = 0; k < N; k++) { const wdw = 0.5 - 0.5 * Math.cos(2 * Math.PI * k / (N - 1)); re[k] = sig[(sigW - N + k + RING) % RING] * wdw; }
+  fft(re, im);
+  const fMax = 2500, bins = Math.floor(fMax / (FS / N));
+  if (!specSmooth || specSmooth.length !== bins) specSmooth = new Float32Array(bins);
+  let mx = 0;
+  for (let k = 0; k < bins; k++) { const a = 2 * Math.hypot(re[k], im[k]) / (N * 0.5); specSmooth[k] += (a - specSmooth[k]) * 0.25; mx = Math.max(mx, specSmooth[k]); }
+  fftMax += (niceMax(Math.max(mx * 1.15, 0.2)) - fftMax) * 0.08;
+  const M = niceMax(fftMax);
+  const { g, w, h } = prepCanvas(document.getElementById("cFft"));
+  const pad = { l: 44, r: 12, t: 10, b: 22 };
+  axisY(g, pad.l, pad.t, w - pad.r, h - pad.b, M, 0, 3, "m/s²", M < 3 ? 1 : 0);
+  const X = f => pad.l + (w - pad.l - pad.r) * f / fMax, Y = a => h - pad.b - (h - pad.t - pad.b) * a / M;
+  // área + linha
+  g.beginPath(); g.moveTo(X(0), Y(0));
+  for (let k = 0; k < bins; k++) g.lineTo(X(k * FS / N), Y(Math.min(specSmooth[k], M)));
+  g.lineTo(X(fMax), Y(0)); g.closePath();
+  g.fillStyle = C["series-vib"]; g.globalAlpha = 0.15; g.fill(); g.globalAlpha = 1;
+  g.beginPath(); for (let k = 0; k < bins; k++) { const x = X(k * FS / N), y = Y(Math.min(specSmooth[k], M)); k ? g.lineTo(x, y) : g.moveTo(x, y); }
+  g.strokeStyle = C["series-vib"]; g.lineWidth = 1.5; g.stroke();
+  g.fillStyle = C.muted; g.textAlign = "center"; g.textBaseline = "top"; g.font = "10.5px 'IBM Plex Mono', monospace";
+  for (const f of [0, 500, 1000, 1500, 2000, 2500]) g.fillText(f === 0 ? "0" : (f / 1000).toLocaleString("pt-BR") + " kHz", clamp(X(f), pad.l + 8, w - 22), h - pad.b + 4);
+  // marcador do modo do suporte
+  g.setLineDash([3, 3]); g.strokeStyle = C["ink-2"]; g.lineWidth = 1; g.beginPath(); g.moveTo(X(F_NAT) + .5, pad.t); g.lineTo(X(F_NAT) + .5, h - pad.b); g.stroke(); g.setLineDash([]);
+  g.fillStyle = C["ink-2"]; g.textAlign = "left"; g.textBaseline = "top"; g.fillText("modo do suporte", X(F_NAT) + 4, pad.t);
+}
+
+function drawProfile() {
+  const { g, w, h } = prepCanvas(document.getElementById("cProf"));
+  const pad = { l: 44, r: 10, t: 10, b: 22 };
+  const L = 2.5, N = 700, f = P.f, r = R_EPS;
+  const geo = [], real = [];
+  let seed = 777 + P.i * 31 + S.rep * 7;
+  const rr = () => { seed = (seed * 1664525 + 1013904223) >>> 0; return seed / 4294967296 - 0.5; };
+  const chat = P.chatter, nz = 0.04 + 0.03 * P.aForced;
+  let smooth = 0;
+  for (let k = 0; k < N; k++) {
+    const x = L * k / (N - 1);
+    const u = ((x % f) + f) % f - f / 2;
+    const yg = (r - Math.sqrt(r * r - u * u)) * 1000;             // µm
+    smooth += (rr() - smooth) * 0.3;
+    const wav = chat * 1.6 * Math.sin(2 * Math.PI * x / (f * 3.7) + 0.6) + chat * 0.9 * Math.sin(2 * Math.PI * x / 0.083);
+    geo.push(yg); real.push(yg + wav + smooth * (nz + chat * 1.2) * 4 + 0.25 * (P.raEst - P.raTh * 1.12) * Math.sin(2 * Math.PI * x / 0.21));
+  }
+  const cen = a => { const m = a.reduce((s, v) => s + v, 0) / a.length; return a.map(v => v - m); };
+  const G = cen(geo), R = cen(real);
+  const raOf = a => a.reduce((s, v) => s + Math.abs(v), 0) / a.length;
+  let lim = 0; for (const v of R) lim = Math.max(lim, Math.abs(v)); for (const v of G) lim = Math.max(lim, Math.abs(v));
+  const M = niceMax(lim * 1.1);
+  axisY(g, pad.l, pad.t, w - pad.r, h - pad.b, M, -M, 4, "µm", M < 5 ? 1 : 0);
+  const X = x => pad.l + (w - pad.l - pad.r) * x / L, Y = v => pad.t + (h - pad.t - pad.b) * (0.5 - v / (2 * M));
+  g.setLineDash([4, 3]); g.strokeStyle = C["ink-2"]; g.lineWidth = 1.2; g.beginPath();
+  G.forEach((v, k) => { const x = X(L * k / (N - 1)), y = Y(-v); k ? g.lineTo(x, y) : g.moveTo(x, y); }); g.stroke(); g.setLineDash([]);
+  g.strokeStyle = C["series-ra"]; g.lineWidth = 2; g.lineJoin = "round"; g.beginPath();
+  R.forEach((v, k) => { const x = X(L * k / (N - 1)), y = Y(-v); k ? g.lineTo(x, y) : g.moveTo(x, y); }); g.stroke();
+  g.fillStyle = C.muted; g.textAlign = "center"; g.textBaseline = "top"; g.font = "10.5px 'IBM Plex Mono', monospace";
+  for (const x of [0, 0.5, 1, 1.5, 2, 2.5]) g.fillText(fmt(x, 1) + " mm", clamp(X(x), pad.l + 14, w - 24), h - pad.b + 5);
+  // rótulo direto de Ra
+  g.textAlign = "right"; g.textBaseline = "top"; g.font = "500 11px 'IBM Plex Mono', monospace";
+  g.fillStyle = C.ink; g.fillText(`Ra perfil ${fmt(raOf(R))} µm · Ra geom. ${fmt(raOf(G))} µm · passo ${fmt(f, 2)} mm`, w - pad.r, pad.t + 2);
+}
+
+/* Efeitos principais: média da resposta em cada nível de cada fator */
+let effHits = [];
+function drawEffects() {
+  const { g, w, h } = prepCanvas(document.getElementById("cEff"));
+  const all = L9.map((_, i) => params(i));
+  const resp = S.resp;
+  const measuredAll = all.every(p => (resp === "ra" ? p.raMeas : p.vibMeas) != null);
+  const val = p => resp === "ra" ? (measuredAll ? p.raMeas : p.raEst) : (measuredAll ? p.vibMeas : p.vibEst);
+  const facs = [["Rotação n", 0, S.levels.n, "rpm"], ["Avanço fn", 1, S.levels.f, "mm/rot"], ["Prof. ap", 2, S.levels.ap, "mm"]];
+  const means = facs.map(([, fi]) => [1, 2, 3].map(l => mean(all.filter(p => p.lv[fi] === l).map(val))));
+  const grand = mean(all.map(val));
+  let mx = 0; means.flat().forEach(v => mx = Math.max(mx, v || 0));
+  const M = niceMax(mx * 1.15);
+  const pad = { l: 44, r: 8, t: 22, b: 30 };
+  const gap = 14, pw = (w - pad.l - pad.r - gap * 2) / 3;
+  axisY(g, pad.l, pad.t, w - pad.r, h - pad.b, M, 0, 4, resp === "ra" ? "Ra µm" : "m/s²", M < 5 ? 1 : 0);
+  const color = resp === "ra" ? C["series-ra"] : C["series-vib"];
+  const Y = v => h - pad.b - (h - pad.t - pad.b) * v / M;
+  effHits = [];
+  facs.forEach(([name, fi, lv, unit], j) => {
+    const x0 = pad.l + j * (pw + gap);
+    const X = k => x0 + pw * (0.15 + 0.35 * k);
+    g.fillStyle = C["ink-2"]; g.font = "500 11px 'IBM Plex Sans', sans-serif"; g.textAlign = "center"; g.textBaseline = "bottom";
+    g.fillText(name, x0 + pw / 2, pad.t - 6);
+    g.setLineDash([3, 3]); g.strokeStyle = C.muted; g.lineWidth = 1; g.beginPath(); g.moveTo(x0, Y(grand)); g.lineTo(x0 + pw, Y(grand)); g.stroke(); g.setLineDash([]);
+    g.strokeStyle = color; g.lineWidth = 2; g.beginPath(); means[j].forEach((v, k) => { k ? g.lineTo(X(k), Y(v)) : g.moveTo(X(k), Y(v)); }); g.stroke();
+    means[j].forEach((v, k) => {
+      g.beginPath(); g.arc(X(k), Y(v), 4.5, 0, Math.PI * 2); g.fillStyle = color; g.fill(); g.lineWidth = 2; g.strokeStyle = C.panel; g.stroke();
+      g.fillStyle = C.muted; g.font = "10.5px 'IBM Plex Mono', monospace"; g.textBaseline = "top";
+      g.fillText(String(lv[k]).replace(".", ","), X(k), h - pad.b + 4);
+      effHits.push({ x: X(k), y: Y(v), txt: `${name} nível ${k + 1} (${String(lv[k]).replace(".", ",")} ${unit}): ${fmt(v)} ${resp === "ra" ? "µm" : "m/s²"}` });
+    });
+    const delta = Math.max(...means[j]) - Math.min(...means[j]);
+    g.fillStyle = C.ink; g.textBaseline = "top"; g.font = "500 10.5px 'IBM Plex Mono', monospace";
+    g.fillText("Δ " + fmt(delta), x0 + pw / 2, h - pad.b + 16);
+  });
+  const deltas = means.map(m => Math.max(...m) - Math.min(...m));
+  const top = deltas.indexOf(Math.max(...deltas));
+  document.getElementById("effNote").textContent =
+    (measuredAll ? "Com os dados medidos (média das repetições). " : "Com valores estimados pelo modelo; preencha a tabela para usar as medições. ") +
+    `Maior efeito em ${resp === "ra" ? "Ra" : "vibração"}: ${facs[top][0]} (Δ ${fmt(deltas[top])}). Linha tracejada: média geral.`;
+}
+const cEff = document.getElementById("cEff"), tip = document.getElementById("tip");
+cEff.addEventListener("pointermove", e => {
+  const r = cEff.getBoundingClientRect(); const x = e.clientX - r.left, y = e.clientY - r.top;
+  let best = null, bd = 18; for (const hh of effHits) { const d = Math.hypot(hh.x - x, hh.y - y); if (d < bd) { bd = d; best = hh; } }
+  if (best) { tip.hidden = false; tip.textContent = best.txt; tip.style.left = Math.min(e.clientX + 12, innerWidth - tip.offsetWidth - 8) + "px"; tip.style.top = (e.clientY + 12) + "px"; }
+  else tip.hidden = true;
+});
+cEff.addEventListener("pointerleave", () => tip.hidden = true);
+document.querySelectorAll(".effects-toggle button").forEach(b => b.addEventListener("click", () => {
+  S.resp = b.dataset.resp; document.querySelectorAll(".effects-toggle button").forEach(x => x.setAttribute("aria-pressed", x === b)); drawEffects();
+}));
+
+/* ---------------- UI ---------------- */
+const ensChips = document.getElementById("ensChips"), repChips = document.getElementById("repChips");
+function buildChips() {
+  ensChips.innerHTML = "";
+  L9.forEach((_, i) => {
+    const b = document.createElement("button"); b.className = "chip"; b.type = "button"; b.textContent = i + 1;
+    b.setAttribute("aria-pressed", i === S.ens); b.title = `Ensaio ${i + 1}`;
+    b.addEventListener("click", () => selectEns(i)); ensChips.appendChild(b);
+  });
+  repChips.innerHTML = "";
+  ["R1", "R2"].forEach((t, i) => {
+    const b = document.createElement("button"); b.className = "chip"; b.type = "button"; b.textContent = t; b.setAttribute("aria-pressed", i === S.rep);
+    b.addEventListener("click", () => { S.rep = i; buildChips(); restartPass(); drawProfile(); updateReadouts(); }); repChips.appendChild(b);
+  });
+}
+function selectEns(i, keepSeq) {
+  S.ens = i; P = params(i); if (!keepSeq) sim.seq = false;
+  buildChips(); buildTable(); restartPass(); drawProfile(); updateReadouts(); updateScene(true);
+}
+
+const tbody = document.getElementById("tbody");
+function buildTable() {
+  tbody.innerHTML = "";
+  L9.forEach((_, i) => {
+    const p = params(i); const tr = document.createElement("tr"); if (i === S.ens) tr.className = "on";
+    const lv = k => `<span class="lvl">(${p.lv[k]})</span> `;
+    tr.innerHTML = `<td class="l">${i + 1}</td><td>${lv(0)}${p.n}</td><td>${lv(1)}${fmt(p.f)}</td><td>${lv(2)}${fmt(p.ap, 1)}</td><td>${fmt(p.vc, 0)}</td><td>${fmt(p.vf, 0)}</td><td>${fmt(p.raTh)}</td><td>${fmt(p.raEst)}</td>` +
+      [["ra", 0], ["ra", 1], ["vib", 0], ["vib", 1]].map(([k, r]) => `<td><input type="number" step="0.01" min="0" id="m-${i}-${k}-${r}" aria-label="Ensaio ${i + 1} ${k === "ra" ? "Ra" : "vibração"} R${r + 1}" value="${S.meas[i][k][r] ?? ""}"></td>`).join("");
+    tr.addEventListener("click", e => { if (e.target.tagName !== "INPUT" && i !== S.ens) selectEns(i); });
+    tbody.appendChild(tr);
+  });
+  tbody.querySelectorAll("input").forEach(inp => inp.addEventListener("change", () => {
+    const [, i, k, r] = inp.id.split("-"); const v = inp.value === "" ? null : parseFloat(inp.value.replace(",", "."));
+    S.meas[+i][k][+r] = isNaN(v) ? null : v; save(); P = params(S.ens); updateReadouts(); drawEffects();
+  }));
+}
+
+const levelsEl = document.getElementById("levels");
+[["n", "Rotação n (rpm)", 50], ["f", "Avanço fn (mm/rot)", 0.01], ["ap", "Profundidade ap (mm)", 0.1]].forEach(([k, label, step]) => {
+  const l = document.createElement("span"); l.className = "small"; l.textContent = label; levelsEl.appendChild(l);
+  for (let j = 0; j < 3; j++) {
+    const inp = document.createElement("input"); inp.type = "number"; inp.step = step; inp.min = 0; inp.id = `lv-${k}-${j}`; inp.value = S.levels[k][j];
+    inp.setAttribute("aria-label", `${label} nível ${j + 1}`);
+    inp.addEventListener("change", () => { const v = parseFloat(inp.value); if (!isNaN(v) && v > 0) { S.levels[k][j] = v; save(); refreshAll(); } });
+    levelsEl.appendChild(inp);
+  }
+});
+const d0 = document.getElementById("d0"), lcut = document.getElementById("lcut");
+d0.value = S.D0; lcut.value = S.Lcut;
+d0.addEventListener("change", () => { S.D0 = clamp(+d0.value || 50, 10, 120); save(); refreshAll(); frameCamera(); });
+lcut.addEventListener("change", () => { S.Lcut = clamp(+lcut.value || 80, 20, 120); save(); refreshAll(); frameCamera(); });
+function refreshAll() { P = params(S.ens); buildTable(); restartPass(); drawProfile(); drawEffects(); updateReadouts(); updateScene(true); }
+
+document.getElementById("btnClear").addEventListener("click", e => {
+  const b = e.currentTarget;
+  if (b.dataset.armed) { S.meas = Array.from({ length: 9 }, () => ({ ra: [null, null], vib: [null, null] })); save(); refreshAll(); b.textContent = "Limpar medições"; delete b.dataset.armed; }
+  else { b.dataset.armed = 1; b.textContent = "Confirmar limpeza"; setTimeout(() => { if (b.dataset.armed) { delete b.dataset.armed; b.textContent = "Limpar medições"; } }, 4000); }
+});
+document.getElementById("btnCsv").addEventListener("click", async e => {
+  const rows = [["ensaio", "n_rpm", "fn_mm_rot", "ap_mm", "vc_m_min", "Ra_teorica_um", "Ra_estimada_um", "Ra_R1", "Ra_R2", "Vib_R1", "Vib_R2"]];
+  L9.forEach((_, i) => { const p = params(i), m = S.meas[i]; rows.push([i + 1, p.n, p.f, p.ap, p.vc.toFixed(0), p.raTh.toFixed(2), p.raEst.toFixed(2), m.ra[0] ?? "", m.ra[1] ?? "", m.vib[0] ?? "", m.vib[1] ?? ""]); });
+  const csv = rows.map(r => r.join(";")).join("\n"); const b = e.currentTarget;
+  try { await navigator.clipboard.writeText(csv); b.textContent = "CSV copiado"; } catch (err) { b.textContent = "Não foi possível copiar"; }
+  setTimeout(() => b.textContent = "Copiar CSV", 2000);
+});
+
+const btnPlay = document.getElementById("btnPlay");
+btnPlay.addEventListener("click", () => { sim.playing = !sim.playing; btnPlay.textContent = sim.playing ? "Pausar" : "Continuar"; });
+document.getElementById("btnRestart").addEventListener("click", () => { restartPass(); sim.playing = true; btnPlay.textContent = "Pausar"; });
+document.getElementById("speedSel").addEventListener("change", e => sim.speed = +e.target.value);
+document.getElementById("exag").addEventListener("change", e => sim.exag = e.target.checked);
+const turretSel = document.getElementById("turretSel"); turretSel.value = S.rear ? "rear" : "front";
+turretSel.addEventListener("change", () => { S.rear = turretSel.value === "rear"; save(); updateScene(); frameCamera(); });
+document.getElementById("btnRunAll").addEventListener("click", () => { sim.seq = true; sim.playing = true; btnPlay.textContent = "Pausar"; selectEns(0, true); });
+
+function updateReadouts() {
+  document.getElementById("tRaTh").innerHTML = `${fmt(P.raTh)}<small>µm</small>`;
+  const hasRa = P.raMeas != null, hasVib = P.vibMeas != null;
+  document.getElementById("kRa").textContent = hasRa ? "Ra medida" : "Ra estimada";
+  document.getElementById("tRa").innerHTML = `${fmt(hasRa ? P.raMeas : P.raEst)}<small>µm</small>`;
+  document.getElementById("sRa").textContent = hasRa ? `média · est. ${fmt(P.raEst)}` : `modelo · ${fmt(P.raEst / P.raTh, 1)}× teórica`;
+  document.getElementById("kVib").textContent = hasVib ? "Vibração medida" : "Vibração RMS";
+  document.getElementById("sVib").textContent = hasVib ? `média · est. ${fmt(P.vibEst, 1)}` : "modelo · m/s²";
+  document.getElementById("hud").innerHTML = [
+    `Ensaio <b>${S.ens + 1}</b> · <b>R${S.rep + 1}</b>`, `n <b>${P.n}</b> rpm`, `v<sub>c</sub> <b>${fmt(P.vc, 0)}</b> m/min`,
+    `f<sub>n</sub> <b>${fmt(P.f)}</b> mm/rot`, `a<sub>p</sub> <b>${fmt(P.ap, 1)}</b> mm`, `v<sub>f</sub> <b>${fmt(P.vf, 0)}</b> mm/min`,
+    `Ø <b>${fmt(S.D0, 0)} → ${fmt(S.D0 - 2 * P.ap, 1)}</b> mm`
+  ].map(t => `<span class="tag">${t}</span>`).join("");
+  document.getElementById("fftNote").textContent = `Rotação ${fmt(P.n / 60, 1)} Hz (1×) e harmônicos à esquerda; pico em ~${fmt(F_NAT / 1000, 2)} kHz indica o modo do suporte${P.chatter > 0.05 ? ", excitado por chatter neste ensaio" : ""}.`;
+}
+let vibDisp = 0;
+function updateLive(dt) {
+  let s2 = 0; const n = 2048; for (let k = 0; k < n; k++) { const v = sig[(sigW - n + k + RING) % RING]; s2 += v * v; }
+  const rms = Math.sqrt(s2 / n); vibDisp += (rms - vibDisp) * Math.min(1, dt * 4);
+  const show = P.vibMeas != null ? P.vibMeas : vibDisp;
+  document.getElementById("tVib").innerHTML = `${fmt(show, 1)}<small>m/s²</small>`;
+  const pill = document.getElementById("statusPill");
+  let cls, txt;
+  if (!sim.cutting || !sim.playing) { cls = "idle"; txt = sim.done ? "passe concluído" : (sim.playing ? "aproximando" : "pausado"); }
+  else[cls, txt] = statusOf(P.vibMeas ?? vibDisp, P.chatter);
+  if (pill.className !== "pill " + cls || pill.textContent !== txt) { pill.className = "pill " + cls; pill.textContent = txt; }
+  document.getElementById("prog").style.width = (100 * clamp((X_START() - sim.x) / (X_START() - X_END()), 0, 1)) + "%";
+}
+
+/* ---------------- Atualização da cena ---------------- */
+function updateScene() {
+  const R0 = S.D0 / 2, Rm = R0 - P.ap, xEnd = BAR_END();
+  const xc = clamp(sim.x, CHUCK_FACE, xEnd);
+  const lenRaw = xc - CHUCK_FACE, lenCut = xEnd - xc;
+  rawBar.visible = lenRaw > 0.01; rawBar.scale.set(R0, lenRaw, R0); rawBar.position.x = CHUCK_FACE + lenRaw / 2;
+  cutBar.visible = lenCut > 0.01; cutBar.scale.set(Rm, lenCut, Rm); cutBar.position.x = xc + lenCut / 2;
+  texCut.repeat.set(3, Math.max(1, lenCut / (P.f * 12)));   // marcas de avanço ampliadas 12×
+  texRaw.repeat.set(3, Math.max(1, lenRaw / 6));
+  shoulder.visible = lenCut > 0.01 && lenRaw > 0.01; shoulder.position.x = xc; shoulder.scale.set(R0, R0, 1);
+  const ratio = Math.round(Rm / R0 * 1000) / 1000;
+  if (shoulder.userData.ratio !== ratio) { shoulder.geometry.dispose(); shoulder.geometry = new THREE.RingGeometry(ratio, 1, 96); shoulder.userData.ratio = ratio; }
+  const endR = lenCut > 0.01 ? Rm : R0; endCap.position.x = xEnd; endCap.scale.set(endR, endR, 1);
+  endMark.position.x = xEnd + 0.4; endMark.scale.set(1, endR * 1.6, 1);
+  const sg = S.rear ? -1 : 1;
+  toolRig.position.set(sim.x, 0, sg * Rm);
+  toolRig.rotation.x = S.rear ? Math.PI : 0;              // torre traseira: ferramenta invertida
+  const tz = sg * (Rm + 125 - TIP.z);                      // centro do bloco da torre em Z
+  const turretBottom = sg * (-12.5 - TIP.y) - 20;
+  const colH = turretBottom + 140; carriage.scale.y = colH; carriage.position.set(sim.x - TIP.x, -140 + colH / 2, tz);
+  feedArrow.position.set(sim.x + 30, R0 + 18, Rm + 6);
+  head.position.x = CHUCK_FACE - 60 - 75;
+}
+
+const views = {
+  free: () => ({ p: [230, 170, 330], t: [-10, -10, 20] }),
+  tool: () => { const sg = S.rear ? -1 : 1; return { p: [sim.x + 70, 65, sg * (S.D0 / 2 + 110)], t: [sim.x + 5, 0, sg * (S.D0 / 2)] }; },
+  top: () => ({ p: [0, 480, S.rear ? -60 : 90], t: [0, 0, S.rear ? -40 : 60] }),
+  front: () => ({ p: [0, 20, 480], t: [0, 0, 0] }),
+};
+let camTarget = null;
+function frameCamera(name = document.getElementById("viewSel").value) {
+  const v = views[name](); camTarget = { p: new THREE.Vector3(...v.p), t: new THREE.Vector3(...v.t), k: 0 };
+}
+document.getElementById("viewSel").addEventListener("change", e => frameCamera(e.target.value));
+camera.position.set(230, 170, 330); controls.target.set(-10, -10, 20);
+controls.addEventListener("start", () => { camTarget = null; });
+
+function resize() {
+  const r = stage.getBoundingClientRect();
+  renderer.setSize(r.width, r.height, false); camera.aspect = r.width / r.height; camera.updateProjectionMatrix();
+}
+new ResizeObserver(resize).observe(stage); resize();
+
+function applyTheme() { readTokens(); scene.background = new THREE.Color(C.viewport); drawProfile(); drawEffects(); }
+matchMedia("(prefers-color-scheme: dark)").addEventListener("change", applyTheme);
+new MutationObserver(applyTheme).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+
+/* ---------------- Loop ---------------- */
+let last = performance.now(), spinAngle = 0, uiT = 0, seqWait = 0;
+const FEED_BOOST = 2; // avanço acelerado na animação para o passe não demorar
+function loop(now) {
+  const dt = Math.min(0.05, (now - last) / 1000); last = now;
+  const R0 = S.D0 / 2;
+  if (sim.playing) {
+    spinAngle += 2 * Math.PI * (P.n / 60) * sim.speed * dt;
+    spindle.rotation.x = spinAngle; endMark.rotation.x = spinAngle;
+    if (!sim.done) {
+      sim.x -= (P.vf / 60) * FEED_BOOST * dt;
+      if (sim.x <= X_END()) { sim.x = X_END(); sim.done = true; }
+    } else {
+      // pausa curta e repete o passe (ou avança para o próximo ensaio na sequência L9)
+      seqWait += dt;
+      if (seqWait > 1.5) { seqWait = 0; if (sim.seq && S.ens < 8) selectEns(S.ens + 1, true); else { if (sim.seq) sim.seq = false; restartPass(); } }
+    }
+  }
+  sim.cutting = !sim.done && sim.x <= BAR_END() + 0.5;
+  genSamples(dt);
+  // vibração da ferramenta (deslocamento visual)
+  const cur = sig[(sigW - 1 + RING) % RING];
+  const k = sim.exag ? 0.05 : 0.004;
+  toolVib.position.set(0, cur * k, cur * k * 0.5); // local da ferramenta (acompanha a inversão)
+  updateScene();
+
+  // cavacos
+  if (sim.cutting && sim.playing) {
+    const rate = rnd() < 0.5 ? 1 : 0;
+    for (let q = 0; q < rate; q++) {
+      const c = chipState[chipIdx]; chipIdx = (chipIdx + 1) % CHIPS;
+      c.life = 0.9 + rnd() * 0.5; c.s = 0.8 + P.ap * 0.6 + P.f * 3;
+      const sg = S.rear ? -1 : 1;
+      c.p.set(sim.x - 1, sg * 1.5, sg * (R0 - P.ap * 0.5));
+      c.v.set(20 + rnd() * 30, sg * (60 + rnd() * 40), sg * (40 + rnd() * 50));
+      c.r.set(rnd() * 6, rnd() * 6, rnd() * 6); c.w.set(rnd() * 20 - 10, rnd() * 20 - 10, rnd() * 20 - 10);
+    }
+  }
+  for (let q = 0; q < CHIPS; q++) {
+    const c = chipState[q];
+    if (c.life > 0) {
+      c.life -= dt; c.v.y -= 260 * dt; c.p.addScaledVector(c.v, dt);
+      if (c.p.y < -138) { c.p.y = -138; c.v.set(0, 0, 0); c.w.set(0, 0, 0); }
+      c.r.x += c.w.x * dt; c.r.y += c.w.y * dt; c.r.z += c.w.z * dt;
+      dummy.position.copy(c.p); dummy.rotation.copy(c.r); dummy.scale.setScalar(c.life > 0 ? c.s : 0);
+    } else dummy.scale.setScalar(0);
+    dummy.updateMatrix(); chips.setMatrixAt(q, dummy.matrix);
+  }
+  chips.instanceMatrix.needsUpdate = true;
+
+  if (camTarget) {
+    if (document.getElementById("viewSel").value === "tool") { const v = views.tool(); camTarget.p.set(...v.p); camTarget.t.set(...v.t); }
+    camera.position.lerp(camTarget.p, 0.08); controls.target.lerp(camTarget.t, 0.08);
+    if (camera.position.distanceTo(camTarget.p) < 0.5 && document.getElementById("viewSel").value !== "tool") camTarget = null;
+  }
+  controls.update();
+  renderer.render(scene, camera);
+
+  uiT += dt;
+  if (uiT > 1 / 30) { uiT = 0; drawWave(); drawFft(); updateLive(dt * 2); }
+  requestAnimationFrame(loop);
+}
+
+buildChips(); buildTable(); applyTheme(); updateReadouts(); updateScene();
+new ResizeObserver(() => { drawProfile(); drawEffects(); }).observe(document.querySelector(".lower"));
+requestAnimationFrame(loop);
+</script>
+
+</body>
+</html>

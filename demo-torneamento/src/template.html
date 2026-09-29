@@ -1,0 +1,917 @@
+<title>Bancada Virtual de Torneamento</title>
+<meta name="description" content="Demonstração 3D dos ensaios L9 de torneamento de alumínio com suporte DWLNR 2525M 06 e pastilha WNMG 06 04 12-WMX 4405: vibração e rugosidade.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: painel de instrumentos de bancada. Viewport 3D + leituras à direita; abaixo, perfil, matriz L9 e efeitos principais. */
+:root {
+  --bg: #eceff1;
+  --panel: #ffffff;
+  --panel-2: #f5f7f8;
+  --ink: #141a1f;
+  --ink-2: #4a545d;
+  --muted: #76818b;
+  --line: #d3d9de;
+  --accent: #b87a12;        /* dourado do revestimento da pastilha */
+  --accent-ink: #7f5200;
+  --viewport: #dfe4e8;
+  --series-ra: #2a78d6;     /* rugosidade */
+  --series-vib: #eb6834;    /* vibração */
+  --good: #1f8a4c;
+  --warn: #b27400;
+  --crit: #cf3a3a;
+  --f-display: "Barlow Condensed", "Arial Narrow", "Helvetica Neue", Arial, sans-serif;
+  --f-body: "IBM Plex Sans", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --f-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  --r: 6px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0f1316; --panel: #171d22; --panel-2: #1c242a; --ink: #e7ecf0; --ink-2: #a8b3bc;
+    --muted: #7c8892; --line: #2a343c; --accent: #d9a13a; --accent-ink: #e8b85c; --viewport: #12181c;
+    --series-ra: #3987e5; --series-vib: #d95926; --good: #3fb36e; --warn: #d9a13a; --crit: #e66767;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0f1316; --panel: #171d22; --panel-2: #1c242a; --ink: #e7ecf0; --ink-2: #a8b3bc;
+  --muted: #7c8892; --line: #2a343c; --accent: #d9a13a; --accent-ink: #e8b85c; --viewport: #12181c;
+  --series-ra: #3987e5; --series-vib: #d95926; --good: #3fb36e; --warn: #d9a13a; --crit: #e66767;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--ink); font-family: var(--f-body); font-size: 14px; line-height: 1.45; }
+.wrap { max-width: 1440px; margin: 0 auto; padding-inline: 16px; padding-block: 16px 40px; display: grid; gap: 16px; }
+h1, h2, h3 { font-family: var(--f-display); font-weight: 600; letter-spacing: .01em; margin: 0; text-wrap: balance; }
+h1 { font-size: 30px; line-height: 1.05; }
+h2 { font-size: 20px; }
+h3 { font-size: 15px; text-transform: uppercase; letter-spacing: .06em; color: var(--ink-2); font-weight: 600; }
+.mono, .num { font-family: var(--f-mono); font-variant-numeric: tabular-nums; }
+.eyebrow { font-family: var(--f-mono); font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+p { margin: 0; }
+.muted { color: var(--muted); }
+.small { font-size: 12px; }
+
+header.top { display: flex; flex-wrap: wrap; gap: 12px 24px; align-items: end; justify-content: space-between; }
+header.top .id { display: grid; gap: 4px; min-width: 0; }
+.spec { display: flex; flex-wrap: wrap; gap: 6px; }
+.tag { font-family: var(--f-mono); font-size: 11.5px; padding: 3px 8px; border: 1px solid var(--line); border-radius: 999px; background: var(--panel); color: var(--ink-2); white-space: nowrap; }
+.tag b { color: var(--ink); font-weight: 500; }
+
+.selector { display: flex; flex-wrap: wrap; gap: 10px 16px; align-items: center; background: var(--panel); border: 1px solid var(--line); border-radius: var(--r); padding: 10px 12px; }
+.chips { display: flex; flex-wrap: wrap; gap: 4px; }
+.chip { font-family: var(--f-mono); font-size: 13px; min-width: 36px; height: 32px; padding: 0 8px; border: 1px solid var(--line); background: var(--panel-2); color: var(--ink); border-radius: 4px; cursor: pointer; }
+.chip:hover { border-color: var(--ink-2); }
+.chip[aria-pressed="true"] { background: var(--ink); color: var(--panel); border-color: var(--ink); }
+.chip .st { display: inline-block; width: 6px; height: 6px; border-radius: 50%; margin-left: 5px; vertical-align: middle; background: transparent; }
+.sel-label { font-size: 12px; color: var(--muted); font-family: var(--f-mono); text-transform: uppercase; letter-spacing: .06em; }
+button.btn { font: 500 13px var(--f-body); height: 32px; padding: 0 12px; border-radius: 4px; border: 1px solid var(--line); background: var(--panel-2); color: var(--ink); cursor: pointer; display: inline-flex; align-items: center; gap: 6px; }
+button.btn:hover { border-color: var(--ink-2); }
+button.btn.primary { background: var(--accent); border-color: var(--accent); color: #1a1204; }
+button:focus-visible, input:focus-visible, select:focus-visible { outline: 2px solid var(--series-ra); outline-offset: 2px; }
+select, input[type="number"] { font: 13px var(--f-mono); height: 32px; border: 1px solid var(--line); border-radius: 4px; background: var(--panel-2); color: var(--ink); padding: 0 6px; }
+.spacer { flex: 1; }
+
+.main { display: grid; grid-template-columns: minmax(0, 1.65fr) minmax(0, 1fr); gap: 16px; }
+@media (max-width: 1020px) { .main { grid-template-columns: minmax(0, 1fr); } }
+
+.stage { position: relative; background: var(--viewport); border: 1px solid var(--line); border-radius: var(--r); overflow: hidden; min-height: 420px; height: 100%; }
+#three { position: absolute; inset: 0; display: block; width: 100%; height: 100%; touch-action: none; }
+.hud { position: absolute; left: 10px; top: 10px; right: 10px; display: flex; flex-wrap: wrap; gap: 6px; pointer-events: none; }
+.hud .tag { background: color-mix(in srgb, var(--panel) 88%, transparent); backdrop-filter: blur(4px); }
+.stage-bar { position: absolute; left: 10px; right: 10px; bottom: 10px; display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+.stage-bar .btn, .stage-bar select { background: color-mix(in srgb, var(--panel) 92%, transparent); }
+.progress { flex: 1 1 160px; min-width: 120px; height: 6px; background: color-mix(in srgb, var(--panel) 70%, transparent); border-radius: 3px; overflow: hidden; }
+.progress i { display: block; height: 100%; width: 0; background: var(--accent); }
+.loadmsg { position: absolute; inset: 0; display: grid; place-items: center; color: var(--muted); font-family: var(--f-mono); font-size: 12px; }
+
+.side { display: grid; gap: 12px; align-content: start; min-width: 0; }
+.card { background: var(--panel); border: 1px solid var(--line); border-radius: var(--r); padding: 12px; display: grid; gap: 8px; min-width: 0; }
+.card-head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; flex-wrap: wrap; }
+.tiles { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+.tile { border: 1px solid var(--line); border-radius: 4px; padding: 8px 10px; display: grid; gap: 2px; background: var(--panel-2); min-width: 0; }
+.tile .v { font-family: var(--f-mono); font-size: 22px; font-weight: 500; font-variant-numeric: tabular-nums; line-height: 1.1; }
+.tile .v small { font-size: 12px; color: var(--muted); font-weight: 400; margin-left: 2px; }
+.tile .k { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; }
+.tile .sub { font-size: 11px; color: var(--ink-2); font-family: var(--f-mono); }
+.pill { display: inline-flex; align-items: center; gap: 5px; font: 500 11px var(--f-mono); padding: 2px 8px; border-radius: 999px; border: 1px solid currentColor; white-space: nowrap; }
+.pill::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
+.pill.good { color: var(--good); } .pill.warn { color: var(--warn); } .pill.crit { color: var(--crit); } .pill.idle { color: var(--muted); }
+.pill.good::before { border-radius: 50%; } .pill.warn::before { border-radius: 1px; transform: rotate(45deg); } .pill.crit::before { border-radius: 0; }
+canvas.chart { width: 100%; display: block; }
+.legend { display: flex; flex-wrap: wrap; gap: 4px 14px; font-size: 12px; color: var(--ink-2); }
+.legend span { display: inline-flex; align-items: center; gap: 6px; }
+.legend i { width: 16px; height: 2px; background: currentColor; display: inline-block; }
+.legend i.dash { background: repeating-linear-gradient(90deg, currentColor 0 4px, transparent 4px 7px); }
+.note { font-size: 12px; color: var(--ink-2); border-left: 2px solid var(--accent); padding-left: 10px; }
+
+.lower { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 16px; }
+@media (max-width: 1020px) { .lower { grid-template-columns: minmax(0, 1fr); } }
+
+.table-wrap { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; font-size: 12.5px; }
+th, td { padding: 5px 6px; border-bottom: 1px solid var(--line); text-align: right; white-space: nowrap; }
+th { font: 500 11px var(--f-mono); color: var(--muted); text-transform: uppercase; letter-spacing: .04em; vertical-align: bottom; }
+th.l, td.l { text-align: left; }
+td { font-family: var(--f-mono); font-variant-numeric: tabular-nums; }
+tbody tr { cursor: pointer; }
+tbody tr:hover { background: var(--panel-2); }
+tbody tr.on { background: color-mix(in srgb, var(--accent) 14%, transparent); }
+td input { width: 62px; height: 26px; font-size: 12px; text-align: right; }
+.lvl { color: var(--muted); }
+.group-h { border-bottom: 0; text-align: center; color: var(--ink-2); }
+.levels { display: grid; grid-template-columns: auto repeat(3, minmax(0, 1fr)); gap: 6px 8px; align-items: center; }
+.levels input { width: 100%; }
+.levels .h { font: 500 11px var(--f-mono); color: var(--muted); text-transform: uppercase; }
+.row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.effects-toggle { display: inline-flex; border: 1px solid var(--line); border-radius: 4px; overflow: hidden; }
+.effects-toggle button { font: 500 12px var(--f-body); border: 0; background: var(--panel-2); color: var(--ink-2); padding: 5px 10px; cursor: pointer; }
+.effects-toggle button[aria-pressed="true"] { background: var(--ink); color: var(--panel); }
+.tip { position: fixed; pointer-events: none; background: var(--panel); color: var(--ink); border: 1px solid var(--line); border-radius: 4px; padding: 6px 8px; font: 12px var(--f-mono); box-shadow: 0 4px 14px rgba(0,0,0,.14); z-index: 10; }
+footer { font-size: 12px; color: var(--muted); display: grid; gap: 4px; }
+footer a { color: var(--ink-2); }
+@media (max-width: 520px) { .tiles { grid-template-columns: minmax(0,1fr) minmax(0,1fr); } h1 { font-size: 24px; } .stage { min-height: 340px; } }
+@media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto; } }
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <div class="id">
+      <span class="eyebrow">UniSENAI · Projeto Integrador · Tecnologia em Fabricação Mecânica</span>
+      <h1>Bancada Virtual de Torneamento</h1>
+      <p class="muted">Rotação, avanço e profundidade de corte × vibração e rugosidade no torneamento cilíndrico externo de alumínio.</p>
+    </div>
+    <div class="spec">
+      <span class="tag">Suporte <b>DWLNR 2525M 06</b></span>
+      <span class="tag">Pastilha <b>WNMG 06 04 12-WMX 4405</b></span>
+      <span class="tag">r<sub>ε</sub> <b>1,2 mm</b></span>
+      <span class="tag">κ<sub>r</sub> <b>95°</b></span>
+      <span class="tag">Material <b>Alumínio (ISO N)</b></span>
+    </div>
+  </header>
+
+  <section class="selector" aria-label="Seleção do ensaio">
+    <span class="sel-label">Ensaio L9</span>
+    <div class="chips" id="ensChips"></div>
+    <span class="sel-label">Repetição</span>
+    <div class="chips" id="repChips"></div>
+    <span class="spacer"></span>
+    <button class="btn" id="btnRunAll" type="button" title="Executa os 9 ensaios em sequência">Rodar sequência L9</button>
+  </section>
+
+  <section class="main">
+    <div class="stage" id="stage">
+      <canvas id="three" aria-label="Modelo 3D do torno com tarugo, suporte e pastilha"></canvas>
+      <div class="loadmsg" id="loadmsg">Carregando modelo 3D…</div>
+      <div class="hud" id="hud"></div>
+      <div class="stage-bar">
+        <button class="btn primary" id="btnPlay" type="button">Pausar</button>
+        <button class="btn" id="btnRestart" type="button">Reiniciar passe</button>
+        <select id="viewSel" aria-label="Vista da câmera">
+          <option value="free">Vista geral</option>
+          <option value="tool">Detalhe da pastilha</option>
+          <option value="top">Vista superior</option>
+          <option value="front">Vista frontal</option>
+        </select>
+        <select id="speedSel" aria-label="Velocidade da animação">
+          <option value="0.1">Rotação 10 %</option>
+          <option value="0.25" selected>Rotação 25 %</option>
+          <option value="1">Rotação real</option>
+        </select>
+        <select id="turretSel" aria-label="Posição da torre"><option value="rear">Torre traseira</option><option value="front">Torre dianteira</option></select>
+        <label class="tag row" style="gap:4px;pointer-events:auto"><input type="checkbox" id="exag" checked> vibração ampliada</label>
+        <div class="progress" aria-label="Progresso do passe"><i id="prog"></i></div>
+      </div>
+    </div>
+
+    <div class="side">
+      <div class="card">
+        <div class="card-head">
+          <h3>Leituras do ensaio</h3>
+          <span id="statusPill" class="pill idle">parado</span>
+        </div>
+        <div class="tiles">
+          <div class="tile"><span class="k">Ra teórica</span><span class="v" id="tRaTh">–</span><span class="sub">f²/(18√3·rε)</span></div>
+          <div class="tile"><span class="k" id="kRa">Ra estimada</span><span class="v" id="tRa">–</span><span class="sub" id="sRa">modelo</span></div>
+          <div class="tile"><span class="k" id="kVib">Vibração RMS</span><span class="v" id="tVib">–</span><span class="sub" id="sVib">aceleração</span></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-head">
+          <h3>Sinal de vibração</h3>
+          <span class="small muted mono">acelerômetro no suporte · 40 ms</span>
+        </div>
+        <canvas class="chart" id="cWave" height="130" aria-label="Sinal de vibração no tempo"></canvas>
+      </div>
+
+      <div class="card">
+        <div class="card-head">
+          <h3>Espectro (FFT)</h3>
+          <span class="small muted mono">0–2,5 kHz</span>
+        </div>
+        <canvas class="chart" id="cFft" height="130" aria-label="Espectro de frequências da vibração"></canvas>
+        <p class="small muted" id="fftNote"></p>
+      </div>
+    </div>
+  </section>
+
+  <section class="lower">
+    <div class="card">
+      <div class="card-head">
+        <h3>Perfil de rugosidade</h3>
+        <span class="small muted mono">comprimento de amostragem 2,5 mm</span>
+      </div>
+      <canvas class="chart" id="cProf" height="190" aria-label="Perfil de rugosidade simulado"></canvas>
+      <div class="legend">
+        <span style="color:var(--series-ra)"><i></i>perfil com vibração</span>
+        <span style="color:var(--ink-2)"><i class="dash"></i>perfil geométrico (só avanço e rε)</span>
+      </div>
+      <p class="note">As cristas têm passo igual ao avanço f<sub>n</sub> e forma do raio de ponta r<sub>ε</sub> = 1,2 mm. A vibração soma ondulação e irregularidade, e por isso a Ra medida deve ficar acima da teórica.</p>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <h3>Efeitos principais</h3>
+        <div class="effects-toggle" role="group" aria-label="Resposta">
+          <button type="button" data-resp="ra" aria-pressed="true">Ra</button>
+          <button type="button" data-resp="vib" aria-pressed="false">Vibração</button>
+        </div>
+      </div>
+      <canvas class="chart" id="cEff" height="190" aria-label="Gráfico de efeitos principais"></canvas>
+      <p class="small muted" id="effNote"></p>
+    </div>
+  </section>
+
+  <section class="card">
+    <div class="card-head">
+      <h2>Matriz de ensaios L9 (Taguchi) com resultados</h2>
+      <div class="row">
+        <button class="btn" type="button" id="btnCsv">Copiar CSV</button>
+        <button class="btn" type="button" id="btnClear">Limpar medições</button>
+      </div>
+    </div>
+    <p class="small muted">Clique numa linha para ver o ensaio no torno. Digite a Ra do rugosímetro e a vibração medida (m/s² RMS) nas duas repetições: os indicadores e os efeitos principais passam a usar os dados medidos. Os valores ficam salvos neste navegador.</p>
+    <div class="table-wrap">
+      <table id="tbl">
+        <thead>
+          <tr>
+            <th class="l" rowspan="2">Ensaio</th>
+            <th rowspan="2">n<br>rpm</th>
+            <th rowspan="2">f<sub>n</sub><br>mm/rot</th>
+            <th rowspan="2">a<sub>p</sub><br>mm</th>
+            <th rowspan="2">v<sub>c</sub><br>m/min</th>
+            <th rowspan="2">v<sub>f</sub><br>mm/min</th>
+            <th rowspan="2">Ra teór.<br>µm</th>
+            <th rowspan="2">Ra est.<br>µm</th>
+            <th class="group-h" colspan="2">Ra medida µm</th>
+            <th class="group-h" colspan="2">Vibração m/s²</th>
+          </tr>
+          <tr><th>R1</th><th>R2</th><th>R1</th><th>R2</th></tr>
+        </thead>
+        <tbody id="tbody"></tbody>
+      </table>
+    </div>
+    <div class="card" style="background:var(--panel-2)">
+      <div class="card-head"><h3>Níveis dos fatores</h3><span class="small muted">Sugestão inicial, ajuste conforme a capacidade do torno e a recomendação do fabricante</span></div>
+      <div class="levels" id="levels">
+        <span></span><span class="h">Nível 1 (baixo)</span><span class="h">Nível 2 (médio)</span><span class="h">Nível 3 (alto)</span>
+      </div>
+      <div class="row small">
+        <label for="d0">Diâmetro inicial do tarugo (mm)</label><input type="number" id="d0" min="10" max="120" step="1" value="50" style="width:80px">
+        <label for="lcut">Comprimento usinado (mm)</label><input type="number" id="lcut" min="20" max="120" step="5" value="80" style="width:80px">
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <p><b>Sobre os dados:</b> até os ensaios serem realizados, vibração e “Ra estimada” vêm de um modelo ilustrativo (força de corte k<sub>c</sub>·a<sub>p</sub>·f<sub>n</sub>, excitação na frequência de rotação, modo do suporte em ~1,45 kHz e limite de estabilidade dependente da rotação). A Ra teórica segue Machado et al. (2015). A pastilha WMX tem geometria wiper, que segundo o fabricante pode reduzir a Ra abaixo do valor da fórmula clássica para o mesmo avanço.</p>
+    <p>Modelo 3D: montagem gerada no <a href="https://www.sandvik.coromant.com/pt-pt/tools/tool-assembly-builder#assemblyid=2c1da1d4-301f-4591-7071-08df1df10947" target="_blank" rel="noopener">Tool Assembly Builder da Sandvik Coromant</a> (STEP). Autores: Marcos Felipe Moreira dos Anjos, Petterson Albert Miguel Soares. Orientação: Roberto Giani Pattaro Junior, Renato Ludwig Pilan, Ricardo Favaro.</p>
+  </footer>
+</div>
+<div class="tip" id="tip" hidden></div>
+
+<script type="application/json" id="meshData">__MESH__</script>
+
+<script type="importmap">
+{ "imports": {
+  "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+} }
+</script>
+
+<script type="module">
+import * as THREE from "three";
+import { OrbitControls } from "three/addons/controls/OrbitControls.js";
+
+/* ---------------- Dados do experimento ---------------- */
+const L9 = [[1,1,1],[1,2,2],[1,3,3],[2,1,2],[2,2,3],[2,3,1],[3,1,3],[3,2,1],[3,3,2]];
+const R_EPS = 1.2;        // mm, raio de ponta
+const KC = 500;           // N/mm², força específica de corte (alumínio 350–700)
+const F_NAT = 1450;       // Hz, modo dominante do suporte (ilustrativo)
+const FS = 8192;          // Hz, taxa de amostragem simulada
+const STORE = "bancada-torneamento-v1";
+
+const S = {
+  levels: { n: [1000, 1500, 2000], f: [0.10, 0.20, 0.30], ap: [0.5, 1.0, 1.5] },
+  D0: 50, Lcut: 80,
+  meas: Array.from({ length: 9 }, () => ({ ra: [null, null], vib: [null, null] })),
+  ens: 4, rep: 0, resp: "ra", rear: true,
+};
+try {
+  const saved = JSON.parse(localStorage.getItem(STORE) || "null");
+  if (saved) { Object.assign(S.levels, saved.levels || {}); if (typeof saved.rear === "boolean") S.rear = saved.rear; S.meas = saved.meas || S.meas; S.D0 = saved.D0 || S.D0; S.Lcut = saved.Lcut || S.Lcut; }
+} catch (e) {}
+function save() { try { localStorage.setItem(STORE, JSON.stringify({ levels: S.levels, meas: S.meas, D0: S.D0, Lcut: S.Lcut, rear: S.rear })); } catch (e) {} }
+
+const clamp = (x, a, b) => Math.max(a, Math.min(b, x));
+const fmt = (x, d = 2) => (x == null || isNaN(x)) ? "–" : x.toLocaleString("pt-BR", { minimumFractionDigits: d, maximumFractionDigits: d });
+const mean = a => { const v = a.filter(x => x != null && !isNaN(x)); return v.length ? v.reduce((s, x) => s + x, 0) / v.length : null; };
+
+// Limite de estabilidade ilustrativo: a_p limite oscila com a rotação (lóbulos)
+function apLim(n) { return 0.95 + 0.65 * (0.5 + 0.5 * Math.cos(2 * Math.PI * (n - 1000) / 760)); }
+
+function params(i) {
+  const [a, b, c] = L9[i];
+  const n = +S.levels.n[a - 1], f = +S.levels.f[b - 1], ap = +S.levels.ap[c - 1];
+  const vc = Math.PI * S.D0 * n / 1000;
+  const vf = f * n;
+  const raTh = f * f / (18 * Math.sqrt(3) * R_EPS) * 1000;
+  const Fc = KC * ap * f;
+  const chatter = clamp((ap - apLim(n)) / 0.45, 0, 1);
+  const aForced = 0.018 * Fc * (0.6 + 0.4 * n / 1500);
+  const aChat = chatter * (6 + 5 * ap);
+  const aNoise = 0.25 + 0.004 * Fc;
+  const vibEst = Math.sqrt(aForced ** 2 / 2 + aChat ** 2 / 2 + aNoise ** 2);
+  const bue = 0.35 * Math.exp(-vc / 180);                 // aresta postiça em vc baixa
+  const raEst = raTh * 1.12 + bue + 0.55 * chatter + 0.012 * aForced;
+  const m = S.meas[i];
+  const raMeas = mean(m.ra), vibMeas = mean(m.vib);
+  return { i, lv: [a, b, c], n, f, ap, vc, vf, raTh, Fc, chatter, aForced, aChat, aNoise, vibEst, raEst, raMeas, vibMeas };
+}
+function statusOf(vib, chatter) {
+  if (chatter > 0.35 || vib > 8) return ["crit", "chatter"];
+  if (chatter > 0.05 || vib > 4) return ["warn", "atenção"];
+  return ["good", "estável"];
+}
+
+/* ---------------- Tokens de cor (tema) ---------------- */
+let C = {};
+function readTokens() {
+  const cs = getComputedStyle(document.documentElement);
+  for (const k of ["bg","panel","panel-2","ink","ink-2","muted","line","accent","viewport","series-ra","series-vib","good","warn","crit"]) C[k] = cs.getPropertyValue("--" + k).trim();
+}
+readTokens();
+
+/* ---------------- Cena 3D ---------------- */
+const canvas = document.getElementById("three");
+const stage = document.getElementById("stage");
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
+renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.05;
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(35, 1, 1, 5000);
+const controls = new OrbitControls(camera, canvas);
+controls.enableDamping = true;
+
+// Ambiente simples para reflexos metálicos
+const pmrem = new THREE.PMREMGenerator(renderer);
+function envScene() {
+  const s = new THREE.Scene();
+  const g = new THREE.SphereGeometry(1000, 32, 16);
+  const m = new THREE.ShaderMaterial({ side: THREE.BackSide, uniforms: {}, vertexShader: "varying vec3 p; void main(){ p = position; gl_Position = projectionMatrix*modelViewMatrix*vec4(position,1.); }", fragmentShader: "varying vec3 p; void main(){ float h = normalize(p).y; vec3 c = mix(vec3(.18,.2,.22), vec3(1.), smoothstep(-.2,.9,h)); c += vec3(1.2)*smoothstep(.97,1.,dot(normalize(p),normalize(vec3(.4,.8,.3)))); gl_FragColor = vec4(c,1.); }" });
+  s.add(new THREE.Mesh(g, m));
+  return s;
+}
+scene.environment = pmrem.fromScene(envScene(), 0.02).texture;
+
+scene.add(new THREE.HemisphereLight(0xffffff, 0x556677, 1.4));
+const key = new THREE.DirectionalLight(0xffffff, 1.6); key.position.set(150, 260, 220); scene.add(key);
+const rim = new THREE.DirectionalLight(0xbfd6ff, 0.7); rim.position.set(-200, 120, -200); scene.add(rim);
+
+// Materiais
+const matSteel = new THREE.MeshStandardMaterial({ color: 0x8a939b, metalness: 0.5, roughness: 0.4 });
+const matDark = new THREE.MeshStandardMaterial({ color: 0x4d565e, metalness: 0.3, roughness: 0.6 });
+const matHolder = new THREE.MeshStandardMaterial({ color: 0x5a636c, metalness: 0.55, roughness: 0.35 });
+const matInsert = new THREE.MeshStandardMaterial({ color: 0xd9ad4c, metalness: 0.6, roughness: 0.3 });
+const matScrew = new THREE.MeshStandardMaterial({ color: 0x8a6f5a, metalness: 0.6, roughness: 0.4 });
+
+function stripeTexture(fine) {
+  const c = document.createElement("canvas"); c.width = 64; c.height = 256;
+  const g = c.getContext("2d");
+  const grd = g.createLinearGradient(0, 0, 0, 256);
+  for (let k = 0; k <= 8; k++) { const t = k / 8; const v = fine ? (k % 2 ? 190 : 235) : 212 + Math.random() * 8; grd.addColorStop(t, `rgb(${v},${v + 2},${v + 5})`); }
+  g.fillStyle = grd; g.fillRect(0, 0, 64, 256);
+  if (fine) for (let y = 0; y < 256; y++) { g.fillStyle = `rgba(0,0,0,${Math.random() * 0.08})`; g.fillRect(0, y, 64, 1); }
+  else for (let q = 0; q < 900; q++) { g.fillStyle = `rgba(0,0,0,${Math.random() * 0.06})`; g.fillRect(Math.random() * 64, Math.random() * 256, 1 + Math.random() * 3, 1); }
+  const t = new THREE.CanvasTexture(c); t.wrapS = t.wrapT = THREE.RepeatWrapping; t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 8;
+  return t;
+}
+const texRaw = stripeTexture(false);
+const texCut = stripeTexture(true);
+const matRaw = new THREE.MeshStandardMaterial({ color: 0xc8cdd1, metalness: 0.35, roughness: 0.6, map: texRaw });
+const matCut = new THREE.MeshStandardMaterial({ color: 0xeef1f3, metalness: 0.6, roughness: 0.22, map: texCut });
+
+// Referências do torno (em mm; eixo X = eixo da árvore, Y para cima, Z para o operador)
+const CHUCK_FACE = -60;
+const world = new THREE.Group(); scene.add(world);
+
+// Barramento e cabeçote
+const bed = new THREE.Mesh(new THREE.BoxGeometry(520, 30, 380), matDark); bed.position.set(20, -155, 0); world.add(bed);
+const head = new THREE.Mesh(new THREE.BoxGeometry(150, 220, 200), matDark); head.position.set(CHUCK_FACE - 60 - 75, -30, -10); world.add(head);
+
+// Placa de 3 castanhas (gira)
+const spindle = new THREE.Group(); spindle.position.x = CHUCK_FACE; world.add(spindle);
+const chuckBody = new THREE.Mesh(new THREE.CylinderGeometry(80, 80, 55, 64), matSteel); chuckBody.rotation.z = Math.PI / 2; chuckBody.position.x = -27.5 - 5; spindle.add(chuckBody);
+const chuckRim = new THREE.Mesh(new THREE.TorusGeometry(80, 2.5, 8, 64), matDark); chuckRim.rotation.y = Math.PI / 2; chuckRim.position.x = -5; spindle.add(chuckRim);
+for (let k = 0; k < 3; k++) {
+  const jaw = new THREE.Group(); jaw.rotation.x = k * 2 * Math.PI / 3; spindle.add(jaw);
+  const j1 = new THREE.Mesh(new THREE.BoxGeometry(22, 30, 18), matDark); j1.position.set(6, 42, 0); jaw.add(j1);
+  const j2 = new THREE.Mesh(new THREE.BoxGeometry(22, 18, 18), matDark); j2.position.set(6, 62, 0); jaw.add(j2);
+}
+
+// Tarugo: trecho bruto (Ø inicial) e trecho usinado (Ø inicial − 2·ap)
+const cylGeo = new THREE.CylinderGeometry(1, 1, 1, 96, 1, true);
+const capGeo = new THREE.CircleGeometry(1, 96);
+const rawBar = new THREE.Mesh(cylGeo, matRaw); rawBar.rotation.z = Math.PI / 2; world.add(rawBar);
+const cutBar = new THREE.Mesh(cylGeo, matCut); cutBar.rotation.z = Math.PI / 2; world.add(cutBar);
+const matFace = new THREE.MeshStandardMaterial({ color: 0xe6eaed, metalness: 0.55, roughness: 0.25 });
+const shoulder = new THREE.Mesh(new THREE.RingGeometry(0.5, 1, 96), matFace); shoulder.rotation.y = Math.PI / 2; world.add(shoulder);
+const endCap = new THREE.Mesh(capGeo, matFace); endCap.rotation.y = Math.PI / 2; world.add(endCap);
+const endMark = new THREE.Mesh(new THREE.BoxGeometry(0.6, 1, 2), matDark); world.add(endMark); // risco para ver a rotação
+
+// Torre / castelo porta-ferramenta
+const toolRig = new THREE.Group(); world.add(toolRig);   // posição de avanço
+const toolVib = new THREE.Group(); toolRig.add(toolVib); // deslocamento de vibração
+const tool = new THREE.Group(); toolVib.add(tool);
+
+// Ponta da ferramenta no sistema do STEP (Z mínimo da pastilha)
+let TIP = new THREE.Vector3(-18.7, 0.26, -26.4);
+function buildMesh(d, mat) {
+  const g = new THREE.BufferGeometry();
+  g.setAttribute("position", new THREE.Float32BufferAttribute(d.v, 3));
+  g.setIndex(d.i);
+  g.computeVertexNormals();
+  return new THREE.Mesh(g, mat);
+}
+try {
+  const M = JSON.parse(document.getElementById("meshData").textContent);
+  const holder = buildMesh(M.holder, matHolder);
+  const insert = buildMesh(M.insert, matInsert);
+  tool.add(holder, insert);
+  // encontra a ponta: vértice da pastilha com menor Z
+  const v = M.insert.v; let best = 0;
+  for (let k = 2; k < v.length; k += 3) if (v[k] < v[best + 2]) best = k - 2;
+  TIP.set(v[best], v[best + 1], v[best + 2]);
+  // parafuso de fixação estilizado sobre o grampo
+  const screw = new THREE.Mesh(new THREE.CylinderGeometry(3.2, 3.2, 6, 20), matScrew);
+  screw.position.set(-9.3, 11.5, -8.3); tool.add(screw);
+  document.getElementById("loadmsg").remove();
+} catch (e) {
+  document.getElementById("loadmsg").textContent = "Não foi possível carregar a geometria da ferramenta.";
+}
+tool.position.set(-TIP.x, -TIP.y, -TIP.z);
+// bloco da torre segurando a haste
+const turret = new THREE.Mesh(new THREE.BoxGeometry(40, 40, 46), matDark);
+turret.position.set(-TIP.x, -12.5 - TIP.y, 125 - TIP.z); toolVib.add(turret);   // envolve o fim da haste
+const carriage = new THREE.Mesh(new THREE.BoxGeometry(40, 1, 46), matDark); world.add(carriage); // coluna até o barramento
+
+// Cavacos (instanced)
+const CHIPS = 260;
+const chipGeo = new THREE.TorusGeometry(1, 0.18, 4, 10, Math.PI * 1.4);
+const chipMat = new THREE.MeshStandardMaterial({ color: 0xdfe3e6, metalness: 0.5, roughness: 0.3 });
+const chips = new THREE.InstancedMesh(chipGeo, chipMat, CHIPS); chips.instanceMatrix.setUsage(THREE.DynamicDrawUsage); world.add(chips);
+const chipState = Array.from({ length: CHIPS }, () => ({ life: 0, p: new THREE.Vector3(), v: new THREE.Vector3(), r: new THREE.Euler(), w: new THREE.Vector3(), s: 1 }));
+let chipIdx = 0;
+const dummy = new THREE.Object3D();
+
+// Setas de referência (n, fn)
+function arrow(dir, origin, len, color) { const a = new THREE.ArrowHelper(dir.clone().normalize(), origin, len, color, 8, 5); world.add(a); return a; }
+const feedArrow = arrow(new THREE.Vector3(-1, 0, 0), new THREE.Vector3(0, 40, 30), 40, 0x2a78d6);
+
+/* ---------------- Simulação ---------------- */
+const sim = { playing: true, x: 0, cutting: false, done: false, t: 0, speed: 0.25, exag: true, seq: false };
+const RING = 4096; const sig = new Float32Array(RING); let sigW = 0;
+let P = params(S.ens);
+let phaseCh = 0, noiseState = 0;
+let rngSeed = 12345;
+function rnd() { rngSeed = (rngSeed * 1664525 + 1013904223) >>> 0; return rngSeed / 4294967296; }
+function gauss() { let u = 0, v = 0; while (!u) u = rnd(); v = rnd(); return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v); }
+
+const X_START = () => BAR_END() + 4;   // início, 4 mm fora da peça
+const X_END = () => CHUCK_FACE + 30;                     // para antes das castanhas
+const BAR_END = () => CHUCK_FACE + 30 + S.Lcut;          // extremidade livre do tarugo
+
+function restartPass() { sim.x = X_START(); sim.done = false; sim.t = 0; }
+restartPass();
+
+function genSamples(dtReal) {
+  // gera amostras correspondentes ao tempo real simulado (limitado)
+  const nS = Math.min(Math.round(dtReal * FS), 1200);
+  const f1 = P.n / 60;
+  const cut = sim.cutting && sim.playing;
+  for (let k = 0; k < nS; k++) {
+    sim.t += 1 / FS;
+    const t = sim.t;
+    let s = 0.08 * gauss();                                         // ruído de fundo (máquina ligada)
+    if (sim.playing) s += 0.15 * Math.sin(2 * Math.PI * f1 * t);    // desbalanceamento da placa
+    if (cut) {
+      s += P.aForced * (Math.sin(2 * Math.PI * f1 * t) + 0.45 * Math.sin(2 * Math.PI * 2 * f1 * t + 0.7) + 0.2 * Math.sin(2 * Math.PI * 3 * f1 * t + 1.9));
+      s += P.aNoise * gauss() * 0.9;
+      // resposta do modo do suporte: sempre um pouco excitado; com chatter cresce e modula
+      const env = 0.35 + 0.65 * (0.5 + 0.5 * Math.sin(2 * Math.PI * f1 * t));
+      s += (0.12 * P.aForced + P.aChat * env) * Math.sin(2 * Math.PI * F_NAT * t + phaseCh);
+    }
+    phaseCh += 0.0004 * gauss();
+    sig[sigW] = s; sigW = (sigW + 1) % RING;
+  }
+}
+
+/* ---------------- Gráficos (canvas 2D) ---------------- */
+function prepCanvas(cv) {
+  const r = cv.getBoundingClientRect();
+  const dpr = Math.min(devicePixelRatio, 2);
+  const w = Math.max(10, Math.round(r.width)), h = +cv.getAttribute("height");
+  if (cv.width !== w * dpr || cv.height !== h * dpr) { cv.width = w * dpr; cv.height = h * dpr; cv.style.height = h + "px"; }
+  const g = cv.getContext("2d"); g.setTransform(dpr, 0, 0, dpr, 0, 0); g.clearRect(0, 0, w, h);
+  return { g, w, h };
+}
+function niceMax(v) { if (v <= 0) return 1; const p = Math.pow(10, Math.floor(Math.log10(v))); for (const m of [1, 2, 2.5, 5, 10]) if (m * p >= v) return m * p; return 10 * p; }
+function axisY(g, x0, y0, x1, y1, max, min, ticks, label, fmtD = 1) {
+  g.font = "10.5px 'IBM Plex Mono', monospace"; g.textAlign = "right"; g.textBaseline = "middle";
+  for (let k = 0; k <= ticks; k++) {
+    const v = min + (max - min) * k / ticks; const y = y1 - (y1 - y0) * k / ticks;
+    g.strokeStyle = C.line; g.lineWidth = 1; g.beginPath(); g.moveTo(x0, Math.round(y) + .5); g.lineTo(x1, Math.round(y) + .5); g.stroke();
+    g.fillStyle = C.muted; g.fillText(fmt(v, fmtD), x0 - 5, y);
+  }
+  if (label) { g.save(); g.translate(10, (y0 + y1) / 2); g.rotate(-Math.PI / 2); g.textAlign = "center"; g.fillStyle = C.muted; g.fillText(label, 0, 0); g.restore(); }
+}
+
+let waveScale = 2;
+function drawWave() {
+  const { g, w, h } = prepCanvas(document.getElementById("cWave"));
+  const n = Math.round(0.04 * FS);
+  const pad = { l: 44, r: 12, t: 10, b: 22 };
+  let pk = 0; for (let k = 0; k < n; k++) pk = Math.max(pk, Math.abs(sig[(sigW - n + k + RING) % RING]));
+  waveScale += (Math.max(niceMax(pk * 1.1), 1) - waveScale) * 0.08;
+  const M = niceMax(waveScale);
+  axisY(g, pad.l, pad.t, w - pad.r, h - pad.b, M, -M, 4, "m/s²", M < 5 ? 1 : 0);
+  g.strokeStyle = C["series-vib"]; g.lineWidth = 1.5; g.lineJoin = "round"; g.beginPath();
+  for (let k = 0; k < n; k++) {
+    const v = sig[(sigW - n + k + RING) % RING];
+    const x = pad.l + (w - pad.l - pad.r) * k / (n - 1), y = pad.t + (h - pad.t - pad.b) * (0.5 - v / (2 * M));
+    k ? g.lineTo(x, y) : g.moveTo(x, y);
+  }
+  g.stroke();
+  g.fillStyle = C.muted; g.textAlign = "center"; g.textBaseline = "top"; g.font = "10.5px 'IBM Plex Mono', monospace";
+  for (const ms of [0, 10, 20, 30, 40]) g.fillText(ms + " ms", pad.l + (w - pad.l - pad.r) * ms / 40, h - pad.b + 4);
+}
+
+function fft(re, im) {
+  const n = re.length;
+  for (let i = 1, j = 0; i < n; i++) { let bit = n >> 1; for (; j & bit; bit >>= 1) j ^= bit; j ^= bit; if (i < j) { [re[i], re[j]] = [re[j], re[i]]; [im[i], im[j]] = [im[j], im[i]]; } }
+  for (let len = 2; len <= n; len <<= 1) {
+    const ang = -2 * Math.PI / len, wr = Math.cos(ang), wi = Math.sin(ang);
+    for (let i = 0; i < n; i += len) { let cr = 1, ci = 0; for (let j = 0; j < len / 2; j++) { const a = i + j, b = a + len / 2; const tr = re[b] * cr - im[b] * ci, ti = re[b] * ci + im[b] * cr; re[b] = re[a] - tr; im[b] = im[a] - ti; re[a] += tr; im[a] += ti; const nr = cr * wr - ci * wi; ci = cr * wi + ci * wr; cr = nr; } }
+  }
+}
+let specSmooth = null, fftMax = 1;
+function drawFft() {
+  const N = 2048; const re = new Float32Array(N), im = new Float32Array(N);
+  for (let k = 0; k < N; k++) { const wdw = 0.5 - 0.5 * Math.cos(2 * Math.PI * k / (N - 1)); re[k] = sig[(sigW - N + k + RING) % RING] * wdw; }
+  fft(re, im);
+  const fMax = 2500, bins = Math.floor(fMax / (FS / N));
+  if (!specSmooth || specSmooth.length !== bins) specSmooth = new Float32Array(bins);
+  let mx = 0;
+  for (let k = 0; k < bins; k++) { const a = 2 * Math.hypot(re[k], im[k]) / (N * 0.5); specSmooth[k] += (a - specSmooth[k]) * 0.25; mx = Math.max(mx, specSmooth[k]); }
+  fftMax += (niceMax(Math.max(mx * 1.15, 0.2)) - fftMax) * 0.08;
+  const M = niceMax(fftMax);
+  const { g, w, h } = prepCanvas(document.getElementById("cFft"));
+  const pad = { l: 44, r: 12, t: 10, b: 22 };
+  axisY(g, pad.l, pad.t, w - pad.r, h - pad.b, M, 0, 3, "m/s²", M < 3 ? 1 : 0);
+  const X = f => pad.l + (w - pad.l - pad.r) * f / fMax, Y = a => h - pad.b - (h - pad.t - pad.b) * a / M;
+  // área + linha
+  g.beginPath(); g.moveTo(X(0), Y(0));
+  for (let k = 0; k < bins; k++) g.lineTo(X(k * FS / N), Y(Math.min(specSmooth[k], M)));
+  g.lineTo(X(fMax), Y(0)); g.closePath();
+  g.fillStyle = C["series-vib"]; g.globalAlpha = 0.15; g.fill(); g.globalAlpha = 1;
+  g.beginPath(); for (let k = 0; k < bins; k++) { const x = X(k * FS / N), y = Y(Math.min(specSmooth[k], M)); k ? g.lineTo(x, y) : g.moveTo(x, y); }
+  g.strokeStyle = C["series-vib"]; g.lineWidth = 1.5; g.stroke();
+  g.fillStyle = C.muted; g.textAlign = "center"; g.textBaseline = "top"; g.font = "10.5px 'IBM Plex Mono', monospace";
+  for (const f of [0, 500, 1000, 1500, 2000, 2500]) g.fillText(f === 0 ? "0" : (f / 1000).toLocaleString("pt-BR") + " kHz", clamp(X(f), pad.l + 8, w - 22), h - pad.b + 4);
+  // marcador do modo do suporte
+  g.setLineDash([3, 3]); g.strokeStyle = C["ink-2"]; g.lineWidth = 1; g.beginPath(); g.moveTo(X(F_NAT) + .5, pad.t); g.lineTo(X(F_NAT) + .5, h - pad.b); g.stroke(); g.setLineDash([]);
+  g.fillStyle = C["ink-2"]; g.textAlign = "left"; g.textBaseline = "top"; g.fillText("modo do suporte", X(F_NAT) + 4, pad.t);
+}
+
+function drawProfile() {
+  const { g, w, h } = prepCanvas(document.getElementById("cProf"));
+  const pad = { l: 44, r: 10, t: 10, b: 22 };
+  const L = 2.5, N = 700, f = P.f, r = R_EPS;
+  const geo = [], real = [];
+  let seed = 777 + P.i * 31 + S.rep * 7;
+  const rr = () => { seed = (seed * 1664525 + 1013904223) >>> 0; return seed / 4294967296 - 0.5; };
+  const chat = P.chatter, nz = 0.04 + 0.03 * P.aForced;
+  let smooth = 0;
+  for (let k = 0; k < N; k++) {
+    const x = L * k / (N - 1);
+    const u = ((x % f) + f) % f - f / 2;
+    const yg = (r - Math.sqrt(r * r - u * u)) * 1000;             // µm
+    smooth += (rr() - smooth) * 0.3;
+    const wav = chat * 1.6 * Math.sin(2 * Math.PI * x / (f * 3.7) + 0.6) + chat * 0.9 * Math.sin(2 * Math.PI * x / 0.083);
+    geo.push(yg); real.push(yg + wav + smooth * (nz + chat * 1.2) * 4 + 0.25 * (P.raEst - P.raTh * 1.12) * Math.sin(2 * Math.PI * x / 0.21));
+  }
+  const cen = a => { const m = a.reduce((s, v) => s + v, 0) / a.length; return a.map(v => v - m); };
+  const G = cen(geo), R = cen(real);
+  const raOf = a => a.reduce((s, v) => s + Math.abs(v), 0) / a.length;
+  let lim = 0; for (const v of R) lim = Math.max(lim, Math.abs(v)); for (const v of G) lim = Math.max(lim, Math.abs(v));
+  const M = niceMax(lim * 1.1);
+  axisY(g, pad.l, pad.t, w - pad.r, h - pad.b, M, -M, 4, "µm", M < 5 ? 1 : 0);
+  const X = x => pad.l + (w - pad.l - pad.r) * x / L, Y = v => pad.t + (h - pad.t - pad.b) * (0.5 - v / (2 * M));
+  g.setLineDash([4, 3]); g.strokeStyle = C["ink-2"]; g.lineWidth = 1.2; g.beginPath();
+  G.forEach((v, k) => { const x = X(L * k / (N - 1)), y = Y(-v); k ? g.lineTo(x, y) : g.moveTo(x, y); }); g.stroke(); g.setLineDash([]);
+  g.strokeStyle = C["series-ra"]; g.lineWidth = 2; g.lineJoin = "round"; g.beginPath();
+  R.forEach((v, k) => { const x = X(L * k / (N - 1)), y = Y(-v); k ? g.lineTo(x, y) : g.moveTo(x, y); }); g.stroke();
+  g.fillStyle = C.muted; g.textAlign = "center"; g.textBaseline = "top"; g.font = "10.5px 'IBM Plex Mono', monospace";
+  for (const x of [0, 0.5, 1, 1.5, 2, 2.5]) g.fillText(fmt(x, 1) + " mm", clamp(X(x), pad.l + 14, w - 24), h - pad.b + 5);
+  // rótulo direto de Ra
+  g.textAlign = "right"; g.textBaseline = "top"; g.font = "500 11px 'IBM Plex Mono', monospace";
+  g.fillStyle = C.ink; g.fillText(`Ra perfil ${fmt(raOf(R))} µm · Ra geom. ${fmt(raOf(G))} µm · passo ${fmt(f, 2)} mm`, w - pad.r, pad.t + 2);
+}
+
+/* Efeitos principais: média da resposta em cada nível de cada fator */
+let effHits = [];
+function drawEffects() {
+  const { g, w, h } = prepCanvas(document.getElementById("cEff"));
+  const all = L9.map((_, i) => params(i));
+  const resp = S.resp;
+  const measuredAll = all.every(p => (resp === "ra" ? p.raMeas : p.vibMeas) != null);
+  const val = p => resp === "ra" ? (measuredAll ? p.raMeas : p.raEst) : (measuredAll ? p.vibMeas : p.vibEst);
+  const facs = [["Rotação n", 0, S.levels.n, "rpm"], ["Avanço fn", 1, S.levels.f, "mm/rot"], ["Prof. ap", 2, S.levels.ap, "mm"]];
+  const means = facs.map(([, fi]) => [1, 2, 3].map(l => mean(all.filter(p => p.lv[fi] === l).map(val))));
+  const grand = mean(all.map(val));
+  let mx = 0; means.flat().forEach(v => mx = Math.max(mx, v || 0));
+  const M = niceMax(mx * 1.15);
+  const pad = { l: 44, r: 8, t: 22, b: 30 };
+  const gap = 14, pw = (w - pad.l - pad.r - gap * 2) / 3;
+  axisY(g, pad.l, pad.t, w - pad.r, h - pad.b, M, 0, 4, resp === "ra" ? "Ra µm" : "m/s²", M < 5 ? 1 : 0);
+  const color = resp === "ra" ? C["series-ra"] : C["series-vib"];
+  const Y = v => h - pad.b - (h - pad.t - pad.b) * v / M;
+  effHits = [];
+  facs.forEach(([name, fi, lv, unit], j) => {
+    const x0 = pad.l + j * (pw + gap);
+    const X = k => x0 + pw * (0.15 + 0.35 * k);
+    g.fillStyle = C["ink-2"]; g.font = "500 11px 'IBM Plex Sans', sans-serif"; g.textAlign = "center"; g.textBaseline = "bottom";
+    g.fillText(name, x0 + pw / 2, pad.t - 6);
+    g.setLineDash([3, 3]); g.strokeStyle = C.muted; g.lineWidth = 1; g.beginPath(); g.moveTo(x0, Y(grand)); g.lineTo(x0 + pw, Y(grand)); g.stroke(); g.setLineDash([]);
+    g.strokeStyle = color; g.lineWidth = 2; g.beginPath(); means[j].forEach((v, k) => { k ? g.lineTo(X(k), Y(v)) : g.moveTo(X(k), Y(v)); }); g.stroke();
+    means[j].forEach((v, k) => {
+      g.beginPath(); g.arc(X(k), Y(v), 4.5, 0, Math.PI * 2); g.fillStyle = color; g.fill(); g.lineWidth = 2; g.strokeStyle = C.panel; g.stroke();
+      g.fillStyle = C.muted; g.font = "10.5px 'IBM Plex Mono', monospace"; g.textBaseline = "top";
+      g.fillText(String(lv[k]).replace(".", ","), X(k), h - pad.b + 4);
+      effHits.push({ x: X(k), y: Y(v), txt: `${name} nível ${k + 1} (${String(lv[k]).replace(".", ",")} ${unit}): ${fmt(v)} ${resp === "ra" ? "µm" : "m/s²"}` });
+    });
+    const delta = Math.max(...means[j]) - Math.min(...means[j]);
+    g.fillStyle = C.ink; g.textBaseline = "top"; g.font = "500 10.5px 'IBM Plex Mono', monospace";
+    g.fillText("Δ " + fmt(delta), x0 + pw / 2, h - pad.b + 16);
+  });
+  const deltas = means.map(m => Math.max(...m) - Math.min(...m));
+  const top = deltas.indexOf(Math.max(...deltas));
+  document.getElementById("effNote").textContent =
+    (measuredAll ? "Com os dados medidos (média das repetições). " : "Com valores estimados pelo modelo; preencha a tabela para usar as medições. ") +
+    `Maior efeito em ${resp === "ra" ? "Ra" : "vibração"}: ${facs[top][0]} (Δ ${fmt(deltas[top])}). Linha tracejada: média geral.`;
+}
+const cEff = document.getElementById("cEff"), tip = document.getElementById("tip");
+cEff.addEventListener("pointermove", e => {
+  const r = cEff.getBoundingClientRect(); const x = e.clientX - r.left, y = e.clientY - r.top;
+  let best = null, bd = 18; for (const hh of effHits) { const d = Math.hypot(hh.x - x, hh.y - y); if (d < bd) { bd = d; best = hh; } }
+  if (best) { tip.hidden = false; tip.textContent = best.txt; tip.style.left = Math.min(e.clientX + 12, innerWidth - tip.offsetWidth - 8) + "px"; tip.style.top = (e.clientY + 12) + "px"; }
+  else tip.hidden = true;
+});
+cEff.addEventListener("pointerleave", () => tip.hidden = true);
+document.querySelectorAll(".effects-toggle button").forEach(b => b.addEventListener("click", () => {
+  S.resp = b.dataset.resp; document.querySelectorAll(".effects-toggle button").forEach(x => x.setAttribute("aria-pressed", x === b)); drawEffects();
+}));
+
+/* ---------------- UI ---------------- */
+const ensChips = document.getElementById("ensChips"), repChips = document.getElementById("repChips");
+function buildChips() {
+  ensChips.innerHTML = "";
+  L9.forEach((_, i) => {
+    const b = document.createElement("button"); b.className = "chip"; b.type = "button"; b.textContent = i + 1;
+    b.setAttribute("aria-pressed", i === S.ens); b.title = `Ensaio ${i + 1}`;
+    b.addEventListener("click", () => selectEns(i)); ensChips.appendChild(b);
+  });
+  repChips.innerHTML = "";
+  ["R1", "R2"].forEach((t, i) => {
+    const b = document.createElement("button"); b.className = "chip"; b.type = "button"; b.textContent = t; b.setAttribute("aria-pressed", i === S.rep);
+    b.addEventListener("click", () => { S.rep = i; buildChips(); restartPass(); drawProfile(); updateReadouts(); }); repChips.appendChild(b);
+  });
+}
+function selectEns(i, keepSeq) {
+  S.ens = i; P = params(i); if (!keepSeq) sim.seq = false;
+  buildChips(); buildTable(); restartPass(); drawProfile(); updateReadouts(); updateScene(true);
+}
+
+const tbody = document.getElementById("tbody");
+function buildTable() {
+  tbody.innerHTML = "";
+  L9.forEach((_, i) => {
+    const p = params(i); const tr = document.createElement("tr"); if (i === S.ens) tr.className = "on";
+    const lv = k => `<span class="lvl">(${p.lv[k]})</span> `;
+    tr.innerHTML = `<td class="l">${i + 1}</td><td>${lv(0)}${p.n}</td><td>${lv(1)}${fmt(p.f)}</td><td>${lv(2)}${fmt(p.ap, 1)}</td><td>${fmt(p.vc, 0)}</td><td>${fmt(p.vf, 0)}</td><td>${fmt(p.raTh)}</td><td>${fmt(p.raEst)}</td>` +
+      [["ra", 0], ["ra", 1], ["vib", 0], ["vib", 1]].map(([k, r]) => `<td><input type="number" step="0.01" min="0" id="m-${i}-${k}-${r}" aria-label="Ensaio ${i + 1} ${k === "ra" ? "Ra" : "vibração"} R${r + 1}" value="${S.meas[i][k][r] ?? ""}"></td>`).join("");
+    tr.addEventListener("click", e => { if (e.target.tagName !== "INPUT" && i !== S.ens) selectEns(i); });
+    tbody.appendChild(tr);
+  });
+  tbody.querySelectorAll("input").forEach(inp => inp.addEventListener("change", () => {
+    const [, i, k, r] = inp.id.split("-"); const v = inp.value === "" ? null : parseFloat(inp.value.replace(",", "."));
+    S.meas[+i][k][+r] = isNaN(v) ? null : v; save(); P = params(S.ens); updateReadouts(); drawEffects();
+  }));
+}
+
+const levelsEl = document.getElementById("levels");
+[["n", "Rotação n (rpm)", 50], ["f", "Avanço fn (mm/rot)", 0.01], ["ap", "Profundidade ap (mm)", 0.1]].forEach(([k, label, step]) => {
+  const l = document.createElement("span"); l.className = "small"; l.textContent = label; levelsEl.appendChild(l);
+  for (let j = 0; j < 3; j++) {
+    const inp = document.createElement("input"); inp.type = "number"; inp.step = step; inp.min = 0; inp.id = `lv-${k}-${j}`; inp.value = S.levels[k][j];
+    inp.setAttribute("aria-label", `${label} nível ${j + 1}`);
+    inp.addEventListener("change", () => { const v = parseFloat(inp.value); if (!isNaN(v) && v > 0) { S.levels[k][j] = v; save(); refreshAll(); } });
+    levelsEl.appendChild(inp);
+  }
+});
+const d0 = document.getElementById("d0"), lcut = document.getElementById("lcut");
+d0.value = S.D0; lcut.value = S.Lcut;
+d0.addEventListener("change", () => { S.D0 = clamp(+d0.value || 50, 10, 120); save(); refreshAll(); frameCamera(); });
+lcut.addEventListener("change", () => { S.Lcut = clamp(+lcut.value || 80, 20, 120); save(); refreshAll(); frameCamera(); });
+function refreshAll() { P = params(S.ens); buildTable(); restartPass(); drawProfile(); drawEffects(); updateReadouts(); updateScene(true); }
+
+document.getElementById("btnClear").addEventListener("click", e => {
+  const b = e.currentTarget;
+  if (b.dataset.armed) { S.meas = Array.from({ length: 9 }, () => ({ ra: [null, null], vib: [null, null] })); save(); refreshAll(); b.textContent = "Limpar medições"; delete b.dataset.armed; }
+  else { b.dataset.armed = 1; b.textContent = "Confirmar limpeza"; setTimeout(() => { if (b.dataset.armed) { delete b.dataset.armed; b.textContent = "Limpar medições"; } }, 4000); }
+});
+document.getElementById("btnCsv").addEventListener("click", async e => {
+  const rows = [["ensaio", "n_rpm", "fn_mm_rot", "ap_mm", "vc_m_min", "Ra_teorica_um", "Ra_estimada_um", "Ra_R1", "Ra_R2", "Vib_R1", "Vib_R2"]];
+  L9.forEach((_, i) => { const p = params(i), m = S.meas[i]; rows.push([i + 1, p.n, p.f, p.ap, p.vc.toFixed(0), p.raTh.toFixed(2), p.raEst.toFixed(2), m.ra[0] ?? "", m.ra[1] ?? "", m.vib[0] ?? "", m.vib[1] ?? ""]); });
+  const csv = rows.map(r => r.join(";")).join("\n"); const b = e.currentTarget;
+  try { await navigator.clipboard.writeText(csv); b.textContent = "CSV copiado"; } catch (err) { b.textContent = "Não foi possível copiar"; }
+  setTimeout(() => b.textContent = "Copiar CSV", 2000);
+});
+
+const btnPlay = document.getElementById("btnPlay");
+btnPlay.addEventListener("click", () => { sim.playing = !sim.playing; btnPlay.textContent = sim.playing ? "Pausar" : "Continuar"; });
+document.getElementById("btnRestart").addEventListener("click", () => { restartPass(); sim.playing = true; btnPlay.textContent = "Pausar"; });
+document.getElementById("speedSel").addEventListener("change", e => sim.speed = +e.target.value);
+document.getElementById("exag").addEventListener("change", e => sim.exag = e.target.checked);
+const turretSel = document.getElementById("turretSel"); turretSel.value = S.rear ? "rear" : "front";
+turretSel.addEventListener("change", () => { S.rear = turretSel.value === "rear"; save(); updateScene(); frameCamera(); });
+document.getElementById("btnRunAll").addEventListener("click", () => { sim.seq = true; sim.playing = true; btnPlay.textContent = "Pausar"; selectEns(0, true); });
+
+function updateReadouts() {
+  document.getElementById("tRaTh").innerHTML = `${fmt(P.raTh)}<small>µm</small>`;
+  const hasRa = P.raMeas != null, hasVib = P.vibMeas != null;
+  document.getElementById("kRa").textContent = hasRa ? "Ra medida" : "Ra estimada";
+  document.getElementById("tRa").innerHTML = `${fmt(hasRa ? P.raMeas : P.raEst)}<small>µm</small>`;
+  document.getElementById("sRa").textContent = hasRa ? `média · est. ${fmt(P.raEst)}` : `modelo · ${fmt(P.raEst / P.raTh, 1)}× teórica`;
+  document.getElementById("kVib").textContent = hasVib ? "Vibração medida" : "Vibração RMS";
+  document.getElementById("sVib").textContent = hasVib ? `média · est. ${fmt(P.vibEst, 1)}` : "modelo · m/s²";
+  document.getElementById("hud").innerHTML = [
+    `Ensaio <b>${S.ens + 1}</b> · <b>R${S.rep + 1}</b>`, `n <b>${P.n}</b> rpm`, `v<sub>c</sub> <b>${fmt(P.vc, 0)}</b> m/min`,
+    `f<sub>n</sub> <b>${fmt(P.f)}</b> mm/rot`, `a<sub>p</sub> <b>${fmt(P.ap, 1)}</b> mm`, `v<sub>f</sub> <b>${fmt(P.vf, 0)}</b> mm/min`,
+    `Ø <b>${fmt(S.D0, 0)} → ${fmt(S.D0 - 2 * P.ap, 1)}</b> mm`
+  ].map(t => `<span class="tag">${t}</span>`).join("");
+  document.getElementById("fftNote").textContent = `Rotação ${fmt(P.n / 60, 1)} Hz (1×) e harmônicos à esquerda; pico em ~${fmt(F_NAT / 1000, 2)} kHz indica o modo do suporte${P.chatter > 0.05 ? ", excitado por chatter neste ensaio" : ""}.`;
+}
+let vibDisp = 0;
+function updateLive(dt) {
+  let s2 = 0; const n = 2048; for (let k = 0; k < n; k++) { const v = sig[(sigW - n + k + RING) % RING]; s2 += v * v; }
+  const rms = Math.sqrt(s2 / n); vibDisp += (rms - vibDisp) * Math.min(1, dt * 4);
+  const show = P.vibMeas != null ? P.vibMeas : vibDisp;
+  document.getElementById("tVib").innerHTML = `${fmt(show, 1)}<small>m/s²</small>`;
+  const pill = document.getElementById("statusPill");
+  let cls, txt;
+  if (!sim.cutting || !sim.playing) { cls = "idle"; txt = sim.done ? "passe concluído" : (sim.playing ? "aproximando" : "pausado"); }
+  else[cls, txt] = statusOf(P.vibMeas ?? vibDisp, P.chatter);
+  if (pill.className !== "pill " + cls || pill.textContent !== txt) { pill.className = "pill " + cls; pill.textContent = txt; }
+  document.getElementById("prog").style.width = (100 * clamp((X_START() - sim.x) / (X_START() - X_END()), 0, 1)) + "%";
+}
+
+/* ---------------- Atualização da cena ---------------- */
+function updateScene() {
+  const R0 = S.D0 / 2, Rm = R0 - P.ap, xEnd = BAR_END();
+  const xc = clamp(sim.x, CHUCK_FACE, xEnd);
+  const lenRaw = xc - CHUCK_FACE, lenCut = xEnd - xc;
+  rawBar.visible = lenRaw > 0.01; rawBar.scale.set(R0, lenRaw, R0); rawBar.position.x = CHUCK_FACE + lenRaw / 2;
+  cutBar.visible = lenCut > 0.01; cutBar.scale.set(Rm, lenCut, Rm); cutBar.position.x = xc + lenCut / 2;
+  texCut.repeat.set(3, Math.max(1, lenCut / (P.f * 12)));   // marcas de avanço ampliadas 12×
+  texRaw.repeat.set(3, Math.max(1, lenRaw / 6));
+  shoulder.visible = lenCut > 0.01 && lenRaw > 0.01; shoulder.position.x = xc; shoulder.scale.set(R0, R0, 1);
+  const ratio = Math.round(Rm / R0 * 1000) / 1000;
+  if (shoulder.userData.ratio !== ratio) { shoulder.geometry.dispose(); shoulder.geometry = new THREE.RingGeometry(ratio, 1, 96); shoulder.userData.ratio = ratio; }
+  const endR = lenCut > 0.01 ? Rm : R0; endCap.position.x = xEnd; endCap.scale.set(endR, endR, 1);
+  endMark.position.x = xEnd + 0.4; endMark.scale.set(1, endR * 1.6, 1);
+  const sg = S.rear ? -1 : 1;
+  toolRig.position.set(sim.x, 0, sg * Rm);
+  toolRig.rotation.x = S.rear ? Math.PI : 0;              // torre traseira: ferramenta invertida
+  const tz = sg * (Rm + 125 - TIP.z);                      // centro do bloco da torre em Z
+  const turretBottom = sg * (-12.5 - TIP.y) - 20;
+  const colH = turretBottom + 140; carriage.scale.y = colH; carriage.position.set(sim.x - TIP.x, -140 + colH / 2, tz);
+  feedArrow.position.set(sim.x + 30, R0 + 18, Rm + 6);
+  head.position.x = CHUCK_FACE - 60 - 75;
+}
+
+const views = {
+  free: () => ({ p: [230, 170, 330], t: [-10, -10, 20] }),
+  tool: () => { const sg = S.rear ? -1 : 1; return { p: [sim.x + 70, 65, sg * (S.D0 / 2 + 110)], t: [sim.x + 5, 0, sg * (S.D0 / 2)] }; },
+  top: () => ({ p: [0, 480, S.rear ? -60 : 90], t: [0, 0, S.rear ? -40 : 60] }),
+  front: () => ({ p: [0, 20, 480], t: [0, 0, 0] }),
+};
+let camTarget = null;
+function frameCamera(name = document.getElementById("viewSel").value) {
+  const v = views[name](); camTarget = { p: new THREE.Vector3(...v.p), t: new THREE.Vector3(...v.t), k: 0 };
+}
+document.getElementById("viewSel").addEventListener("change", e => frameCamera(e.target.value));
+camera.position.set(230, 170, 330); controls.target.set(-10, -10, 20);
+controls.addEventListener("start", () => { camTarget = null; });
+
+function resize() {
+  const r = stage.getBoundingClientRect();
+  renderer.setSize(r.width, r.height, false); camera.aspect = r.width / r.height; camera.updateProjectionMatrix();
+}
+new ResizeObserver(resize).observe(stage); resize();
+
+function applyTheme() { readTokens(); scene.background = new THREE.Color(C.viewport); drawProfile(); drawEffects(); }
+matchMedia("(prefers-color-scheme: dark)").addEventListener("change", applyTheme);
+new MutationObserver(applyTheme).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+
+/* ---------------- Loop ---------------- */
+let last = performance.now(), spinAngle = 0, uiT = 0, seqWait = 0;
+const FEED_BOOST = 2; // avanço acelerado na animação para o passe não demorar
+function loop(now) {
+  const dt = Math.min(0.05, (now - last) / 1000); last = now;
+  const R0 = S.D0 / 2;
+  if (sim.playing) {
+    spinAngle += 2 * Math.PI * (P.n / 60) * sim.speed * dt;
+    spindle.rotation.x = spinAngle; endMark.rotation.x = spinAngle;
+    if (!sim.done) {
+      sim.x -= (P.vf / 60) * FEED_BOOST * dt;
+      if (sim.x <= X_END()) { sim.x = X_END(); sim.done = true; }
+    } else {
+      // pausa curta e repete o passe (ou avança para o próximo ensaio na sequência L9)
+      seqWait += dt;
+      if (seqWait > 1.5) { seqWait = 0; if (sim.seq && S.ens < 8) selectEns(S.ens + 1, true); else { if (sim.seq) sim.seq = false; restartPass(); } }
+    }
+  }
+  sim.cutting = !sim.done && sim.x <= BAR_END() + 0.5;
+  genSamples(dt);
+  // vibração da ferramenta (deslocamento visual)
+  const cur = sig[(sigW - 1 + RING) % RING];
+  const k = sim.exag ? 0.05 : 0.004;
+  toolVib.position.set(0, cur * k, cur * k * 0.5); // local da ferramenta (acompanha a inversão)
+  updateScene();
+
+  // cavacos
+  if (sim.cutting && sim.playing) {
+    const rate = rnd() < 0.5 ? 1 : 0;
+    for (let q = 0; q < rate; q++) {
+      const c = chipState[chipIdx]; chipIdx = (chipIdx + 1) % CHIPS;
+      c.life = 0.9 + rnd() * 0.5; c.s = 0.8 + P.ap * 0.6 + P.f * 3;
+      const sg = S.rear ? -1 : 1;
+      c.p.set(sim.x - 1, sg * 1.5, sg * (R0 - P.ap * 0.5));
+      c.v.set(20 + rnd() * 30, sg * (60 + rnd() * 40), sg * (40 + rnd() * 50));
+      c.r.set(rnd() * 6, rnd() * 6, rnd() * 6); c.w.set(rnd() * 20 - 10, rnd() * 20 - 10, rnd() * 20 - 10);
+    }
+  }
+  for (let q = 0; q < CHIPS; q++) {
+    const c = chipState[q];
+    if (c.life > 0) {
+      c.life -= dt; c.v.y -= 260 * dt; c.p.addScaledVector(c.v, dt);
+      if (c.p.y < -138) { c.p.y = -138; c.v.set(0, 0, 0); c.w.set(0, 0, 0); }
+      c.r.x += c.w.x * dt; c.r.y += c.w.y * dt; c.r.z += c.w.z * dt;
+      dummy.position.copy(c.p); dummy.rotation.copy(c.r); dummy.scale.setScalar(c.life > 0 ? c.s : 0);
+    } else dummy.scale.setScalar(0);
+    dummy.updateMatrix(); chips.setMatrixAt(q, dummy.matrix);
+  }
+  chips.instanceMatrix.needsUpdate = true;
+
+  if (camTarget) {
+    if (document.getElementById("viewSel").value === "tool") { const v = views.tool(); camTarget.p.set(...v.p); camTarget.t.set(...v.t); }
+    camera.position.lerp(camTarget.p, 0.08); controls.target.lerp(camTarget.t, 0.08);
+    if (camera.position.distanceTo(camTarget.p) < 0.5 && document.getElementById("viewSel").value !== "tool") camTarget = null;
+  }
+  controls.update();
+  renderer.render(scene, camera);
+
+  uiT += dt;
+  if (uiT > 1 / 30) { uiT = 0; drawWave(); drawFft(); updateLive(dt * 2); }
+  requestAnimationFrame(loop);
+}
+
+buildChips(); buildTable(); applyTheme(); updateReadouts(); updateScene();
+new ResizeObserver(() => { drawProfile(); drawEffects(); }).observe(document.querySelector(".lower"));
+requestAnimationFrame(loop);
+</script>
