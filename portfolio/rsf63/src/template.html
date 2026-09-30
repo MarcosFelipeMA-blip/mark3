@@ -33,6 +33,10 @@
     --tb: 60px;
   }
   [hidden] { display: none !important; }
+  /* modo vitrine: só o modelo, fundo transparente, sem interação */
+  .vitrine body { background: transparent; }
+  .vitrine .brand, .vitrine #credit, .vitrine #seq, .vitrine #info, .vitrine #readout, .vitrine #cutNote, .vitrine #toolbar, .vitrine #tip, .vitrine #toast, .vitrine #dims, .vitrine #loading { display: none !important; }
+  .vitrine #c { pointer-events: none; }
   * { box-sizing: border-box; }
   html, body { height: 100%; }
   body {

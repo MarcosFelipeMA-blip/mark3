@@ -20,6 +20,9 @@ const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
 const $ = id => document.getElementById(id);
 const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const CAPTURE = location.hash === '#captura';
+// Modo vitrine (#vitrine): sem painéis, corte A-A, câmera passeando devagar. Usado na abertura do portfólio.
+const SHOWCASE = location.hash === '#vitrine';
+if (SHOWCASE) document.documentElement.classList.add('vitrine');
 
 /* ---------- Dados do modelo (RSF-63, i = 30) ---------- */
 const CAT = {
@@ -417,6 +420,7 @@ let orthoSpan = 330;
 let focusTo = null;
 
 function panelOffsets() {
+  if (SHOWCASE) return { dx: 0, dy: 0 };
   const narrow = innerWidth <= 860;
   if (narrow) {
     const r = $('info').getBoundingClientRect();
@@ -702,6 +706,13 @@ function frame(fixedDt) {
     camera.position.add(controls.target.clone().sub(before));
     if (controls.target.distanceTo(focusTo) < 0.05) focusTo = null;
   }
+  if (SHOWCASE) {
+    // passeia pela frente do corte (±45°), sem nunca mostrar o lado fechado
+    showT += dt;
+    const az = 0.45 + Math.sin(showT * 0.22) * 0.75, el = 0.3 + Math.sin(showT * 0.13) * 0.1, dist = innerWidth < innerHeight ? 500 : 440;
+    persp.position.set(SHOW_TARGET.x + Math.sin(az) * Math.cos(el) * dist, SHOW_TARGET.y + Math.sin(el) * dist, SHOW_TARGET.z + Math.cos(az) * Math.cos(el) * dist);
+    controls.target.copy(SHOW_TARGET);
+  }
   controls.update();
   renderer.render(scene, camera);
   if (state.view === 'front' || state.view === 'side') updateDims(); // cotas aparecem quando as peças terminam de voltar
@@ -710,8 +721,11 @@ function frame(fixedDt) {
 }
 
 renderAll();
-setCut('none');
+setCut(SHOWCASE ? 'aa' : 'none');
 setView('3d');
+let showT = 0;
+const SHOW_TARGET = V(34, 12, 0);
+if (SHOWCASE) { controls.enabled = false; }
 new ResizeObserver(() => { document.documentElement.style.setProperty('--tb', $('toolbar').offsetHeight + 'px'); resize(); }).observe($('toolbar'));
 $('loading').hidden = true;
 window.redutor = {

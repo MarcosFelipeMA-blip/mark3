@@ -72,6 +72,11 @@
   .btn.primary:hover { background: #7cc6ff; }
   figure { margin: 0; position: relative; }
   figure img { border-radius: 4px; border: 1px solid var(--line); width: 100%; }
+  .live { aspect-ratio: 4 / 3; max-width: 100%; border: 1px solid var(--line); border-radius: 4px; overflow: hidden;
+    background: radial-gradient(80% 70% at 50% 45%, #1f2c3a 0%, #111820 70%); }
+  .live.poster { background: url("img/rsf63-corte.jpg") center / cover, #111820; }
+  .live iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; background: transparent; pointer-events: none; }
+  .live .open3d { position: absolute; right: 12px; bottom: 12px; min-height: 38px; padding: 0 14px; font-size: 14px; background: rgba(13,18,24,.85); }
   .tag { position: absolute; left: 12px; bottom: 12px; padding: 5px 9px; background: rgba(13,18,24,.85); border: 1px solid var(--line); border-radius: 2px; font: 500 11px/1.3 var(--mono); letter-spacing: .06em; text-transform: uppercase; color: var(--ink-2); }
 
   .formats { display: grid; grid-template-columns: repeat(4, 1fr); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
@@ -185,9 +190,10 @@
         <a class="btn" href="#contato">Pedir uma prévia grátis</a>
       </div>
     </div>
-    <figure>
-      <img src="img/rsf63-corte.jpg" alt="Redutor coroa e rosca sem fim em corte de um quarto, mostrando a coroa de bronze, o sem-fim, rolamentos e retentores hachurados" width="1200" height="800">
-      <span class="tag">Corte ¼ · redutor RSF-63</span>
+    <figure class="live poster" id="live">
+      <iframe src="rsf63.html#vitrine" title="Redutor RSF-63 em 3D com corte A-A, girando" tabindex="-1" aria-hidden="true"></iframe>
+      <span class="tag">Corte A-A · 3D ao vivo</span>
+      <a class="btn open3d" href="rsf63.html">Explorar em 3D</a>
     </figure>
   </div>
 
@@ -381,6 +387,11 @@
 </footer>
 
 <script>
+  // 3D ao vivo na abertura: tira a imagem de espera quando o redutor carrega
+  (() => {
+    const live = document.getElementById('live'), f = live.querySelector('iframe');
+    f.addEventListener('load', () => setTimeout(() => live.classList.remove('poster'), 300));
+  })();
   // Palavra-marca: as letras começam "explodidas" e se montam no lugar.
   (() => {
     const el = document.getElementById('word');
