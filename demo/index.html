@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Padaria Pão Dourado</title>
+  <meta name="description" content="Pães fresquinhos, bolos e salgados. Faça seu pedido pelo WhatsApp.">
+  <style>
+    :root { --bg: #fffaf2; --fg: #2b1d0e; --muted: #7a6450; --card: #ffffff;
+            --line: #efe2cf; --accent: #b5651d; --accent-fg: #ffffff; }
+    @media (prefers-color-scheme: dark) {
+      :root { --bg: #17120c; --fg: #f5ead9; --muted: #bfa88c; --card: #211a12;
+              --line: #3a2e21; --accent: #e59a4f; --accent-fg: #17120c; }
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: Georgia, "Times New Roman", serif; background: var(--bg);
+           color: var(--fg); line-height: 1.55; }
+    .wrap { max-width: 900px; margin: 0 auto; padding: 0 16px; }
+    .hero { padding: 56px 0 40px; text-align: center; }
+    .hero h1 { font-size: clamp(2rem, 6vw, 3.2rem); margin: 0 0 8px; }
+    .hero p { color: var(--muted); font-size: 1.15rem; margin: 0 0 24px; }
+    .btn { display: inline-block; background: var(--accent); color: var(--accent-fg);
+           padding: 12px 22px; border-radius: 999px; text-decoration: none;
+           font-family: system-ui, sans-serif; font-weight: 600; }
+    section { padding: 32px 0; border-top: 1px solid var(--line); }
+    h2 { margin: 0 0 16px; }
+    .menu { display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
+    .item { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 16px;
+            display: flex; justify-content: space-between; gap: 12px; }
+    .item span { color: var(--muted); white-space: nowrap; }
+    .info { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            font-family: system-ui, sans-serif; }
+    .info p { margin: 4px 0; color: var(--muted); }
+    footer { padding: 24px 0 40px; text-align: center; color: var(--muted); font-size: .85rem;
+             font-family: system-ui, sans-serif; border-top: 1px solid var(--line); }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="hero">
+      <h1>Padaria Pão Dourado</h1>
+      <p>Pão quentinho toda manhã desde 1998.</p>
+      <a class="btn" href="#">Fazer pedido no WhatsApp</a>
+    </div>
+
+    <section>
+      <h2>Cardápio</h2>
+      <div class="menu">
+        <div class="item">Pão francês (kg)<span>R$ 16,90</span></div>
+        <div class="item">Pão de queijo (10 un.)<span>R$ 12,00</span></div>
+        <div class="item">Bolo de cenoura<span>R$ 28,00</span></div>
+        <div class="item">Coxinha<span>R$ 7,50</span></div>
+        <div class="item">Café com leite<span>R$ 6,00</span></div>
+        <div class="item">Sonho de creme<span>R$ 6,50</span></div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Visite a gente</h2>
+      <div class="info">
+        <div><strong>Endereço</strong><p>Rua das Flores, 123 — Centro</p></div>
+        <div><strong>Horário</strong><p>Seg a sáb: 6h às 20h</p><p>Dom: 6h às 13h</p></div>
+        <div><strong>Contato</strong><p>(11) 99999-9999</p></div>
+      </div>
+    </section>
+
+    <footer>Site de demonstração · <a href="../">Quer um site assim para o seu negócio?</a></footer>
+  </div>
+</body>
+</html>

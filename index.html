@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sites para pequenos negócios</title>
+  <meta name="description" content="Site profissional para o seu negócio, pronto em até 3 dias. Apareça no Google e receba pedidos pelo WhatsApp.">
+  <style>
+    :root {
+      --bg: #fafaf7; --fg: #1d1d1b; --muted: #5d5d58; --card: #ffffff;
+      --line: #e6e4dc; --accent: #0f7b5f; --accent-fg: #ffffff;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root { --bg: #121211; --fg: #f1f0ea; --muted: #a8a79f; --card: #1c1c1a;
+              --line: #2e2e2b; --accent: #3fbf95; --accent-fg: #0b0b0a; }
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+           background: var(--bg); color: var(--fg); line-height: 1.55; }
+    .wrap { max-width: 960px; margin: 0 auto; padding: 0 16px; }
+    header { padding: 20px 0; display: flex; justify-content: space-between; align-items: center; }
+    header strong { font-size: 1.1rem; }
+    .btn { display: inline-block; background: var(--accent); color: var(--accent-fg);
+           padding: 12px 20px; border-radius: 10px; text-decoration: none; font-weight: 600; }
+    .btn.small { padding: 8px 14px; font-size: .9rem; }
+    .hero { padding: 48px 0 56px; }
+    .hero h1 { font-size: clamp(1.9rem, 5vw, 3rem); line-height: 1.15; margin: 0 0 16px; }
+    .hero p { font-size: 1.15rem; color: var(--muted); max-width: 620px; margin: 0 0 28px; }
+    section { padding: 40px 0; border-top: 1px solid var(--line); }
+    h2 { font-size: 1.6rem; margin: 0 0 20px; }
+    .grid { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+    .card { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 20px; }
+    .card h3 { margin: 0 0 8px; }
+    .price { font-size: 1.8rem; font-weight: 700; margin: 8px 0; }
+    .card ul { padding-left: 18px; margin: 12px 0 18px; color: var(--muted); }
+    .featured { border: 2px solid var(--accent); }
+    .muted { color: var(--muted); }
+    footer { padding: 32px 0 48px; border-top: 1px solid var(--line); color: var(--muted); font-size: .9rem; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <strong id="brand">Seu Nome · Sites</strong>
+      <a class="btn small wa" href="#">WhatsApp</a>
+    </header>
+
+    <div class="hero">
+      <h1>Seu negócio com site profissional em até 3 dias.</h1>
+      <p>Apareça no Google, mostre seus produtos e receba pedidos direto no WhatsApp. Sem mensalidade escondida, sem complicação.</p>
+      <a class="btn wa" href="#">Quero meu site</a>
+      <p class="muted" style="margin-top:14px;font-size:.95rem">Veja um exemplo: <a href="demo/">site de demonstração de uma padaria</a></p>
+    </div>
+
+    <section>
+      <h2>Para quem é</h2>
+      <div class="grid">
+        <div class="card"><h3>Comércio local</h3><p class="muted">Padarias, lanchonetes, mercadinhos e lojas que querem ser encontrados no Google.</p></div>
+        <div class="card"><h3>Serviços</h3><p class="muted">Salões, barbearias, oficinas, clínicas e profissionais autônomos.</p></div>
+        <div class="card"><h3>Quem vende pelo Instagram</h3><p class="muted">Um endereço próprio com catálogo e botão de pedido no WhatsApp.</p></div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Pacotes</h2>
+      <div class="grid">
+        <div class="card">
+          <h3>Cartão digital</h3>
+          <div class="price">R$ 197</div>
+          <ul><li>1 página com seus contatos</li><li>Botão de WhatsApp e mapa</li><li>Pronto em 24 horas</li></ul>
+          <a class="btn small wa" href="#">Escolher</a>
+        </div>
+        <div class="card featured">
+          <h3>Site completo</h3>
+          <div class="price">R$ 497</div>
+          <ul><li>Página com produtos ou serviços</li><li>Fotos, horários e avaliações</li><li>Perfil no Google Maps configurado</li><li>Pronto em até 3 dias</li></ul>
+          <a class="btn small wa" href="#">Escolher</a>
+        </div>
+        <div class="card">
+          <h3>Manutenção</h3>
+          <div class="price">R$ 79/mês</div>
+          <ul><li>Atualização de preços e fotos</li><li>Hospedagem e domínio cuidados</li><li>Suporte pelo WhatsApp</li></ul>
+          <a class="btn small wa" href="#">Escolher</a>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Como funciona</h2>
+      <div class="grid">
+        <div class="card"><h3>1. Conversa</h3><p class="muted">Você me manda fotos, endereço, horários e o que vende.</p></div>
+        <div class="card"><h3>2. Primeira versão</h3><p class="muted">Em até 48 horas você recebe o link para ver no celular.</p></div>
+        <div class="card"><h3>3. No ar</h3><p class="muted">Ajustamos o que precisar, e você paga só quando aprovar.</p></div>
+      </div>
+    </section>
+
+    <footer>
+      <span id="brand-footer">Seu Nome</span> · Sites para pequenos negócios ·
+      <a class="wa" href="#">Fale comigo no WhatsApp</a>
+    </footer>
+  </div>
+
+  <script>
+    // Edite estas duas linhas com seus dados:
+    const NOME = "Seu Nome";
+    const WHATSAPP = "5511999999999"; // DDI + DDD + número, só dígitos
+
+    const msg = encodeURIComponent("Olá! Vi seu site e quero saber mais sobre um site para o meu negócio.");
+    document.querySelectorAll(".wa").forEach(a => {
+      a.href = `https://wa.me/${WHATSAPP}?text=${msg}`;
+      a.target = "_blank";
+      a.rel = "noopener";
+    });
+    document.getElementById("brand").textContent = `${NOME} · Sites`;
+    document.getElementById("brand-footer").textContent = NOME;
+  </script>
+</body>
+</html>
