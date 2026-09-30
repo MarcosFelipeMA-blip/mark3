@@ -2,47 +2,33 @@
 
 Pasta para guardar em `D:\PROJETOS CLAUDE\PROJETOS PRODUTOS DIGITAIS`.
 
-## Produtos
-| # | Produto | Público | Preço | Status |
+## Os 3 kits
+| # | Produto | Público | Preço | O cliente recebe |
 |---|---|---|---|---|
-| 01 | Salão Cheio com IA | Salões, manicures, cabeleireiras | R$ 47 | ✅ Pronto |
-| 02 | Corretor com IA | Corretores de imóveis | R$ 67 | ✅ Pronto |
-| 03 | Contas em Dia com IA | Quem quer organizar as contas e sair do rotativo | R$ 27 | ✅ Pronto (com planilha) |
+| 01 | **Salão Cheio com IA** | Salões, manicures, cabeleireiras | R$ 67 | E-book (17 págs.) + 50 prompts + 7 planilhas + Comece Aqui |
+| 02 | **Corretor com IA** | Corretores e imobiliárias | R$ 97 (equipes: 5 por R$ 347) | E-book (19 págs.) + 50 prompts + 8 planilhas + Comece Aqui |
+| 03 | **Contas em Dia com IA** | Quem quer organizar as contas | R$ 37 | E-book (19 págs.) + 40 prompts + 8 planilhas + Comece Aqui |
 
-Cada pasta tem:
-- `produto.html`: o material que o cliente recebe (fonte editável)
-- `*.pdf`: o mesmo material já em PDF, pronto para subir na Kiwify
-- `pagina-de-vendas.html`: a página que convence a comprar
-- `divulgacao.md`: mensagens, posts e roteiros para vender
-- O produto 03 tem também `Planilha-Contas-em-Dia.xlsx`
+## Os ZIPs
+A pasta `ZIPS/` tem um arquivo por produto. Cada ZIP contém:
+- `PRODUTO - entregar ao cliente/`: os 4 arquivos que você sobe na Kiwify
+- `VENDAS - para voce/`: amostra grátis, página de vendas, textos da Kiwify e plano de divulgação
+- `fontes/`: os textos editáveis
+- `LEIA-ME.md`: instruções do produto
 
 ## Por onde começar
-**Comece por um produto só.** Minha sugestão:
-- **Corretor com IA**, se você conhece corretores ou tem facilidade de falar com profissionais. É o de preço mais alto, e o corretor paga com mais facilidade.
-- **Salão Cheio com IA**, se você conhece donas de salão ou quer vender também os sites do `index.html`.
-- **Contas em Dia**, se você prefere vender pelo Instagram ou TikTok para o público geral, em volume.
+**Um produto por vez.** Sugestão de ordem:
+1. **Corretor com IA:** maior preço, público que compra ferramenta de trabalho e possibilidade de vender para equipes.
+2. **Salão Cheio com IA:** público enorme e combina com a venda de sites (`index.html` na raiz do repositório).
+3. **Contas em Dia com IA:** produto de volume, depende de conteúdo diário no TikTok e Reels.
 
-## Como baixar para o seu computador
-1. Abra o repositório `mark3` no GitHub e troque para a branch `claude/wizardly-noether-sah3m7`.
-2. Clique em **Code → Download ZIP**.
-3. Extraia e copie a pasta `PROJETOS PRODUTOS DIGITAIS` para `D:\PROJETOS CLAUDE\`.
+## Passo a passo para colocar à venda
+1. Descompacte o ZIP do produto.
+2. Troque `[Seu Nome]` e `[seu número]` (me mande seu nome e WhatsApp que eu gero os PDFs de novo já preenchidos).
+3. Crie a conta na **Kiwify** (grátis) e cadastre o produto com os textos de `textos-kiwify.md`.
+4. Suba os 4 arquivos da pasta `PRODUTO - entregar ao cliente`.
+5. Cole o link de pagamento e o seu WhatsApp no final do `pagina-de-vendas.html`.
+6. Siga o `divulgacao.md`: amostra grátis → teste → oferta.
 
-## Antes de vender: coloque seu nome
-Os PDFs saem com `[Seu Nome]`. Para trocar:
-1. Abra o `produto.html` no Bloco de Notas, aperte **Ctrl+H**, troque `[Seu Nome]` pelo seu nome e salve.
-2. Abra o `produto.html` no Google Chrome (dois cliques no arquivo).
-3. Aperte **Ctrl+P**, escolha **Salvar como PDF** e, em "Mais configurações", marque **Gráficos de plano de fundo**.
-4. Substitua o PDF antigo.
-
-## Como vender na Kiwify
-1. Crie a conta em kiwify.com.br (grátis, cobra uma taxa só quando vende).
-2. **Produtos → Criar produto**. Suba o PDF (e a planilha, no produto 03).
-3. Coloque o preço. A garantia de 7 dias já é obrigatória por lei em compras online.
-4. Copie o **link de checkout** e cole em `LINK_CHECKOUT`, no final do `pagina-de-vendas.html`. Troque também o `WHATSAPP`.
-5. Publique a página de vendas no GitHub Pages ou, no começo, use só o link da Kiwify.
-6. Para o produto 03, dá para configurar um **upsell** na Kiwify: quem compra o 01 ou o 02 recebe a oferta do 03 por R$ 19.
-
-## Antes de divulgar
-- **Teste os prompts** no ChatGPT com dados reais. Se algum resultado ficar ruim, me avise que eu ajusto.
-- Dê o produto de graça para 3 pessoas do público em troca de depoimento. Coloque os depoimentos na página de vendas.
-- Siga o `divulgacao.md`: **10 contatos por dia**.
+## Para gerar tudo de novo (depois de editar os textos)
+Na pasta `_ferramentas`: `python3 build.py` (precisa de Python com `markdown` e `openpyxl`, e Node com Playwright). Ou me peça que eu gero.
