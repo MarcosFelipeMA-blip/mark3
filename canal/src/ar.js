@@ -17,7 +17,7 @@ function simplify(pts, tol) {
   return pts.filter((_, i) => keep[i]);
 }
 
-window.exportAR = async function exportAR({ segs = 64, tol = 0.02 } = {}) {
+window.exportAR = async function exportAR({ segs = 48, tol = 0.02 } = {}) {
   const D = window.demo, { THREE, TOOLS, PATHS, R0, Y0, yc, FOCUS, bands, pc, bodyRing, PHI0, PHILEN, M } = D;
   D.state.playing = true; D.seek(D.TOTAL); for (let i = 0; i < 4; i++) D.step(1 / 30);
 
@@ -109,8 +109,9 @@ window.exportAR = async function exportAR({ segs = 64, tol = 0.02 } = {}) {
       times.push(t); vals.push(p.x, p.y, p.z);
     });
     tracks.push(new THREE.VectorKeyframeTrack(`${tools[i].name}.position`, times, vals));
-    const e = 1e-4, on = [0, Math.max(0, t0 - 0.02), t0, t, t + 0.02], v = [e, e, 1, 1, e];
-    tracks.push(new THREE.VectorKeyframeTrack(`${tools[i].name}.scale`, on, v.flatMap(x => [x, x, x]), THREE.InterpolateDiscrete));
+    // visibilidade por escala; tempos estritamente crescentes (exigência do glTF)
+    const e = 1e-4, keysV = t0 > 0 ? [[0, e], [t0, 1], [t, 1], [t + 0.02, e]] : [[0, 1], [t, 1], [t + 0.02, e]];
+    tracks.push(new THREE.VectorKeyframeTrack(`${tools[i].name}.scale`, keysV.map(k => k[0]), keysV.flatMap(k => [k[1], k[1], k[1]]), THREE.InterpolateDiscrete));
     t0 = t + 0.6;
   });
   const clip = new THREE.AnimationClip('Usinagem', t0, tracks);
