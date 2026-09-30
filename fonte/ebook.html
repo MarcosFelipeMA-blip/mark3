@@ -1,0 +1,435 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Kit Freela Digital com IA</title>
+<style>
+  @page { size: A4; margin: 22mm 20mm 22mm 20mm; }
+  @page :first { margin: 0; }
+  :root { --ink:#1b1f2a; --muted:#5b6475; --brand:#5b3df5; --brand2:#12b886; --soft:#f3f1ff; --line:#e3e1ef; }
+  * { box-sizing: border-box; }
+  body { font-family: "DejaVu Sans", "Liberation Sans", sans-serif; color: var(--ink); font-size: 10.5pt; line-height: 1.55; margin: 0; }
+  h1 { font-size: 22pt; line-height: 1.15; margin: 0 0 6mm; color: var(--brand); }
+  h2 { font-size: 14pt; margin: 8mm 0 3mm; }
+  h3 { font-size: 11.5pt; margin: 5mm 0 2mm; color: var(--brand); }
+  p { margin: 0 0 3mm; }
+  ul, ol { margin: 0 0 3mm; padding-left: 6mm; }
+  li { margin-bottom: 1.2mm; }
+  .chapter { page-break-before: always; }
+  .kicker { text-transform: uppercase; letter-spacing: .12em; font-size: 8.5pt; color: var(--muted); margin-bottom: 2mm; }
+  .box { background: var(--soft); border-left: 4px solid var(--brand); padding: 4mm 5mm; margin: 4mm 0; border-radius: 2mm; }
+  .box.green { background: #e9fbf4; border-color: var(--brand2); }
+  .box.warn { background: #fff6e5; border-color: #f59f00; }
+  .box p:last-child, .box ul:last-child { margin-bottom: 0; }
+  table { width: 100%; border-collapse: collapse; margin: 3mm 0 5mm; font-size: 9.5pt; }
+  th, td { border: 1px solid var(--line); padding: 2mm 2.5mm; text-align: left; vertical-align: top; }
+  th { background: var(--soft); }
+  .prompt { font-family: "DejaVu Sans Mono", monospace; font-size: 8.8pt; background: #f7f7fa; border: 1px solid var(--line); padding: 3mm 4mm; border-radius: 2mm; margin: 2mm 0 4mm; white-space: pre-wrap; page-break-inside: avoid; }
+  .check li { list-style: none; margin-left: -5mm; }
+  .check li::before { content: "☐  "; color: var(--brand); }
+  /* capa */
+  .cover { height: 297mm; width: 210mm; background: linear-gradient(150deg, #2a1b8f 0%, #5b3df5 55%, #12b886 100%); color: #fff; padding: 28mm 22mm; position: relative; }
+  .cover .tag { display: inline-block; border: 1px solid rgba(255,255,255,.6); padding: 1.5mm 4mm; border-radius: 20mm; font-size: 9pt; letter-spacing: .1em; text-transform: uppercase; }
+  .cover h1 { color: #fff; font-size: 40pt; margin: 30mm 0 8mm; }
+  .cover .sub { font-size: 15pt; max-width: 150mm; opacity: .95; }
+  .cover ul { position: absolute; bottom: 30mm; left: 22mm; font-size: 11pt; padding: 0; }
+  .cover ul li { list-style: none; margin-bottom: 2.5mm; }
+  .toc li { margin-bottom: 2mm; }
+  .small { font-size: 8.5pt; color: var(--muted); }
+</style>
+</head>
+<body>
+
+<section class="cover">
+  <span class="tag">Kit completo · Guia + Planilha + Modelos</span>
+  <h1>Freela Digital<br>com IA</h1>
+  <p class="sub">O método passo a passo para escolher, precificar, vender e entregar serviços digitais usando inteligência artificial — do zero ao primeiro cliente em 30 dias.</p>
+  <ul>
+    <li>✦ Guia completo em 10 capítulos</li>
+    <li>✦ 60 prompts prontos para produzir e vender</li>
+    <li>✦ Planilha de precificação, clientes e caixa</li>
+    <li>✦ Modelos editáveis de proposta e contrato</li>
+  </ul>
+</section>
+
+<section class="chapter">
+  <div class="kicker">Antes de começar</div>
+  <h1>Como usar este kit</h1>
+  <p>Este material foi feito para ser <strong>executado</strong>, não só lido. Cada capítulo termina com uma tarefa prática. Se você fizer uma tarefa por dia, em cerca de 30 dias terá um serviço definido, preço calculado, portfólio no ar, prospecção rodando e um processo de entrega organizado.</p>
+  <h3>O que vem no kit</h3>
+  <table>
+    <tr><th>Arquivo</th><th>Para que serve</th></tr>
+    <tr><td>Guia Freela Digital com IA (este PDF)</td><td>O método completo, scripts de prospecção e 60 prompts.</td></tr>
+    <tr><td>Planilha de Gestão do Freela (.xlsx)</td><td>Calcula seu preço mínimo por hora e por projeto, controla clientes (CRM) e o caixa mensal.</td></tr>
+    <tr><td>Modelo de Proposta Comercial (.docx)</td><td>Proposta profissional com três pacotes, pronta para editar.</td></tr>
+    <tr><td>Modelo de Contrato de Prestação de Serviços (.docx)</td><td>Contrato simples para serviços digitais, com cláusulas de escopo, revisões e pagamento.</td></tr>
+  </table>
+  <div class="box warn">
+    <p><strong>Transparência:</strong> resultados dependem da sua dedicação, do serviço escolhido e do seu mercado. Este kit não promete renda garantida — ele entrega um método, ferramentas e atalhos para você trabalhar de forma organizada e profissional.</p>
+  </div>
+  <h3>Sumário</h3>
+  <ol class="toc">
+    <li>Por que serviços digitais (e por que agora)</li>
+    <li>Escolhendo o serviço certo para você</li>
+    <li>Montando uma oferta irresistível em pacotes</li>
+    <li>Precificação sem chute</li>
+    <li>Portfólio em 7 dias, mesmo sem clientes</li>
+    <li>Prospecção: onde e como encontrar clientes</li>
+    <li>Proposta, objeções e fechamento</li>
+    <li>Entrega com IA: produtividade com qualidade</li>
+    <li>Contrato, recebimento e formalização</li>
+    <li>Plano de ação de 30 dias</li>
+  </ol>
+  <p>Anexo: Biblioteca com 60 prompts prontos.</p>
+</section>
+
+<section class="chapter">
+  <div class="kicker">Capítulo 1</div>
+  <h1>Por que serviços digitais (e por que agora)</h1>
+  <p>Todo negócio — da padaria do bairro à clínica, do advogado ao e-commerce — precisa de presença digital: posts, textos, artes, vídeos, anúncios, site, atendimento. A maioria dos donos de negócio não tem tempo nem conhecimento para fazer isso sozinho. É exatamente aí que entra o prestador de serviços digitais.</p>
+  <h3>As três vantagens do modelo</h3>
+  <ul>
+    <li><strong>Investimento inicial baixo:</strong> um computador (ou até o celular), internet e ferramentas gratuitas ou baratas.</li>
+    <li><strong>Dinheiro rápido:</strong> diferente de um produto, que precisa de audiência, um serviço pode ser vendido para um único cliente já na primeira semana.</li>
+    <li><strong>Recorrência:</strong> gestão de redes sociais, tráfego pago e criação de conteúdo são mensais — o cliente paga todo mês.</li>
+  </ul>
+  <h3>O papel da IA</h3>
+  <p>Ferramentas de inteligência artificial (assistentes de texto, geradores de imagem, editores de vídeo com IA) reduzem drasticamente o tempo de produção. Uma legenda que levava 20 minutos leva 3. Um roteiro que levava uma hora leva 15 minutos. Isso significa que você pode atender mais clientes, com mais qualidade, cobrando o mesmo — ou mais.</p>
+  <div class="box">
+    <p><strong>Regra de ouro:</strong> a IA faz o rascunho, você faz a curadoria. O cliente paga pelo resultado e pelo seu critério — nunca entregue algo gerado por IA sem revisar, adaptar à marca e checar informações.</p>
+  </div>
+  <h3>Tarefa do capítulo</h3>
+  <p>Liste 10 negócios que você conhece (bairro, amigos, família, empresas que você segue) e anote, para cada um, o que está fraco na presença digital deles. Essa lista vai virar sua primeira lista de prospecção.</p>
+</section>
+
+<section class="chapter">
+  <div class="kicker">Capítulo 2</div>
+  <h1>Escolhendo o serviço certo para você</h1>
+  <p>O maior erro de quem começa é oferecer “de tudo um pouco”. Clientes compram especialistas. Escolha <strong>um serviço principal</strong> e, no máximo, um complementar.</p>
+  <h3>12 serviços digitais com alta demanda</h3>
+  <table>
+    <tr><th>Serviço</th><th>Dificuldade</th><th>Recorrente?</th><th>Como a IA ajuda</th></tr>
+    <tr><td>Gestão de redes sociais</td><td>Média</td><td>Sim</td><td>Calendário, legendas, ideias de pauta</td></tr>
+    <tr><td>Criação de artes (Canva)</td><td>Baixa</td><td>Sim</td><td>Textos das artes, imagens, variações</td></tr>
+    <tr><td>Copywriting (textos de venda)</td><td>Média</td><td>Não/Sim</td><td>Rascunhos, headlines, variações</td></tr>
+    <tr><td>Edição de vídeos curtos (Reels/TikTok)</td><td>Média</td><td>Sim</td><td>Roteiros, legendas automáticas, cortes</td></tr>
+    <tr><td>Gestão de tráfego pago</td><td>Alta</td><td>Sim</td><td>Textos de anúncios, análise de métricas</td></tr>
+    <tr><td>Criação de sites / landing pages</td><td>Média</td><td>Não</td><td>Textos, estrutura, código</td></tr>
+    <tr><td>Google Meu Negócio para locais</td><td>Baixa</td><td>Sim</td><td>Descrições, posts, respostas a avaliações</td></tr>
+    <tr><td>Redação de blog / SEO</td><td>Média</td><td>Sim</td><td>Pesquisa de pauta, estrutura, rascunhos</td></tr>
+    <tr><td>E-mail marketing</td><td>Média</td><td>Sim</td><td>Sequências, assuntos, segmentação</td></tr>
+    <tr><td>Atendimento / automação de WhatsApp</td><td>Média</td><td>Sim</td><td>Scripts, respostas frequentes, fluxos</td></tr>
+    <tr><td>Identidade visual simples</td><td>Média</td><td>Não</td><td>Referências, paletas, conceitos</td></tr>
+    <tr><td>Assistente virtual</td><td>Baixa</td><td>Sim</td><td>Organização, e-mails, planilhas</td></tr>
+  </table>
+  <h3>Matriz de escolha</h3>
+  <p>Dê uma nota de 1 a 5 para cada serviço que te interessou nos critérios abaixo. O que somar mais pontos é o seu ponto de partida.</p>
+  <table>
+    <tr><th>Critério</th><th>Pergunta</th></tr>
+    <tr><td>Afinidade</td><td>Eu gostaria de fazer isso toda semana?</td></tr>
+    <tr><td>Habilidade</td><td>Já sei fazer ou aprendo o básico em até 2 semanas?</td></tr>
+    <tr><td>Demanda local</td><td>Os negócios da minha lista precisam disso?</td></tr>
+    <tr><td>Recorrência</td><td>O cliente precisa disso todo mês?</td></tr>
+    <tr><td>Alavanca da IA</td><td>A IA reduz muito o meu tempo nessa tarefa?</td></tr>
+  </table>
+  <div class="box green">
+    <p><strong>Dica de nicho:</strong> “gestão de Instagram” é genérico. “Gestão de Instagram para clínicas odontológicas” é memorável, facilita a prospecção e permite reaproveitar pautas entre clientes do mesmo setor.</p>
+  </div>
+  <h3>Tarefa do capítulo</h3>
+  <p>Preencha a matriz, escolha seu serviço principal e defina um nicho de clientes. Escreva numa frase: “Eu ajudo <em>[tipo de negócio]</em> a <em>[resultado]</em> por meio de <em>[serviço]</em>”.</p>
+</section>
+
+<section class="chapter">
+  <div class="kicker">Capítulo 3</div>
+  <h1>Montando uma oferta irresistível em pacotes</h1>
+  <p>Cliente não compra “horas”, compra <strong>resultado com escopo claro</strong>. Por isso, organize seu serviço em três pacotes. Esse formato facilita a decisão e faz a maioria escolher o do meio.</p>
+  <h3>Exemplo: gestão de Instagram</h3>
+  <table>
+    <tr><th></th><th>Essencial</th><th>Profissional (mais vendido)</th><th>Completo</th></tr>
+    <tr><td>Posts no feed/mês</td><td>8</td><td>12</td><td>16</td></tr>
+    <tr><td>Stories/semana</td><td>—</td><td>3 dias</td><td>5 dias</td></tr>
+    <tr><td>Reels/mês</td><td>—</td><td>2</td><td>4</td></tr>
+    <tr><td>Legendas e hashtags</td><td>✓</td><td>✓</td><td>✓</td></tr>
+    <tr><td>Relatório mensal</td><td>—</td><td>✓</td><td>✓ + reunião</td></tr>
+    <tr><td>Revisões por peça</td><td>1</td><td>2</td><td>2</td></tr>
+  </table>
+  <h3>Os 5 elementos de toda oferta</h3>
+  <ol>
+    <li><strong>Resultado prometido</strong> (realista): “presença profissional e constante no Instagram”.</li>
+    <li><strong>Entregáveis</strong> exatos: quantidade, formato, prazo.</li>
+    <li><strong>Limites</strong>: número de revisões, o que não está incluso.</li>
+    <li><strong>Prazo</strong> de início e de cada entrega.</li>
+    <li><strong>Segurança</strong>: contrato, cronograma, canal de comunicação e política de ajustes.</li>
+  </ol>
+  <div class="box">
+    <p><strong>Oferta de entrada:</strong> tenha também um serviço pontual e barato (ex.: “diagnóstico do perfil + 5 artes”) para quem ainda não confia em você. Depois de entregar bem, ofereça o plano mensal.</p>
+  </div>
+  <h3>Tarefa do capítulo</h3>
+  <p>Monte seus três pacotes e sua oferta de entrada. Use o Prompt 7 do anexo para gerar variações de nomes e descrições.</p>
+</section>
+
+<section class="chapter">
+  <div class="kicker">Capítulo 4</div>
+  <h1>Precificação sem chute</h1>
+  <p>Cobrar barato demais é o jeito mais rápido de desistir de trabalhar com serviços. Use a lógica abaixo — a planilha que acompanha o kit faz todas as contas automaticamente.</p>
+  <h3>Passo 1 — Seu custo por hora</h3>
+  <div class="box">
+    <p><strong>Valor hora mínimo = (Custos fixos mensais + Pró-labore desejado) ÷ Horas faturáveis por mês</strong></p>
+  </div>
+  <ul>
+    <li><strong>Custos fixos:</strong> internet, energia, ferramentas (IA, Canva, editor de vídeo), celular, DAS do MEI, contador se houver.</li>
+    <li><strong>Pró-labore:</strong> quanto você quer receber limpo no mês.</li>
+    <li><strong>Horas faturáveis:</strong> só as horas de produção para clientes. Prospecção, reuniões e administração não entram — normalmente são 60% a 70% do seu tempo total.</li>
+  </ul>
+  <h3>Exemplo</h3>
+  <p>Custos fixos de R$ 400 + pró-labore de R$ 3.000 = R$ 3.400. Trabalhando 6 h/dia, 22 dias, com 65% faturável = 86 h. Valor hora mínimo ≈ R$ 39,50.</p>
+  <h3>Passo 2 — Preço do projeto</h3>
+  <div class="box">
+    <p><strong>Preço = Horas estimadas × Valor hora × (1 + Margem) ÷ (1 − Impostos e taxas)</strong></p>
+  </div>
+  <p>Se um pacote mensal leva 14 horas, com margem de 30% e 6% de impostos/taxas: 14 × 39,50 × 1,30 ÷ 0,94 ≈ <strong>R$ 765</strong>.</p>
+  <h3>Passo 3 — Ajuste pelo mercado</h3>
+  <p>Pesquise o que outros profissionais do seu nicho e região cobram. Se seu preço calculado ficar muito abaixo, você está deixando dinheiro na mesa. Se ficar muito acima, reduza horas com IA e processos, ou atenda clientes maiores.</p>
+  <div class="box warn">
+    <p><strong>Nunca</strong> dê desconto sem tirar algo do escopo. “Consigo fazer por R$ 600 se forem 8 posts em vez de 12.”</p>
+  </div>
+  <h3>Tarefa do capítulo</h3>
+  <p>Abra a aba <em>Precificação</em> da planilha, preencha os campos amarelos e anote o preço de cada pacote.</p>
+</section>
+
+<section class="chapter">
+  <div class="kicker">Capítulo 5</div>
+  <h1>Portfólio em 7 dias, mesmo sem clientes</h1>
+  <p>Ninguém contrata no escuro. A boa notícia: portfólio não precisa vir de clientes pagantes.</p>
+  <h3>Três formas de montar portfólio do zero</h3>
+  <ol>
+    <li><strong>Projetos fictícios bem feitos:</strong> escolha 3 empresas reais do seu nicho e crie “como eu faria” — deixe claro que são projetos conceituais.</li>
+    <li><strong>Antes e depois:</strong> pegue um perfil, site ou anúncio real e mostre sua versão melhorada.</li>
+    <li><strong>Trabalhos-piloto:</strong> ofereça 1 ou 2 serviços com grande desconto em troca de depoimento e autorização para mostrar o resultado.</li>
+  </ol>
+  <h3>Plano de 7 dias</h3>
+  <table>
+    <tr><th>Dia</th><th>Ação</th></tr>
+    <tr><td>1</td><td>Escolher 3 negócios-exemplo do seu nicho</td></tr>
+    <tr><td>2–4</td><td>Produzir uma peça de portfólio por dia (use os prompts do anexo)</td></tr>
+    <tr><td>5</td><td>Montar uma página simples (Canva, Behance, Notion ou destaque do Instagram)</td></tr>
+    <tr><td>6</td><td>Ajustar sua bio: quem você ajuda, com o quê, e como falar com você</td></tr>
+    <tr><td>7</td><td>Oferecer 2 trabalhos-piloto para conhecidos</td></tr>
+  </table>
+  <h3>Tarefa do capítulo</h3>
+  <p>Execute o plano de 7 dias. Ao final, você deve ter um link para enviar a qualquer potencial cliente.</p>
+</section>
+
+<section class="chapter">
+  <div class="kicker">Capítulo 6</div>
+  <h1>Prospecção: onde e como encontrar clientes</h1>
+  <p>Clientes raramente aparecem sozinhos no começo. Você vai buscá-los — de forma educada, personalizada e constante. Meta sugerida: <strong>10 abordagens por dia útil</strong>.</p>
+  <h3>Os 5 canais que mais funcionam</h3>
+  <ol>
+    <li><strong>Rede pessoal:</strong> conte para amigos e família o que você faz e peça indicações.</li>
+    <li><strong>Instagram (direct):</strong> negócios do seu nicho com perfil desatualizado.</li>
+    <li><strong>Google Maps:</strong> empresas locais com poucas fotos, sem site ou avaliações sem resposta.</li>
+    <li><strong>LinkedIn:</strong> ótimo para serviços B2B (copy, e-mail marketing, sites).</li>
+    <li><strong>Plataformas de freela:</strong> Workana, 99Freelas e similares para ganhar experiência e depoimentos.</li>
+  </ol>
+  <h3>Script 1 — Direct no Instagram</h3>
+  <div class="prompt">Oi, [nome]! Tudo bem? Sou [seu nome], trabalho com [serviço] para [nicho].
+Dei uma olhada no perfil da [empresa] e gostei muito de [elogio específico].
+Percebi que [oportunidade concreta — ex.: os últimos posts são de março].
+Preparei 2 ideias rápidas de post pensando em vocês. Posso te mandar aqui? Sem compromisso.</div>
+  <h3>Script 2 — WhatsApp para indicação</h3>
+  <div class="prompt">Oi, [nome]! Comecei a trabalhar com [serviço] e estou montando minha carteira de clientes.
+Você conhece alguém que tenha um negócio e esteja precisando de ajuda com [problema]?
+Se indicar e fechar, te dou [benefício — ex.: 10% do primeiro mês]. Obrigado(a)!</div>
+  <h3>Script 3 — Follow-up (3 dias depois)</h3>
+  <div class="prompt">Oi, [nome]! Passando só para saber se conseguiu ver as ideias que te mandei.
+Se fizer sentido, consigo te mostrar em 15 minutos como ficaria um mês de conteúdo para a [empresa].</div>
+  <div class="box green">
+    <p><strong>Entregue valor antes de pedir:</strong> abordagens que já trazem uma ideia pronta, uma arte de exemplo ou um diagnóstico rápido têm taxa de resposta muito maior do que “oi, faço social media, tem interesse?”.</p>
+  </div>
+  <h3>Tarefa do capítulo</h3>
+  <p>Cadastre 30 potenciais clientes na aba <em>Clientes (CRM)</em> da planilha e faça as primeiras 10 abordagens.</p>
+</section>
+
+<section class="chapter">
+  <div class="kicker">Capítulo 7</div>
+  <h1>Proposta, objeções e fechamento</h1>
+  <h3>A conversa de diagnóstico (15–20 min)</h3>
+  <ol>
+    <li>Qual é o principal objetivo do negócio nos próximos 3 meses?</li>
+    <li>O que já foi tentado no digital? O que funcionou e o que não funcionou?</li>
+    <li>Quem cuida disso hoje? Quanto tempo gasta?</li>
+    <li>Como você vai saber que valeu a pena contratar?</li>
+    <li>Qual orçamento faz sentido para esse objetivo?</li>
+  </ol>
+  <p>Depois da conversa, envie a proposta em até 24 horas usando o <strong>Modelo de Proposta Comercial</strong> do kit.</p>
+  <h3>Respondendo às objeções mais comuns</h3>
+  <table>
+    <tr><th>Objeção</th><th>Resposta sugerida</th></tr>
+    <tr><td>“Está caro.”</td><td>“Entendo. Comparado a quê? Se preferir, posso ajustar o escopo para o pacote Essencial e começamos por ele.”</td></tr>
+    <tr><td>“Vou pensar.”</td><td>“Claro! O que ficou de dúvida? Posso te explicar melhor algum ponto agora.”</td></tr>
+    <tr><td>“Meu sobrinho faz isso.”</td><td>“Ótimo ter alguém de confiança. A diferença é que aqui você tem contrato, calendário e relatório — posso te mostrar um exemplo.”</td></tr>
+    <tr><td>“Não tenho tempo para acompanhar.”</td><td>“É justamente por isso que o serviço existe: você aprova tudo em uma única conversa por semana.”</td></tr>
+    <tr><td>“Já tentei e não deu resultado.”</td><td>“O que foi feito na época? Vamos combinar metas claras e um relatório mensal para você acompanhar.”</td></tr>
+  </table>
+  <h3>Fechamento</h3>
+  <p>Seja direto: “Podemos começar na segunda? Te envio o contrato e o link de pagamento hoje.” Silêncio depois dessa pergunta é normal — espere a resposta.</p>
+  <h3>Tarefa do capítulo</h3>
+  <p>Personalize o modelo de proposta com seus pacotes e preços. Treine as respostas às objeções em voz alta.</p>
+</section>
+
+<section class="chapter">
+  <div class="kicker">Capítulo 8</div>
+  <h1>Entrega com IA: produtividade com qualidade</h1>
+  <p>Um bom processo de entrega é o que transforma um cliente pontual em um cliente de anos.</p>
+  <h3>O fluxo de 5 etapas</h3>
+  <ol>
+    <li><strong>Briefing:</strong> colete informações da marca, público, tom de voz, concorrentes e referências (Prompt 21).</li>
+    <li><strong>Guia da marca:</strong> transforme o briefing num documento-base que você cola no início de toda conversa com a IA (Prompt 22).</li>
+    <li><strong>Produção em lote:</strong> produza o mês inteiro em 1 ou 2 blocos de tempo, não um post por dia.</li>
+    <li><strong>Revisão humana:</strong> checagem de fatos, ortografia, tom de voz e identidade visual.</li>
+    <li><strong>Aprovação e entrega:</strong> envie tudo num único link (Drive/Canva) com calendário e prazo para aprovação.</li>
+  </ol>
+  <h3>Checklist de qualidade antes de entregar</h3>
+  <ul class="check">
+    <li>O texto soa como a marca, e não como uma IA genérica?</li>
+    <li>Todos os dados, preços e informações foram conferidos com o cliente?</li>
+    <li>Imagens geradas por IA respeitam a identidade visual e não trazem erros (mãos, textos, logos)?</li>
+    <li>Nenhuma imagem ou texto copia trabalho de terceiros?</li>
+    <li>Ortografia e gramática revisadas?</li>
+    <li>O entregável bate exatamente com o escopo do contrato?</li>
+  </ul>
+  <div class="box">
+    <p><strong>Relatório mensal:</strong> mesmo que simples, um relatório com o que foi entregue, principais números e próximos passos é o fator nº 1 de retenção. Use o Prompt 30.</p>
+  </div>
+  <h3>Tarefa do capítulo</h3>
+  <p>Crie sua pasta-modelo de cliente (briefing, guia da marca, calendário, entregas, relatórios) para duplicar a cada novo contrato.</p>
+</section>
+
+<section class="chapter">
+  <div class="kicker">Capítulo 9</div>
+  <h1>Contrato, recebimento e formalização</h1>
+  <h3>Sempre com contrato</h3>
+  <p>Mesmo com conhecidos. O <strong>Modelo de Contrato</strong> do kit cobre: escopo, prazos, número de revisões, forma de pagamento, multa por atraso, direitos de uso e rescisão. Adapte à sua realidade e, se possível, peça uma revisão a um advogado.</p>
+  <h3>Recebimento</h3>
+  <ul>
+    <li><strong>Projetos pontuais:</strong> 50% no início e 50% na entrega.</li>
+    <li><strong>Serviços mensais:</strong> pagamento antecipado, todo mês, antes do início do ciclo.</li>
+    <li>Use Pix, boleto ou link de pagamento. Envie lembrete 3 dias antes do vencimento.</li>
+  </ul>
+  <h3>Formalização como MEI</h3>
+  <p>Muitas atividades de serviços digitais podem ser formalizadas como MEI, o que permite emitir nota fiscal e contribuir para a previdência. As regras e as atividades permitidas mudam com o tempo — confira as atividades e o limite de faturamento no Portal do Empreendedor (gov.br) antes de abrir o CNPJ, e procure um contador se tiver dúvidas.</p>
+  <div class="box warn">
+    <p>Este capítulo tem caráter informativo e não substitui orientação jurídica ou contábil.</p>
+  </div>
+  <h3>Tarefa do capítulo</h3>
+  <p>Personalize o contrato, defina sua política de pagamento e registre a primeira entrada na aba <em>Caixa</em> da planilha.</p>
+</section>
+
+<section class="chapter">
+  <div class="kicker">Capítulo 10</div>
+  <h1>Plano de ação de 30 dias</h1>
+  <table>
+    <tr><th>Semana</th><th>Foco</th><th>Entregas</th></tr>
+    <tr><td>1</td><td>Fundação</td><td>Serviço e nicho escolhidos (cap. 2), pacotes montados (cap. 3), preços calculados (cap. 4)</td></tr>
+    <tr><td>2</td><td>Vitrine</td><td>Portfólio com 3 peças, bio ajustada, 2 trabalhos-piloto oferecidos (cap. 5)</td></tr>
+    <tr><td>3</td><td>Prospecção</td><td>30 contatos no CRM, 50 abordagens, follow-ups em dia (cap. 6)</td></tr>
+    <tr><td>4</td><td>Fechamento e entrega</td><td>Diagnósticos, propostas enviadas, primeiro contrato assinado e processo de entrega pronto (caps. 7–9)</td></tr>
+  </table>
+  <h3>Rotina diária sugerida (2 a 4 horas)</h3>
+  <ul>
+    <li>30 min — prospecção (10 abordagens)</li>
+    <li>15 min — follow-ups</li>
+    <li>1 a 3 h — produção (portfólio ou clientes)</li>
+    <li>15 min — atualizar a planilha</li>
+  </ul>
+  <div class="box green">
+    <p><strong>Próximo nível:</strong> depois dos 3 primeiros clientes, documente seu processo, crie modelos reutilizáveis e aumente o preço para os próximos. Com 5 ou mais clientes recorrentes, avalie contratar ajuda para a produção.</p>
+  </div>
+</section>
+
+<section class="chapter">
+  <div class="kicker">Anexo</div>
+  <h1>Biblioteca de 60 prompts</h1>
+  <p>Substitua o que está entre colchetes. Para melhores resultados, cole antes o <strong>guia da marca</strong> do cliente (Prompt 22). Funciona com os principais assistentes de IA.</p>
+
+  <h2>A. Planejamento e oferta (1–10)</h2>
+  <div class="prompt">1. Liste 15 tipos de negócio em [cidade/região] que mais precisam de [serviço] e explique, para cada um, a principal dor digital.</div>
+  <div class="prompt">2. Aja como consultor de negócios. Tenho estas habilidades: [lista]. Sugira 5 serviços digitais que posso vender, com nível de dificuldade e potencial de recorrência.</div>
+  <div class="prompt">3. Crie 10 opções de posicionamento para um profissional de [serviço] focado em [nicho]. Formato: “Eu ajudo X a Y por meio de Z”.</div>
+  <div class="prompt">4. Quais são as 10 maiores objeções de [nicho] ao contratar [serviço]? Para cada uma, escreva uma resposta curta e empática.</div>
+  <div class="prompt">5. Descreva a persona do cliente ideal para [serviço] no nicho [nicho]: rotina, dores, desejos, onde busca informação e o que o faz confiar.</div>
+  <div class="prompt">6. Monte 3 pacotes (Essencial, Profissional, Completo) para [serviço], com entregáveis, limites de revisão e prazos. Coloque em tabela.</div>
+  <div class="prompt">7. Crie 10 nomes criativos para os pacotes de [serviço] e uma descrição de 2 linhas para cada um.</div>
+  <div class="prompt">8. Sugira uma oferta de entrada de baixo valor para [serviço] que ajude o cliente a confiar em mim e leve naturalmente ao plano mensal.</div>
+  <div class="prompt">9. Liste 10 serviços complementares que posso oferecer como upsell para clientes de [serviço].</div>
+  <div class="prompt">10. Analise estes 3 concorrentes: [links ou descrições]. Aponte pontos fortes, fracos e uma forma de me diferenciar.</div>
+
+  <h2>B. Portfólio e marca pessoal (11–20)</h2>
+  <div class="prompt">11. Escreva uma bio de Instagram (até 150 caracteres) para um profissional de [serviço] focado em [nicho], com chamada para ação.</div>
+  <div class="prompt">12. Crie o texto de um estudo de caso conceitual: problema de [empresa-exemplo], solução proposta, peças criadas e resultado esperado.</div>
+  <div class="prompt">13. Gere 20 ideias de posts para o MEU perfil profissional que mostrem autoridade em [serviço] sem parecer propaganda.</div>
+  <div class="prompt">14. Escreva um texto “Sobre mim” de 120 palavras para meu portfólio, com tom [profissional/descontraído].</div>
+  <div class="prompt">15. Crie um roteiro de Reels de 30 segundos mostrando o “antes e depois” de um perfil de [nicho].</div>
+  <div class="prompt">16. Sugira a estrutura de uma página de portfólio no Notion/Canva: seções, ordem e o que escrever em cada uma.</div>
+  <div class="prompt">17. Escreva uma mensagem pedindo depoimento a um cliente satisfeito, com 3 perguntas que facilitem a resposta.</div>
+  <div class="prompt">18. Transforme este depoimento em 3 versões para usar em post, story e proposta: [depoimento].</div>
+  <div class="prompt">19. Crie uma paleta de cores e sugestões de tipografia para minha marca pessoal de [serviço], transmitindo [valores].</div>
+  <div class="prompt">20. Escreva 5 destaques de Instagram (nome + conteúdo) para o perfil de um profissional de [serviço].</div>
+
+  <h2>C. Entrega para clientes (21–40)</h2>
+  <div class="prompt">21. Crie um formulário de briefing com 15 perguntas para iniciar um trabalho de [serviço] com uma empresa de [nicho].</div>
+  <div class="prompt">22. A partir deste briefing, crie um guia da marca com: missão, público, tom de voz (faça/não faça), palavras-chave, temas e exemplos de frases. Briefing: [colar].</div>
+  <div class="prompt">23. Crie um calendário de conteúdo de 30 dias para [empresa], com data, formato (feed/reels/story/carrossel), tema, objetivo e ideia central.</div>
+  <div class="prompt">24. Escreva 5 legendas para o post sobre [tema], no tom de voz do guia da marca, com gancho na primeira linha e chamada para ação.</div>
+  <div class="prompt">25. Crie o texto de um carrossel de 7 slides sobre [tema]: capa com gancho, 5 slides de conteúdo e slide final com chamada para ação.</div>
+  <div class="prompt">26. Escreva 3 roteiros de Reels de até 40 segundos sobre [tema], com gancho nos 3 primeiros segundos, cenas e texto na tela.</div>
+  <div class="prompt">27. Sugira 20 hashtags para [nicho] em [cidade], divididas em amplas, médias e específicas.</div>
+  <div class="prompt">28. Escreva 10 respostas educadas e personalizáveis para avaliações do Google (5 positivas, 5 negativas) de uma empresa de [nicho].</div>
+  <div class="prompt">29. Crie 5 variações de anúncio para [produto/serviço]: título (até 40 caracteres), texto principal (até 125) e chamada para ação.</div>
+  <div class="prompt">30. Com estes dados do mês [colar números], escreva um relatório para o cliente: resumo, destaques, o que melhorar e plano do próximo mês. Linguagem simples.</div>
+  <div class="prompt">31. Escreva a estrutura e os textos de uma landing page para [oferta]: headline, subheadline, benefícios, prova, FAQ e chamada para ação.</div>
+  <div class="prompt">32. Crie uma sequência de 5 e-mails de boas-vindas para novos clientes de [empresa], com assunto e corpo de cada um.</div>
+  <div class="prompt">33. Escreva 15 respostas rápidas para o WhatsApp de [empresa] cobrindo preço, horário, localização, formas de pagamento e agendamento.</div>
+  <div class="prompt">34. Escreva a descrição otimizada do Google Meu Negócio de [empresa] (até 750 caracteres), com palavras-chave locais.</div>
+  <div class="prompt">35. Crie um artigo de blog de 900 palavras sobre [tema], otimizado para a palavra-chave “[palavra-chave]”, com título, subtítulos e meta description.</div>
+  <div class="prompt">36. Gere 10 ideias de campanhas para datas comemorativas do próximo trimestre relevantes para [nicho].</div>
+  <div class="prompt">37. Descreva 5 imagens para gerar com IA para o post sobre [tema], respeitando a identidade: [cores, estilo]. Escreva o prompt de imagem de cada uma.</div>
+  <div class="prompt">38. Revise este texto corrigindo gramática e deixando-o mais claro, sem mudar o tom de voz: [texto].</div>
+  <div class="prompt">39. Adapte este conteúdo para LinkedIn, Instagram e WhatsApp, respeitando o formato de cada canal: [conteúdo].</div>
+  <div class="prompt">40. Liste 10 métricas que devo acompanhar em [serviço] e explique cada uma em uma frase para o cliente leigo.</div>
+
+  <h2>D. Vendas e relacionamento (41–50)</h2>
+  <div class="prompt">41. Personalize esta mensagem de prospecção para [empresa], considerando que [observação sobre o perfil]: [script].</div>
+  <div class="prompt">42. Crie 3 ideias rápidas de post para [empresa] que eu possa enviar como amostra grátis na primeira abordagem.</div>
+  <div class="prompt">43. Escreva o texto de uma proposta comercial para [empresa], com diagnóstico, objetivo, 3 pacotes e próximos passos. Contexto: [resumo da conversa].</div>
+  <div class="prompt">44. Simule um cliente difícil de [nicho] com a objeção “[objeção]”. Faça-me perguntas e avalie minhas respostas ao final.</div>
+  <div class="prompt">45. Escreva 3 mensagens de follow-up (dia 3, dia 7, dia 14) para uma proposta sem resposta, cada vez mais curta.</div>
+  <div class="prompt">46. Escreva uma mensagem para comunicar reajuste de preço a um cliente antigo de forma respeitosa, destacando os resultados entregues.</div>
+  <div class="prompt">47. Escreva uma mensagem educada de cobrança para pagamento com [X] dias de atraso.</div>
+  <div class="prompt">48. Crie um roteiro para reunião mensal de 20 minutos com cliente: pauta, perguntas e como apresentar o próximo passo (upsell).</div>
+  <div class="prompt">49. Escreva uma mensagem pedindo indicações a clientes satisfeitos, com benefício para quem indicar.</div>
+  <div class="prompt">50. Escreva uma mensagem para reativar um ex-cliente que cancelou há [X] meses, com uma oferta de retorno.</div>
+
+  <h2>E. Produtividade e gestão (51–60)</h2>
+  <div class="prompt">51. Crie um checklist passo a passo para [tarefa recorrente] que eu possa seguir toda vez.</div>
+  <div class="prompt">52. Organize minha semana: tenho [lista de tarefas e prazos]. Monte blocos de tempo por dia priorizando o que gera receita.</div>
+  <div class="prompt">53. Transforme estas anotações de reunião em resumo, decisões e próximos passos com responsável e prazo: [anotações].</div>
+  <div class="prompt">54. Crie um procedimento operacional (SOP) para onboarding de novo cliente de [serviço], do pagamento à primeira entrega.</div>
+  <div class="prompt">55. Liste as tarefas de [serviço] que posso automatizar ou acelerar com IA e sugira como fazer cada uma.</div>
+  <div class="prompt">56. Estou com [X] clientes e trabalho [Y] horas por semana. Analise se devo aumentar preço, reduzir escopo ou contratar ajuda. Dados: [colar].</div>
+  <div class="prompt">57. Escreva um e-mail explicando ao cliente os limites do escopo quando ele pede algo fora do combinado, oferecendo orçamento extra.</div>
+  <div class="prompt">58. Crie 5 metas SMART para o meu negócio de serviços digitais nos próximos 90 dias.</div>
+  <div class="prompt">59. Faça uma análise SWOT do meu negócio: [descrição].</div>
+  <div class="prompt">60. Aja como mentor. Revise meu plano para o próximo mês e aponte 3 riscos e 3 oportunidades: [plano].</div>
+  <p class="small">Revise sempre o conteúdo gerado por IA. Não insira dados sensíveis de clientes em ferramentas sem autorização.</p>
+</section>
+
+<section class="chapter">
+  <h1>Obrigado!</h1>
+  <p>Agora é execução. Um capítulo por vez, uma tarefa por dia. Guarde este guia, volte a ele sempre que travar e use a planilha toda semana.</p>
+  <p>Bom trabalho — e bons clientes!</p>
+  <p class="small">© Kit Freela Digital com IA. Uso pessoal. É proibida a revenda ou distribuição deste material.</p>
+</section>
+</body>
+</html>
