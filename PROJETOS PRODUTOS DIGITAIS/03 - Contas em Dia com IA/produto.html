@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Contas em Dia com IA</title>
+<style>
+  :root { --fg:#17231c; --muted:#5a6b60; --accent:#1e7a4c; --soft:#edf7f1; --line:#d3e6da; --box:#f8fcf9; }
+  * { box-sizing:border-box; }
+  body { margin:0; font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; color:var(--fg);
+         background:#fff; line-height:1.6; font-size:16px; }
+  .page { max-width:780px; margin:0 auto; padding:40px 24px; }
+  h1 { font-size:2.6rem; line-height:1.1; margin:0 0 12px; }
+  h2 { font-size:1.7rem; margin:48px 0 12px; color:var(--accent); }
+  h3 { font-size:1.2rem; margin:32px 0 6px; }
+  .cover { min-height:92vh; display:flex; flex-direction:column; justify-content:center;
+           border-bottom:4px solid var(--accent); }
+  .cover .tag { color:var(--accent); font-weight:700; letter-spacing:.08em; text-transform:uppercase; font-size:.85rem; }
+  .cover p { font-size:1.25rem; color:var(--muted); max-width:560px; }
+  .muted { color:var(--muted); }
+  .when { color:var(--muted); font-style:italic; margin:0 0 8px; }
+  .prompt { background:var(--soft); border-left:4px solid var(--accent); padding:14px 16px; border-radius:8px;
+            white-space:pre-wrap; font-family: ui-monospace, Consolas, monospace; font-size:.9rem; margin:8px 0; }
+  .prompt::before { content:"PROMPT — copie e cole"; display:block; font-family:system-ui,sans-serif;
+                    font-size:.7rem; font-weight:700; letter-spacing:.08em; color:var(--accent); margin-bottom:6px; }
+  .example { background:var(--box); border:1px dashed var(--line); padding:12px 16px; border-radius:8px; margin:8px 0; }
+  .example::before { content:"Exemplo de resultado"; display:block; font-size:.7rem; font-weight:700;
+                     letter-spacing:.08em; color:var(--muted); text-transform:uppercase; margin-bottom:4px; }
+  table { width:100%; border-collapse:collapse; margin:12px 0; font-size:.92rem; }
+  th, td { border:1px solid var(--line); padding:8px 10px; text-align:left; vertical-align:top; }
+  th { background:var(--soft); }
+  ul.check { list-style:none; padding-left:0; }
+  ul.check li::before { content:"☐ "; color:var(--accent); font-weight:700; }
+  .tip { background:#fff8e6; border-radius:8px; padding:12px 16px; margin:16px 0; }
+  .tip strong { color:#8a5a00; }
+  .warn { background:#fdecec; border-radius:8px; padding:12px 16px; margin:16px 0; }
+  .warn strong { color:#a12622; }
+  .brk { page-break-before:always; }
+  @media print {
+    .page { padding:0 8px; }
+    .cover { min-height:95vh; }
+    h2 { page-break-after:avoid; }
+    .prompt, .example, .tip, .warn, table { page-break-inside:avoid; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+<section class="cover">
+  <div class="tag">Guia prático + planilha + prompts</div>
+  <h1>Contas em Dia com IA</h1>
+  <p>Descubra para onde vai seu dinheiro, monte um plano para sair do rotativo do cartão e negocie suas dívidas com segurança, usando inteligência artificial grátis.</p>
+  <p class="muted" style="font-size:1rem">Por [Seu Nome]</p>
+</section>
+
+<h2 class="brk">Antes de começar</h2>
+<p>Se você está com contas atrasadas, saiba que não está sozinho: segundo a pesquisa da CNC de 2026, cerca de 8 em cada 10 famílias brasileiras têm alguma dívida, e o cartão de crédito é a principal delas.</p>
+<p>Este guia não promete milagre. Ele te dá <strong>clareza</strong> (quanto você deve, para quem e com quais juros) e um <strong>plano</strong> (o que pagar primeiro e como negociar). Com a IA, a parte das contas fica muito mais rápida.</p>
+
+<p><strong>O que você vai usar:</strong></p>
+<ul>
+  <li>A <strong>planilha que acompanha este guia</strong> (abre no Excel, no Google Planilhas ou no celular)</li>
+  <li>Uma IA gratuita: <strong>ChatGPT</strong>, <strong>Claude</strong> ou <strong>Gemini</strong></li>
+  <li>Seus extratos e faturas dos últimos 2 ou 3 meses</li>
+</ul>
+
+<div class="warn"><strong>Segurança em primeiro lugar:</strong> nunca cole na IA seu CPF, senha, número do cartão, código de segurança ou dados de acesso ao banco. Para usar os prompts, bastam os <strong>valores</strong> e as <strong>descrições dos gastos</strong>. Se o extrato tiver seu nome ou número de conta, apague antes de colar.</div>
+
+<h3>Índice</h3>
+<ol>
+  <li>Passo 1: Descubra para onde vai o seu dinheiro</li>
+  <li>Passo 2: Coloque todas as dívidas na mesa</li>
+  <li>Passo 3: Entenda o cartão de crédito e saia do rotativo</li>
+  <li>Passo 4: Escolha o que pagar primeiro</li>
+  <li>Passo 5: Negocie com segurança</li>
+  <li>Passo 6: Monte seu orçamento e não volte para o vermelho</li>
+  <li>Plano de 30 dias</li>
+  <li>Bônus: Golpes que miram quem está endividado</li>
+  <li>Bônus: Se as apostas entraram na sua vida</li>
+</ol>
+
+<h2 class="brk">Passo 1: Para onde vai o seu dinheiro</h2>
+<p>Quase todo mundo se surpreende com esse passo. Os pequenos gastos do dia a dia (delivery, assinaturas, apps de transporte) somam muito no fim do mês.</p>
+
+<h3>Prompt 1: Organizar o extrato</h3>
+<p class="when">Copie os lançamentos do extrato ou da fatura (só data, descrição e valor) e cole junto com o prompt.</p>
+<div class="prompt">Vou colar abaixo os gastos do meu extrato do último mês. Organize em uma tabela com as categorias: Moradia, Contas da casa, Mercado, Alimentação fora e delivery, Transporte, Saúde, Educação, Assinaturas, Lazer, Compras, Dívidas e juros, Outros.
+Depois me mostre:
+1. O total por categoria e a porcentagem de cada uma
+2. As 5 maiores despesas
+3. Gastos repetidos que parecem assinaturas
+4. Onde provavelmente dá para cortar sem sofrimento
+
+Gastos:
+[cole aqui: data – descrição – valor]</div>
+
+<h3>Prompt 2: Achar cortes realistas</h3>
+<div class="prompt">Minha renda mensal é R$ [valor] e meus gastos por categoria são: [cole o resultado do prompt anterior]. Preciso liberar R$ [valor] por mês para pagar dívidas. Sugira cortes em ordem do mais fácil para o mais difícil, com o valor aproximado que cada um libera. Não sugira cortar mercado básico, remédios ou contas essenciais.</div>
+<div class="example">"1. Cancelar 2 streamings que você não usa: R$ 55. 2. Reduzir delivery de 8 para 3 vezes no mês: cerca de R$ 180. 3. Trocar o plano do celular por um pré-pago mais barato: R$ 40..."</div>
+
+<p>Anote os números na aba <strong>Orçamento do Mês</strong> da planilha.</p>
+
+<h2 class="brk">Passo 2: Todas as dívidas na mesa</h2>
+<p>Muita gente não sabe exatamente quanto deve. Isso gera ansiedade e faz a pessoa pagar a dívida errada. Liste <strong>todas</strong>, mesmo as pequenas e as que você está evitando olhar.</p>
+<p>Na aba <strong>Minhas Dívidas</strong> da planilha, preencha para cada uma: credor, tipo, quanto deve hoje, juros ao mês e parcela.</p>
+
+<div class="tip"><strong>Onde descobrir o que você deve:</strong> o app ou o site de cada banco e loja, o Registrato do Banco Central (gratuito, mostra seus empréstimos e financiamentos em todas as instituições) e o Serasa (dívidas negativadas).</div>
+
+<h3>Prompt 3: Descobrir os juros de uma dívida</h3>
+<p class="when">Quando o banco só informa o valor da parcela, e não os juros.</p>
+<div class="prompt">Peguei um empréstimo de R$ [valor recebido] e estou pagando [número] parcelas de R$ [valor da parcela]. Calcule aproximadamente os juros ao mês e ao ano que estou pagando e o total de juros até o fim. Explique de forma simples e diga se essa taxa é alta comparada com um empréstimo pessoal comum e com o rotativo do cartão.</div>
+
+<h2 class="brk">Passo 3: O cartão de crédito e o rotativo</h2>
+<p>O rotativo é o que acontece quando você paga <strong>menos que o total da fatura</strong>. O que ficou para trás vira dívida com alguns dos juros mais altos do mercado. Em 2026, a média divulgada chegou perto de 430% ao ano.</p>
+<table>
+  <tr><th>Situação</th><th>O que acontece</th></tr>
+  <tr><td>Paga o total da fatura</td><td>Zero juros. É o cenário ideal.</td></tr>
+  <tr><td>Paga o mínimo</td><td>O resto entra no rotativo. Pela regra, o banco só pode manter no rotativo até o vencimento da fatura seguinte e depois precisa oferecer um parcelamento.</td></tr>
+  <tr><td>Parcelamento da fatura</td><td>Juros menores que o rotativo, mas ainda altos. Compare o CET (custo efetivo total) antes de aceitar.</td></tr>
+  <tr><td>Troca por uma dívida mais barata</td><td>Um empréstimo com juros menores (ex.: consignado, se você tiver acesso) para quitar o cartão. Só vale se você <strong>parar de usar o cartão</strong> enquanto isso.</td></tr>
+</table>
+<div class="tip"><strong>Você tem um limite a seu favor:</strong> desde 2024, pela Lei 14.690/2023, os juros e encargos do rotativo e do parcelamento da fatura não podem ultrapassar 100% do valor original da dívida. Se a cobrança passou disso, questione o banco e, se preciso, registre reclamação no consumidor.gov.br.</div>
+
+<h3>Prompt 4: Entender a sua fatura</h3>
+<div class="prompt">Minha fatura do cartão veio assim: total R$ [valor], mínimo R$ [valor], saldo anterior R$ [valor], juros cobrados R$ [valor], parcelas de compras R$ [valor]. As opções de parcelamento oferecidas são: [ex.: 6x de R$ X com CET de Y% ao mês]. Explique em linguagem simples o que está acontecendo, quanto vou pagar no total em cada opção, e qual parece menos cara. Mostre a conta.</div>
+
+<h3>Prompt 5: Comparar opções de troca de dívida</h3>
+<div class="prompt">Tenho R$ [valor] no rotativo do cartão. Recebi estas opções: [opção A: parcelamento da fatura em X vezes de R$ Y]; [opção B: empréstimo pessoal de R$ Z em X vezes de R$ W]. Compare o total pago em cada uma, a parcela mensal e os riscos. Minha sobra mensal para dívidas é R$ [valor]. Qual cabe no meu orçamento e custa menos?</div>
+
+<h2 class="brk">Passo 4: O que pagar primeiro</h2>
+<p>Existem dois métodos conhecidos. Os dois funcionam. O melhor é o que você consegue seguir.</p>
+<table>
+  <tr><th>Método</th><th>Como funciona</th><th>Para quem</th></tr>
+  <tr><td><strong>Avalanche</strong></td><td>Paga o mínimo de todas e coloca todo o dinheiro extra na dívida com <strong>juros mais altos</strong>.</td><td>Quem quer pagar menos juros no total.</td></tr>
+  <tr><td><strong>Bola de neve</strong></td><td>Paga o mínimo de todas e coloca todo o dinheiro extra na dívida <strong>menor</strong>.</td><td>Quem precisa ver vitórias rápidas para não desistir.</td></tr>
+</table>
+<p>A aba <strong>Minhas Dívidas</strong> da planilha mostra automaticamente a ordem nos dois métodos.</p>
+<div class="tip"><strong>Prioridade antes dos métodos:</strong> contas que cortam serviço essencial (aluguel, água, luz, gás) e pensão alimentícia vêm antes de qualquer cartão.</div>
+
+<h3>Prompt 6: Montar o plano de quitação</h3>
+<div class="prompt">Estas são minhas dívidas: [cole a tabela da planilha: credor, saldo, juros ao mês, parcela]. Consigo separar R$ [valor] por mês para dívidas no total. Monte um plano mês a mês pelo método [avalanche / bola de neve]: quanto pagar em cada dívida, quando cada uma termina e quando fico livre. Considere os juros de forma aproximada e me avise se o valor que tenho não é suficiente.</div>
+
+<h2 class="brk">Passo 5: Negocie com segurança</h2>
+<p>Credor prefere receber menos do que não receber. Por isso existem descontos, principalmente em dívidas atrasadas há mais tempo.</p>
+<p><strong>Onde negociar (canais oficiais):</strong></p>
+<ul>
+  <li>O app, o site ou a central oficial do próprio banco ou loja</li>
+  <li>Serasa Limpa Nome (site e app oficiais)</li>
+  <li>consumidor.gov.br, se o credor não te atender bem</li>
+  <li>Procon da sua cidade e mutirões de renegociação anunciados por órgãos oficiais</li>
+</ul>
+
+<h3>Prompt 7: Roteiro de negociação</h3>
+<div class="prompt">Vou ligar (ou entrar no chat) do [banco/loja] para negociar uma dívida de R$ [valor], atrasada há [tempo]. Consigo pagar à vista até R$ [valor] ou parcelas de até R$ [valor]. Monte um roteiro de conversa: como começar, o que perguntar (desconto à vista, juros do parcelamento, CET, o que acontece se eu atrasar uma parcela), como responder se oferecerem uma parcela maior que a que eu posso pagar, e o que pedir por escrito antes de fechar.</div>
+
+<h3>Prompt 8: Avaliar a proposta antes de aceitar</h3>
+<div class="prompt">O credor me ofereceu este acordo: [ex.: entrada de R$ X + 12 parcelas de R$ Y]. A dívida original era R$ [valor]. Minha sobra mensal é R$ [valor]. Calcule o total que vou pagar, o desconto real ou o custo extra em relação à dívida, e se a parcela cabe com folga no meu orçamento. Me diga se devo aceitar, contrapropor (com qual valor) ou esperar.</div>
+
+<div class="warn"><strong>Regra de ouro do acordo:</strong> só aceite parcela que caiba com folga. Quebrar um acordo costuma fazer você perder o desconto e voltar para a estaca zero. E pague sempre por boleto ou Pix gerado no canal oficial do credor.</div>
+
+<h2 class="brk">Passo 6: Orçamento para não voltar ao vermelho</h2>
+<p>Um ponto de partida simples é dividir a renda em três partes. Enquanto houver dívida cara, a parte de "futuro" vai quase toda para ela.</p>
+<table>
+  <tr><th>Parte</th><th>Referência</th><th>O que entra</th></tr>
+  <tr><td>Essencial</td><td>até 50 a 60%</td><td>Moradia, contas, mercado, transporte, saúde</td></tr>
+  <tr><td>Pessoal</td><td>20 a 30%</td><td>Lazer, delivery, compras, assinaturas</td></tr>
+  <tr><td>Futuro</td><td>pelo menos 20%</td><td>Dívidas, depois reserva de emergência, depois investimentos</td></tr>
+</table>
+
+<h3>Prompt 9: Orçamento do próximo mês</h3>
+<div class="prompt">Minha renda é R$ [valor]. Meus gastos essenciais são: [lista]. Meus gastos pessoais são: [lista]. Minhas parcelas de dívida são: [lista]. Monte um orçamento para o próximo mês com valor-limite por categoria, uma meta de quanto sobra para acelerar as dívidas e 3 regras simples para eu seguir no dia a dia.</div>
+
+<h3>Prompt 10: Revisão do mês</h3>
+<div class="prompt">Este era meu orçamento do mês: [cole]. Isto foi o que eu gastei de verdade: [cole]. Compare, mostre onde passei do limite, o que deu certo, e ajuste o orçamento do próximo mês. Seja direto, mas sem julgamento.</div>
+
+<h3>Prompt 11: Renda extra com o que eu já sei fazer</h3>
+<div class="prompt">Tenho estas habilidades: [ex.: cozinho bem, sei usar Excel, tenho carro, falo inglês]. Tenho [X horas] livres por semana e moro em [cidade]. Sugira 5 formas legais e realistas de fazer renda extra, com quanto costuma render, como começar esta semana e quanto preciso investir. Não sugira apostas, pirâmides ou nada que peça pagamento adiantado.</div>
+
+<h2 class="brk">Plano de 30 dias</h2>
+<table>
+  <tr><th>Semana</th><th>Tarefas</th></tr>
+  <tr><td>1: Clareza</td><td>Baixar extratos e faturas · Prompt 1 e 2 · Preencher a aba Orçamento · Consultar Registrato e Serasa · Preencher a aba Dívidas</td></tr>
+  <tr><td>2: Estancar</td><td>Parar de usar o cartão que está no rotativo · Cancelar as assinaturas escolhidas · Prompt 4 e 5 para decidir o que fazer com o rotativo</td></tr>
+  <tr><td>3: Negociar</td><td>Escolher o método (avalanche ou bola de neve) · Prompt 6 · Negociar a 1ª dívida da lista com os prompts 7 e 8</td></tr>
+  <tr><td>4: Manter</td><td>Prompt 9 para o orçamento do próximo mês · Colocar as datas de vencimento no alarme do celular · Prompt 11 se precisar de renda extra</td></tr>
+</table>
+<p>Depois disso, uma vez por mês: <strong>prompt 10</strong> (revisão) e atualização da planilha.</p>
+
+<h2 class="brk">Bônus: Golpes que miram quem está endividado</h2>
+<div class="warn">
+<strong>Desconfie sempre de:</strong>
+<ul>
+  <li>"Limpamos seu nome" mediante pagamento. Ninguém apaga dívida legítima. Só o acordo com o credor tira seu nome da lista.</li>
+  <li>Empréstimo que pede pagamento antecipado de "taxa", "seguro" ou "liberação". Instituição séria desconta do valor, não cobra antes.</li>
+  <li>Boleto de acordo recebido por WhatsApp ou e-mail de número desconhecido. Gere o boleto só no canal oficial.</li>
+  <li>Promessa de lucro rápido: "robô de investimento", "renda garantida", pirâmide.</li>
+  <li>Pedido para usar sua conta ou seu Pix para "movimentar dinheiro" de outra pessoa. Isso pode te envolver em crime.</li>
+</ul>
+</div>
+<div class="prompt">Recebi esta proposta: [cole a mensagem ou descreva]. Analise se tem sinais de golpe, liste os sinais de alerta e me diga como confirmar pelos canais oficiais antes de fazer qualquer coisa.</div>
+
+<h2 class="brk">Bônus: Se as apostas entraram na sua vida</h2>
+<p>As apostas online pesaram no orçamento de muitas famílias. Se isso aconteceu com você, não tem vergonha nenhuma em pedir ajuda.</p>
+<ul>
+  <li><strong>Não tente "recuperar" o que perdeu apostando mais.</strong> É exatamente assim que a dívida cresce.</li>
+  <li>Peça para alguém de confiança acompanhar suas finanças por um tempo.</li>
+  <li><strong>Jogadores Anônimos</strong> tem grupos gratuitos, presenciais e online.</li>
+  <li>O <strong>CAPS</strong> da sua cidade (pelo SUS) atende casos de jogo compulsivo, sem custo.</li>
+  <li>Se a situação estiver pesando no emocional, o <strong>CVV</strong> atende gratuitamente pelo telefone <strong>188</strong>, 24 horas.</li>
+</ul>
+<div class="prompt">Perdi dinheiro com apostas e quero parar. Me ajude a montar um plano prático de 30 dias: como bloquear o acesso, o que fazer quando der vontade de apostar, com quem posso contar, e como reorganizar o dinheiro que eu gastava nisso. Seja acolhedor e direto.</div>
+
+<p class="muted" style="margin-top:40px;font-size:.85rem">Este guia tem finalidade educativa e não substitui orientação de um profissional de finanças, advogado ou órgão de defesa do consumidor. Regras, taxas e programas de renegociação mudam com o tempo: confirme sempre nos canais oficiais. © [Seu Nome]. Proibida a revenda ou distribuição.</p>
+
+</div>
+</body>
+</html>

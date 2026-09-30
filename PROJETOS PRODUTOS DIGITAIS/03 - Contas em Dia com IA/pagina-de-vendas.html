@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Contas em Dia com IA</title>
+<meta name="description" content="Planilha + guia com prompts de IA para organizar suas contas, sair do rotativo do cartão e negociar dívidas com segurança.">
+<style>
+  :root { --bg:#f7fbf8; --fg:#17231c; --muted:#5a6b60; --card:#fff; --line:#d3e6da;
+          --accent:#1e7a4c; --accent-fg:#fff; --soft:#edf7f1; }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg:#0f1712; --fg:#e8f3ec; --muted:#a2b5a9; --card:#18221c; --line:#2a3a30;
+            --accent:#5cc592; --accent-fg:#0f1712; --soft:#1a2a21; }
+  }
+  * { box-sizing:border-box; }
+  body { margin:0; font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif; background:var(--bg);
+         color:var(--fg); line-height:1.6; }
+  .wrap { max-width:760px; margin:0 auto; padding:0 16px; }
+  .hero { padding:56px 0 40px; text-align:center; }
+  .tag { display:inline-block; background:var(--soft); color:var(--accent); font-weight:700; font-size:.8rem;
+         letter-spacing:.06em; text-transform:uppercase; padding:6px 12px; border-radius:999px; }
+  h1 { font-size:clamp(2rem,6vw,3rem); line-height:1.12; margin:16px 0; }
+  .hero p { font-size:1.15rem; color:var(--muted); max-width:580px; margin:0 auto 28px; }
+  .btn { display:inline-block; background:var(--accent); color:var(--accent-fg); text-decoration:none;
+         font-weight:700; padding:16px 28px; border-radius:12px; font-size:1.1rem; }
+  section { padding:40px 0; border-top:1px solid var(--line); }
+  h2 { font-size:1.6rem; margin:0 0 16px; }
+  .pain li { margin:8px 0; }
+  .grid { display:grid; gap:14px; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); }
+  .card { background:var(--card); border:1px solid var(--line); border-radius:14px; padding:18px; }
+  .card h3 { margin:0 0 6px; font-size:1.05rem; }
+  .card p { margin:0; color:var(--muted); font-size:.95rem; }
+  .offer { text-align:center; background:var(--card); border:2px solid var(--accent); border-radius:18px; padding:32px 20px; }
+  .price { font-size:3rem; font-weight:800; margin:8px 0; }
+  .small { color:var(--muted); font-size:.9rem; }
+  details { background:var(--card); border:1px solid var(--line); border-radius:12px; padding:14px 16px; margin:10px 0; }
+  summary { font-weight:600; cursor:pointer; }
+  footer { padding:32px 0 56px; text-align:center; color:var(--muted); font-size:.85rem; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="hero">
+    <span class="tag">Planilha + guia com prompts de IA</span>
+    <h1>Saiba exatamente quanto deve, o que pagar primeiro e como negociar.</h1>
+    <p>Uma planilha simples e prompts prontos para a inteligência artificial fazer as contas com você. Sem promessa milagrosa: com clareza e um plano.</p>
+    <a class="btn buy" href="#">Quero organizar minhas contas</a>
+  </div>
+
+  <section>
+    <h2>Você se reconhece?</h2>
+    <ul class="pain">
+      <li>😰 Evita abrir o app do banco porque tem medo do que vai ver.</li>
+      <li>💳 Paga o mínimo do cartão todo mês e a fatura só cresce.</li>
+      <li>🤯 Não sabe ao certo quanto deve, nem para quem.</li>
+      <li>📞 O banco liga oferecendo acordo e você não sabe se é bom ou ruim.</li>
+      <li>🔁 Todo mês o dinheiro acaba antes do mês acabar.</li>
+    </ul>
+    <p>Você não está sozinho: segundo a CNC, cerca de 8 em cada 10 famílias brasileiras têm dívidas em 2026. O primeiro passo não é ganhar mais. É <strong>enxergar</strong> o problema inteiro.</p>
+  </section>
+
+  <section>
+    <h2>O que você recebe</h2>
+    <div class="grid">
+      <div class="card"><h3>📊 Planilha pronta</h3><p>Orçamento do mês, lista de dívidas e a ordem certa de pagamento, calculada sozinha.</p></div>
+      <div class="card"><h3>🤖 11 prompts de IA</h3><p>Organizar o extrato, achar cortes, entender a fatura, montar o plano, avaliar acordos.</p></div>
+      <div class="card"><h3>💳 Saída do rotativo</h3><p>O que é o rotativo, seus direitos e como comparar as opções sem cair em outra armadilha.</p></div>
+      <div class="card"><h3>🤝 Roteiro de negociação</h3><p>O que perguntar, o que pedir por escrito e quando dizer não para uma proposta.</p></div>
+      <div class="card"><h3>📅 Plano de 30 dias</h3><p>Uma tarefa por vez, da clareza até o primeiro acordo fechado.</p></div>
+      <div class="card"><h3>🛡️ Bônus: golpes e apostas</h3><p>Os golpes que miram quem está endividado, e onde buscar ajuda gratuita se as apostas pesaram.</p></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Como funciona</h2>
+    <div class="grid">
+      <div class="card"><h3>1. Coloque tudo na planilha</h3><p>Renda, gastos e dívidas. A planilha mostra quanto sobra e o que atacar primeiro.</p></div>
+      <div class="card"><h3>2. Use os prompts</h3><p>A IA grátis (ChatGPT, Claude ou Gemini) calcula juros, compara propostas e monta seu plano.</p></div>
+      <div class="card"><h3>3. Negocie e acompanhe</h3><p>Feche acordos que cabem no bolso e revise uma vez por mês.</p></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="offer">
+      <h2>Contas em Dia com IA</h2>
+      <p class="small">Guia em PDF + planilha (Excel e Google Planilhas) · acesso imediato</p>
+      <div class="price">R$ 27</div>
+      <p><a class="btn buy" href="#">Comprar agora</a></p>
+      <p class="small">🔒 Pagamento seguro por Pix ou cartão · Garantia de 7 dias: se não gostar, devolvemos seu dinheiro.</p>
+    </div>
+  </section>
+
+  <section>
+    <h2>Perguntas frequentes</h2>
+    <details><summary>Isso vai limpar meu nome?</summary><p>Não existe mágica. O guia te ajuda a entender suas dívidas e negociar direto com o credor pelos canais oficiais, que é o que realmente tira seu nome da lista.</p></details>
+    <details><summary>Preciso passar meus dados bancários para a IA?</summary><p>Não, e o guia ensina a nunca fazer isso. Os prompts usam só valores e descrições de gastos.</p></details>
+    <details><summary>Funciona no celular?</summary><p>Sim. A planilha abre no Google Planilhas ou no Excel do celular, e a IA funciona pelo app.</p></details>
+    <details><summary>E se eu não gostar?</summary><p>Você tem 7 dias de garantia. Peça o reembolso pela plataforma e devolvemos 100% do valor.</p></details>
+  </section>
+
+  <footer>Conteúdo educativo, não substitui orientação profissional. © [Seu Nome] · <a class="wa" href="#">Dúvidas no WhatsApp</a></footer>
+</div>
+<script>
+  // Edite com seus dados:
+  const LINK_CHECKOUT = "https://pay.kiwify.com.br/SEU-LINK"; // link de pagamento da Kiwify
+  const WHATSAPP = "5511999999999";                         // DDI + DDD + número, só dígitos
+
+  document.querySelectorAll(".buy").forEach(a => a.href = LINK_CHECKOUT);
+  document.querySelectorAll(".wa").forEach(a => {
+    a.href = `https://wa.me/${WHATSAPP}?text=${encodeURIComponent("Olá! Tenho uma dúvida sobre o Contas em Dia com IA.")}`;
+    a.target = "_blank"; a.rel = "noopener";
+  });
+</script>
+</body>
+</html>
