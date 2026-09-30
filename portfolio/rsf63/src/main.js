@@ -45,7 +45,7 @@ const canvas = $('c');
 const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true, preserveDrawingBuffer: CAPTURE });
 renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
-renderer.toneMappingExposure = 0.92;
+renderer.toneMappingExposure = 0.8;
 renderer.shadowMap.enabled = true;
 renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 renderer.localClippingEnabled = true;
@@ -65,7 +65,7 @@ scene.add(new THREE.HemisphereLight(0xffffff, 0xa9b1b8, 0.55));
 const rim = new THREE.DirectionalLight(0xe6eeff, 0.8);
 rim.position.set(-300, 160, -300);
 scene.add(rim);
-const ground = new THREE.Mesh(new THREE.PlaneGeometry(6000, 6000).rotateX(-Math.PI / 2), new THREE.ShadowMaterial({ opacity: 0.14 }));
+const ground = new THREE.Mesh(new THREE.PlaneGeometry(6000, 6000).rotateX(-Math.PI / 2), new THREE.ShadowMaterial({ opacity: 0.4 }));
 ground.position.y = -CAT.H - 0.2;
 ground.receiveShadow = true;
 scene.add(ground);
@@ -94,8 +94,8 @@ function mat(params, hatch) {
   return m;
 }
 const M = {
-  alu: () => mat({ color: 0x9da5ad, metalness: 0.6, roughness: 0.45 }, { color: 0xe7ecef, angle: 45 }),
-  cover: () => mat({ color: 0x96a0a8, metalness: 0.6, roughness: 0.43 }, { color: 0xdfe6ea, angle: -45 }),
+  alu: () => mat({ color: 0x8a939c, metalness: 0.6, roughness: 0.45 }, { color: 0xe7ecef, angle: 45 }),
+  cover: () => mat({ color: 0x848e97, metalness: 0.6, roughness: 0.43 }, { color: 0xdfe6ea, angle: -45 }),
   bronze: () => mat({ color: 0xb87a3d, metalness: 1, roughness: 0.3 }, { color: 0xe8b27a, angle: -45, gap: 5 }),
   iron: () => mat({ color: 0x55595e, metalness: 0.75, roughness: 0.42 }, { color: 0x9aa0a6, angle: 45, gap: 5 }),
   steel: () => mat({ color: 0xcfd3d7, metalness: 1, roughness: 0.18 }, { color: 0xb4bcc4, angle: 60, gap: 4 }),
@@ -499,7 +499,7 @@ function isClipped(pt) {
 const dimsEl = $('dims');
 const dimLines = new THREE.Group();
 scene.add(dimLines);
-const dimMat = new THREE.LineBasicMaterial({ color: 0x1b2530 });
+const dimMat = new THREE.LineBasicMaterial({ color: 0xc9d4de });
 const DIMS = { front: [], side: [] };
 function dim(view, a, b, text, tick = V(1, 0, 0)) {
   const t = tick.clone().multiplyScalar(4);
@@ -678,7 +678,7 @@ addEventListener('keydown', e => {
 });
 
 /* ---------- Laço ---------- */
-const ACCENT = new THREE.Color(0xd94f25);
+const ACCENT = new THREE.Color(0x2f8fe0);
 const clock = new THREE.Clock();
 function frame(fixedDt) {
   const dt = fixedDt ?? Math.min(clock.getDelta(), 0.05);
@@ -704,6 +704,7 @@ function frame(fixedDt) {
   }
   controls.update();
   renderer.render(scene, camera);
+  if (state.view === 'front' || state.view === 'side') updateDims(); // cotas aparecem quando as peças terminam de voltar
   placeDims();
   if (!CAPTURE) requestAnimationFrame(() => frame());
 }
@@ -716,6 +717,6 @@ $('loading').hidden = true;
 window.redutor = {
   setView, setCut, setExplode, nextStep, assembleAll, select: id => select(byId[id] || null), step: dt => frame(dt),
   // usado pela extração do desenho 2D (tools/extract2d.mjs)
-  internals: { THREE, assembly, parts, renderer, mergeVertices, MeshBVH, CAT, state },
+  internals: { THREE, assembly, parts, renderer, mergeVertices, MeshBVH, CAT, state, get camera() { return camera; } },
 };
 if (!CAPTURE) frame();
