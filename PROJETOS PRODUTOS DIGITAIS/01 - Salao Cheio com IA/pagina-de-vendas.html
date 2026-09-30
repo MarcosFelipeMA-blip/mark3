@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Salão Cheio com IA</title>
+<meta name="description" content="Poste todo dia, responda clientes e encha a agenda do seu salão usando IA grátis, em 10 minutos por dia.">
+<style>
+  :root { --bg:#fffaf8; --fg:#231a14; --muted:#6f6158; --card:#fff; --line:#ead9df;
+          --accent:#b0476b; --accent-fg:#fff; --soft:#fbf1f4; }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg:#161113; --fg:#f5ecef; --muted:#b9a8ae; --card:#201a1c; --line:#3a2e33;
+            --accent:#e0799c; --accent-fg:#161113; --soft:#2a1f23; }
+  }
+  * { box-sizing:border-box; }
+  body { margin:0; font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif; background:var(--bg);
+         color:var(--fg); line-height:1.6; }
+  .wrap { max-width:760px; margin:0 auto; padding:0 16px; }
+  .hero { padding:56px 0 40px; text-align:center; }
+  .tag { display:inline-block; background:var(--soft); color:var(--accent); font-weight:700; font-size:.8rem;
+         letter-spacing:.06em; text-transform:uppercase; padding:6px 12px; border-radius:999px; }
+  h1 { font-size:clamp(2rem,6vw,3rem); line-height:1.12; margin:16px 0; }
+  .hero p { font-size:1.15rem; color:var(--muted); max-width:580px; margin:0 auto 28px; }
+  .btn { display:inline-block; background:var(--accent); color:var(--accent-fg); text-decoration:none;
+         font-weight:700; padding:16px 28px; border-radius:12px; font-size:1.1rem; }
+  section { padding:40px 0; border-top:1px solid var(--line); }
+  h2 { font-size:1.6rem; margin:0 0 16px; }
+  .pain li { margin:8px 0; }
+  .grid { display:grid; gap:14px; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); }
+  .card { background:var(--card); border:1px solid var(--line); border-radius:14px; padding:18px; }
+  .card h3 { margin:0 0 6px; font-size:1.05rem; }
+  .card p { margin:0; color:var(--muted); font-size:.95rem; }
+  .quote { background:var(--soft); border-radius:14px; padding:18px; font-size:1.05rem; }
+  .offer { text-align:center; background:var(--card); border:2px solid var(--accent); border-radius:18px; padding:32px 20px; }
+  .price { font-size:3rem; font-weight:800; margin:8px 0; }
+  .small { color:var(--muted); font-size:.9rem; }
+  details { background:var(--card); border:1px solid var(--line); border-radius:12px; padding:14px 16px; margin:10px 0; }
+  summary { font-weight:600; cursor:pointer; }
+  footer { padding:32px 0 56px; text-align:center; color:var(--muted); font-size:.85rem; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="hero">
+    <span class="tag">Para donas de salão, manicures e cabeleireiras</span>
+    <h1>Seu salão postando todo dia, sem gastar horas no celular.</h1>
+    <p>Prompts prontos para a inteligência artificial escrever seus posts, responder clientes e encher os horários vazios da semana. Em 10 minutos por dia.</p>
+    <a class="btn buy" href="#">Quero o Salão Cheio com IA</a>
+  </div>
+
+  <section>
+    <h2>Você se reconhece?</h2>
+    <ul class="pain">
+      <li>😩 Sabe que precisa postar, mas no fim do dia não sobra tempo nem ideia.</li>
+      <li>📉 Terça e quarta a agenda fica vazia, e no sábado não cabe mais ninguém.</li>
+      <li>💬 A cliente pergunta "quanto custa?" no direct, você responde e ela some.</li>
+      <li>👋 Tem cliente que sumiu há meses e você não sabe como chamar de volta sem parecer chata.</li>
+      <li>💸 Não dá para pagar uma agência de R$ 800 por mês.</li>
+    </ul>
+    <p>Não é falta de talento. É falta de tempo e de um método. A inteligência artificial resolve a parte chata. Você só precisa saber <strong>o que pedir</strong>.</p>
+  </section>
+
+  <section>
+    <h2>O que você recebe</h2>
+    <div class="grid">
+      <div class="card"><h3>⚙️ Configuração do Salão</h3><p>Um prompt que ensina a IA quem é o seu salão. Depois disso, tudo sai com a sua cara.</p></div>
+      <div class="card"><h3>✨ 15 prompts do dia a dia</h3><p>Agenda vazia, cliente sumida, antes e depois, "quanto custa?", avaliação negativa, Reels e mais.</p></div>
+      <div class="card"><h3>📅 Calendário de 30 dias</h3><p>Um tema por dia da semana. Gere os posts da semana inteira no domingo, em 10 minutos.</p></div>
+      <div class="card"><h3>📲 10 mensagens de WhatsApp</h3><p>Confirmação, retorno, aniversário, indicação, cancelamento. É só copiar e enviar.</p></div>
+      <div class="card"><h3>🎁 Bônus: Black Friday sem desconto</h3><p>Como lotar a agenda em novembro com combos e brindes, sem destruir seu lucro.</p></div>
+      <div class="card"><h3>✅ Bônus: Rotina de 10 minutos</h3><p>O checklist diário e semanal para nunca mais ficar sem postar.</p></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Veja um exemplo</h2>
+    <p>Você cola o prompt "Cliente sumida há mais de 60 dias" e a IA escreve:</p>
+    <div class="quote">"Oi, Carla! Tudo bem? Faz um tempinho que você não aparece e a gente sentiu sua falta por aqui 💛 Tenho um horário quinta à tarde. Quer que eu reserve pra você?"</div>
+    <p class="small">Uma mensagem dessas, enviada para 10 clientes sumidas, pode trazer de volta mais do que o valor do guia no mesmo dia.</p>
+  </section>
+
+  <section>
+    <h2>Não precisa entender de tecnologia</h2>
+    <div class="grid">
+      <div class="card"><h3>1. Abra uma IA grátis</h3><p>ChatGPT, Claude ou Gemini, no celular mesmo.</p></div>
+      <div class="card"><h3>2. Copie o prompt</h3><p>Troque o que está entre [colchetes] pelos dados do seu salão.</p></div>
+      <div class="card"><h3>3. Publique</h3><p>Leia, ajuste do seu jeito e poste. Pronto.</p></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="offer">
+      <h2>Salão Cheio com IA</h2>
+      <p class="small">Guia em PDF + todos os bônus · acesso imediato</p>
+      <div class="price">R$ 47</div>
+      <p class="small">ou parcelado no cartão</p>
+      <p><a class="btn buy" href="#">Comprar agora</a></p>
+      <p class="small">🔒 Pagamento seguro por Pix ou cartão · Garantia de 7 dias: se não gostar, devolvemos seu dinheiro.</p>
+    </div>
+  </section>
+
+  <section>
+    <h2>Perguntas frequentes</h2>
+    <details><summary>Preciso pagar pela inteligência artificial?</summary><p>Não. Todos os prompts funcionam nas versões gratuitas do ChatGPT, Claude e Gemini.</p></details>
+    <details><summary>Serve para barbearia, esmalteria ou estética?</summary><p>Sim. Os prompts se adaptam aos serviços que você informar na Configuração do Salão.</p></details>
+    <details><summary>Como recebo o material?</summary><p>Logo após o pagamento, você recebe o PDF por e-mail e pode baixar no celular ou no computador.</p></details>
+    <details><summary>E se eu não gostar?</summary><p>Você tem 7 dias de garantia. Peça o reembolso pela plataforma e devolvemos 100% do valor.</p></details>
+  </section>
+
+  <footer>© [Seu Nome] · Dúvidas: <a class="wa" href="#">fale no WhatsApp</a></footer>
+</div>
+<script>
+  // Edite com seus dados:
+  const LINK_CHECKOUT = "https://pay.kiwify.com.br/SEU-LINK"; // link de pagamento da Kiwify
+  const WHATSAPP = "5511999999999";                         // DDI + DDD + número, só dígitos
+
+  document.querySelectorAll(".buy").forEach(a => a.href = LINK_CHECKOUT);
+  document.querySelectorAll(".wa").forEach(a => {
+    a.href = `https://wa.me/${WHATSAPP}?text=${encodeURIComponent("Olá! Tenho uma dúvida sobre o Salão Cheio com IA.")}`;
+    a.target = "_blank"; a.rel = "noopener";
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,262 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Salão Cheio com IA</title>
+<style>
+  :root { --fg:#231a14; --muted:#6f6158; --accent:#b0476b; --soft:#fbf1f4; --line:#ead9df; --box:#fdfaf8; }
+  * { box-sizing:border-box; }
+  body { margin:0; font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; color:var(--fg);
+         background:#fff; line-height:1.6; font-size:16px; }
+  .page { max-width:780px; margin:0 auto; padding:40px 24px; }
+  h1 { font-size:2.6rem; line-height:1.1; margin:0 0 12px; }
+  h2 { font-size:1.7rem; margin:48px 0 12px; color:var(--accent); }
+  h3 { font-size:1.2rem; margin:32px 0 6px; }
+  .cover { min-height:92vh; display:flex; flex-direction:column; justify-content:center;
+           border-bottom:4px solid var(--accent); }
+  .cover .tag { color:var(--accent); font-weight:700; letter-spacing:.08em; text-transform:uppercase; font-size:.85rem; }
+  .cover p { font-size:1.25rem; color:var(--muted); max-width:560px; }
+  .muted { color:var(--muted); }
+  .when { color:var(--muted); font-style:italic; margin:0 0 8px; }
+  .prompt { background:var(--soft); border-left:4px solid var(--accent); padding:14px 16px; border-radius:8px;
+            white-space:pre-wrap; font-family: ui-monospace, Consolas, monospace; font-size:.9rem; margin:8px 0; }
+  .prompt::before { content:"PROMPT — copie e cole"; display:block; font-family:system-ui,sans-serif;
+                    font-size:.7rem; font-weight:700; letter-spacing:.08em; color:var(--accent); margin-bottom:6px; }
+  .example { background:var(--box); border:1px dashed var(--line); padding:12px 16px; border-radius:8px; margin:8px 0; }
+  .example::before { content:"Exemplo de resultado"; display:block; font-size:.7rem; font-weight:700;
+                     letter-spacing:.08em; color:var(--muted); text-transform:uppercase; margin-bottom:4px; }
+  .msg { background:#eefaf1; border-radius:12px; padding:12px 16px; margin:8px 0; }
+  table { width:100%; border-collapse:collapse; margin:12px 0; font-size:.92rem; }
+  th, td { border:1px solid var(--line); padding:8px 10px; text-align:left; vertical-align:top; }
+  th { background:var(--soft); }
+  ul.check { list-style:none; padding-left:0; }
+  ul.check li::before { content:"☐ "; color:var(--accent); font-weight:700; }
+  .tip { background:#fff8e6; border-radius:8px; padding:12px 16px; margin:16px 0; }
+  .tip strong { color:#8a5a00; }
+  .brk { page-break-before:always; }
+  @media print {
+    .page { padding:0 8px; }
+    .cover { min-height:95vh; }
+    h2 { page-break-after:avoid; }
+    .prompt, .example, .msg, table { page-break-inside:avoid; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+<section class="cover">
+  <div class="tag">Guia prático + prompts prontos</div>
+  <h1>Salão Cheio com IA</h1>
+  <p>Poste todo dia, responda clientes e encha a agenda da semana usando inteligência artificial grátis, em 10 minutos por dia.</p>
+  <p class="muted" style="font-size:1rem">Por [Seu Nome]</p>
+</section>
+
+<h2 class="brk">Antes de começar</h2>
+<p>Você não precisa entender de tecnologia nem de marketing. Precisa de um celular e de 10 minutos por dia.</p>
+<p><strong>O que você vai usar:</strong> uma inteligência artificial gratuita. Qualquer uma destas serve:</p>
+<ul>
+  <li><strong>ChatGPT</strong> (chatgpt.com ou app)</li>
+  <li><strong>Claude</strong> (claude.ai ou app)</li>
+  <li><strong>Gemini</strong> (gemini.google.com ou app)</li>
+</ul>
+<p><strong>Como usar este guia:</strong></p>
+<ol>
+  <li>Faça a <strong>Configuração do Salão</strong> (página seguinte). Leva 5 minutos e só precisa ser feita uma vez.</li>
+  <li>Quando tiver um problema, procure no índice o prompt certo, copie, troque o que está entre [colchetes] e cole na IA.</li>
+  <li>Leia a resposta, ajuste do seu jeito e publique. <strong>A IA faz o rascunho, você dá o toque final.</strong></li>
+</ol>
+<div class="tip"><strong>Dica de ouro:</strong> se não gostar da resposta, não comece de novo. Escreva para a IA: "mais curto", "mais divertido", "sem emojis" ou "me dê mais 3 opções". Ela ajusta na hora.</div>
+
+<h3>Índice</h3>
+<ol>
+  <li>Configuração do Salão (faça primeiro)</li>
+  <li>15 prompts para os problemas do dia a dia</li>
+  <li>Calendário de 30 dias de posts</li>
+  <li>10 mensagens de WhatsApp prontas</li>
+  <li>Bônus: Campanha de Black Friday sem dar desconto</li>
+  <li>Bônus: Rotina de 10 minutos por dia</li>
+</ol>
+
+<h2 class="brk">1. Configuração do Salão</h2>
+<p>Este é o prompt mais importante do guia. Ele ensina a IA quem é o seu salão, e depois disso todas as respostas saem com a sua cara.</p>
+<div class="prompt">A partir de agora você é o assistente de marketing do meu salão. Guarde estas informações e use em todas as respostas desta conversa:
+
+- Nome do salão: [nome]
+- Cidade e bairro: [cidade, bairro]
+- Serviços e preços: [ex.: escova R$ 60, corte feminino R$ 90, manicure R$ 35, progressiva a partir de R$ 250]
+- Público: [ex.: mulheres de 25 a 50 anos que trabalham fora e têm pouco tempo]
+- Diferencial: [ex.: atendimento pontual, ambiente acolhedor, produtos sem formol]
+- Tom de voz: [próximo e carinhoso / sofisticado / divertido]
+- Instagram: [@seuperfil]
+- WhatsApp para agendar: [número]
+
+Regras: escreva em português do Brasil, com frases curtas, no máximo 3 emojis por texto, e nunca invente preços ou serviços que eu não listei.
+
+Confirme que entendeu e resuma meu salão em 3 linhas.</div>
+<div class="tip"><strong>Importante:</strong> use sempre a mesma conversa para os próximos prompts, assim a IA lembra do seu salão. Se abrir uma conversa nova, cole a configuração de novo. Deixe o texto salvo no bloco de notas do celular.</div>
+
+<h2 class="brk">2. Os 15 prompts do dia a dia</h2>
+
+<h3>1. A agenda está vazia no meio da semana</h3>
+<p class="when">Use quando terça, quarta ou quinta estiverem com horários sobrando.</p>
+<div class="prompt">Minha agenda está com horários livres na [terça e quarta] desta semana. Crie:
+1. Um post para o feed anunciando esses horários, com senso de urgência mas sem parecer desesperado
+2. Uma sequência de 3 stories
+3. Uma mensagem curta de WhatsApp para enviar às clientes
+Sugira um incentivo que não seja desconto no preço (ex.: hidratação de brinde, prioridade no próximo horário).</div>
+<div class="example">"Sobraram 4 horários na quarta 💇‍♀️ Quem agendar até amanhã ganha uma hidratação express na escova. Chama no WhatsApp que eu seguro o seu!"</div>
+
+<h3>2. Cliente sumida há mais de 60 dias</h3>
+<p class="when">Use para trazer de volta quem parou de vir.</p>
+<div class="prompt">Escreva 3 versões de mensagem de WhatsApp para uma cliente chamada [nome] que fazia [serviço] e não aparece há [2 meses]. A mensagem deve ser carinhosa, sem cobrar e sem parecer robô, lembrar que sentimos falta dela e oferecer um horário nesta semana. Máximo de 4 linhas.</div>
+<div class="example">"Oi, Carla! Tudo bem? Faz um tempinho que você não aparece e a gente sentiu sua falta por aqui 💛 Tenho um horário quinta à tarde. Quer que eu reserve pra você?"</div>
+
+<h3>3. Legenda para foto de antes e depois</h3>
+<p class="when">Use sempre que fizer um trabalho bonito. É o tipo de post que mais traz cliente.</p>
+<div class="prompt">Escreva uma legenda para um antes e depois de [serviço, ex.: mechas loiras em cabelo castanho escuro]. Estrutura: uma primeira frase que prenda a atenção, conte em 2 linhas o que a cliente queria e como foi o processo, e termine com convite para agendar pelo WhatsApp. Dê também 5 hashtags do meu bairro e do serviço.</div>
+
+<h3>4. Responder "quanto custa?" no direct</h3>
+<p class="when">Use para não perder a cliente que pergunta preço e some.</p>
+<div class="prompt">Uma pessoa perguntou no direct: "[quanto custa a progressiva?]". Escreva uma resposta curta que informe o preço, mostre o valor do serviço (o que está incluso, quanto tempo dura o resultado) e termine com uma pergunta que puxe o agendamento. Não pareça vendedor insistente.</div>
+<div class="example">"Oi! A progressiva sai a partir de R$ 250, com resultado que dura em média 3 meses, e já inclui a hidratação 😊 Seu cabelo é mais curto ou longo? Assim te passo o valor certinho e vejo um horário pra você."</div>
+
+<h3>5. Bio do Instagram</h3>
+<div class="prompt">Crie 5 opções de bio para o Instagram do meu salão, com no máximo 150 caracteres. Cada uma deve dizer o que fazemos, para quem, onde, e terminar com chamada para agendar. Uma opção séria, uma divertida e as outras livres.</div>
+
+<h3>6. Roteiro de Reels</h3>
+<p class="when">O Reels é o que mais mostra seu salão para quem ainda não te segue.</p>
+<div class="prompt">Crie 5 roteiros de Reels de até 30 segundos para o meu salão, que eu possa gravar sozinha com o celular. Para cada um: o gancho dos primeiros 3 segundos (texto na tela), as cenas em ordem, o texto que eu falo ou escrevo, e a sugestão de tipo de música. Temas: bastidores, transformação, dica rápida, erro comum das clientes e um dia no salão.</div>
+
+<h3>7. Sequência de stories que vende</h3>
+<div class="prompt">Crie uma sequência de 5 stories para vender [serviço] esta semana. Story 1: uma pergunta que gere identificação. Story 2: o problema. Story 3: a solução (o serviço). Story 4: prova (depoimento ou resultado). Story 5: chamada para agendar com a figurinha de link do WhatsApp. Diga o texto de cada story e que imagem usar.</div>
+
+<h3>8. Responder avaliação negativa</h3>
+<p class="when">Responder bem uma crítica passa mais confiança do que 10 elogios.</p>
+<div class="prompt">Recebi esta avaliação no Google: "[cole a avaliação]". Escreva uma resposta pública educada, que agradeça, reconheça o ponto sem se humilhar, explique rapidamente o que fizemos para melhorar e convide a pessoa a falar comigo no WhatsApp. Máximo de 5 linhas. Nada de discussão.</div>
+
+<h3>9. Pedir avaliação no Google</h3>
+<div class="prompt">Escreva uma mensagem de WhatsApp curta para enviar à cliente logo depois do atendimento, agradecendo e pedindo uma avaliação no Google, explicando que isso ajuda muito um negócio pequeno. Deixe espaço para eu colar o link.</div>
+
+<h3>10. Criar combos e pacotes</h3>
+<p class="when">Combos aumentam o valor que cada cliente gasta, sem baixar preço.</p>
+<div class="prompt">Com base nos meus serviços e preços, sugira 5 combos ou pacotes que façam a cliente gastar um pouco mais e sentir que ganhou. Para cada um: nome atraente, o que inclui, preço sugerido, e para quem é ideal. Inclua um pacote mensal de fidelidade.</div>
+
+<h3>11. Mensagem de aniversário</h3>
+<div class="prompt">Escreva 3 mensagens de aniversário curtas para clientes, cada uma com um mimo para usar no mês do aniversário (ex.: hidratação grátis na escova). Tom carinhoso e pessoal.</div>
+
+<h3>12. Programa de indicação</h3>
+<div class="prompt">Crie um programa simples de indicação para o meu salão: regra (o que a cliente ganha ao indicar uma amiga e o que a amiga ganha), um nome para o programa, um post explicando e uma mensagem de WhatsApp para convidar as clientes atuais.</div>
+
+<h3>13. Tabela de preços bonita</h3>
+<div class="prompt">Organize meus serviços em uma tabela de preços para o Instagram e para o WhatsApp, agrupada por categoria (cabelo, unhas, estética). Escreva uma descrição de uma linha para cada serviço destacando o benefício, não só o nome.</div>
+
+<h3>14. Dia sem ideia de post</h3>
+<div class="prompt">Hoje é [dia da semana, data]. Me dê 5 ideias de post para hoje, levando em conta datas comemorativas próximas e a época do ano. Escolha a melhor e escreva a legenda completa.</div>
+
+<h3>15. Transformar um elogio em post</h3>
+<div class="prompt">Uma cliente me mandou este elogio: "[cole a mensagem]". Transforme em um post de depoimento para o feed: uma frase de abertura, o depoimento resumido, e uma chamada para agendar. Sugira também como montar a imagem (print da conversa com o nome escondido, ou foto do resultado).</div>
+
+<h2 class="brk">3. Calendário de 30 dias</h2>
+<p>Um tema para cada dia da semana. Assim você nunca fica sem ideia. Use o prompt indicado para gerar o texto.</p>
+<table>
+  <tr><th>Dia</th><th>Tipo de post</th><th>Prompt</th></tr>
+  <tr><td>Segunda</td><td>Dica rápida (cuidado com cabelo, unhas ou pele)</td><td>6 ou 14</td></tr>
+  <tr><td>Terça</td><td>Horários livres da semana</td><td>1</td></tr>
+  <tr><td>Quarta</td><td>Antes e depois</td><td>3</td></tr>
+  <tr><td>Quinta</td><td>Depoimento de cliente</td><td>15</td></tr>
+  <tr><td>Sexta</td><td>Reels (bastidores ou transformação)</td><td>6</td></tr>
+  <tr><td>Sábado</td><td>Stories do dia no salão</td><td>7</td></tr>
+  <tr><td>Domingo</td><td>Descanso ou um story leve (agenda da semana)</td><td>—</td></tr>
+</table>
+<p><strong>Semana 1:</strong> foco em apresentar o salão (quem somos, equipe, ambiente).<br>
+<strong>Semana 2:</strong> foco no serviço mais lucrativo (o que dá mais margem).<br>
+<strong>Semana 3:</strong> foco em prova (antes e depois, depoimentos, avaliações do Google).<br>
+<strong>Semana 4:</strong> foco em agenda do próximo mês e combos (prompt 10).</p>
+
+<div class="prompt">Use o calendário abaixo e escreva todos os posts da semana [1] de uma vez, com legenda completa e sugestão de imagem para cada dia:
+Segunda: dica rápida | Terça: horários livres | Quarta: antes e depois | Quinta: depoimento | Sexta: Reels | Sábado: stories.
+Foco da semana: [apresentar o salão].</div>
+<div class="tip"><strong>Economize tempo:</strong> no domingo à noite, use o prompt acima e gere a semana inteira de uma vez. Nos outros dias você só publica.</div>
+
+<h2 class="brk">4. Mensagens de WhatsApp prontas</h2>
+<p>Copie, troque o que está entre colchetes e envie.</p>
+
+<p><strong>1. Confirmação de horário</strong></p>
+<div class="msg">Oi, [nome]! Passando para confirmar seu horário amanhã às [hora] para [serviço] 💛 Posso confirmar?</div>
+
+<p><strong>2. Depois do atendimento</strong></p>
+<div class="msg">[Nome], obrigada pela visita hoje! Ficou lindo 😍 Qualquer dúvida sobre os cuidados em casa, é só me chamar.</div>
+
+<p><strong>3. Pedido de avaliação</strong></p>
+<div class="msg">Se você gostou do atendimento, uma avaliação no Google ajuda demais o nosso salão a crescer 🙏 Leva menos de 1 minuto: [link]</div>
+
+<p><strong>4. Lembrete de retorno</strong></p>
+<div class="msg">Oi, [nome]! Já faz [30 dias] da sua [manicure/escova/coloração]. Quer que eu reserve um horário essa semana para manter tudo em dia?</div>
+
+<p><strong>5. Horário que abriu</strong></p>
+<div class="msg">Abriu um horário hoje às [hora] 😊 Lembrei de você! Quer aproveitar?</div>
+
+<p><strong>6. Cliente sumida</strong></p>
+<div class="msg">Oi, [nome], tudo bem? Faz um tempinho que você não vem e a gente sentiu sua falta 💛 Tenho horário [dia]. Quer que eu reserve?</div>
+
+<p><strong>7. Novidade no salão</strong></p>
+<div class="msg">Novidade por aqui: agora fazemos [serviço novo]! Quer ser uma das primeiras a experimentar? Tenho horários essa semana.</div>
+
+<p><strong>8. Aniversário</strong></p>
+<div class="msg">Feliz aniversário, [nome]! 🎉 Neste mês, seu presente é [mimo] no próximo atendimento. É só agendar!</div>
+
+<p><strong>9. Indicação</strong></p>
+<div class="msg">[Nome], indique uma amiga para o salão: ela ganha [benefício] e você ganha [benefício] no próximo atendimento 💛</div>
+
+<p><strong>10. Cancelamento em cima da hora (com educação)</strong></p>
+<div class="msg">Tudo bem, [nome], imprevistos acontecem! Só peço que, quando possível, avise com [X horas] de antecedência, porque assim consigo oferecer o horário para outra cliente. Quer remarcar para quando?</div>
+
+<h2 class="brk">5. Bônus: Black Friday sem dar desconto</h2>
+<p>Salão não é loja. Dar 50% de desconto enche a agenda de quem só vem na promoção e esvazia o seu lucro. A estratégia aqui é <strong>dar mais valor, não baixar o preço</strong>.</p>
+
+<table>
+  <tr><th>Quando</th><th>O que fazer</th></tr>
+  <tr><td>2 semanas antes</td><td>Anunciar que "vem aí" e abrir lista VIP no WhatsApp (quem entrar agenda primeiro)</td></tr>
+  <tr><td>1 semana antes</td><td>Revelar os combos da Black Friday só para a lista VIP</td></tr>
+  <tr><td>Semana da Black Friday</td><td>Abrir para todos. Posts diários com os horários que ainda restam</td></tr>
+  <tr><td>Sexta-feira</td><td>Última chamada nos stories e mensagem final para a lista</td></tr>
+  <tr><td>Depois</td><td>Oferecer pacote de dezembro (festas de fim de ano) para quem veio</td></tr>
+</table>
+
+<p><strong>Ideias de oferta sem desconto:</strong></p>
+<ul>
+  <li>Combo com brinde: escova + hidratação pelo preço da escova</li>
+  <li>Pacote de fim de ano pago agora: 3 escovas para usar até janeiro</li>
+  <li>Vale-presente com bônus: compre R$ 200, use R$ 230</li>
+  <li>Horário garantido para as festas: quem fechar agora reserva a semana do Natal</li>
+</ul>
+
+<div class="prompt">Monte a campanha completa de Black Friday do meu salão, seguindo esta estratégia: sem desconto no preço, usando combos, brindes e vale-presente. Quero:
+1. 3 opções de oferta com nome atraente e preço
+2. Um post por fase: "vem aí", lista VIP, abertura, última chamada
+3. Uma mensagem de WhatsApp para cada fase
+4. Uma sequência de 5 stories para o dia da Black Friday</div>
+
+<h2 class="brk">6. Bônus: Rotina de 10 minutos por dia</h2>
+<ul class="check">
+  <li>Responder o direct e o WhatsApp (use o prompt 4 se perguntarem preço) — 3 min</li>
+  <li>Publicar o post do dia, que já está pronto do domingo — 2 min</li>
+  <li>Postar 2 ou 3 stories do dia a dia no salão — 3 min</li>
+  <li>Mandar 1 mensagem de retorno para uma cliente que não vem há mais de 30 dias — 2 min</li>
+</ul>
+<p><strong>Toda semana:</strong></p>
+<ul class="check">
+  <li>Domingo: gerar os posts da semana com o prompt do calendário</li>
+  <li>Pedir avaliação no Google para pelo menos 3 clientes</li>
+  <li>Gravar 1 Reels</li>
+</ul>
+
+<div class="tip" style="margin-top:40px"><strong>Lembrete final:</strong> constância vence perfeição. Um salão que posta todo dia com texto simples cresce mais do que um que posta uma vez por mês com arte perfeita. A IA está aqui justamente para você não precisar pensar do zero.</div>
+
+<p class="muted" style="margin-top:40px;font-size:.85rem">© [Seu Nome]. Este material é para uso do comprador. Proibida a revenda ou distribuição.</p>
+
+</div>
+</body>
+</html>
