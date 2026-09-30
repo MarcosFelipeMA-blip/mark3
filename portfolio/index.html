@@ -1,0 +1,343 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Vista Explodida</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=Barlow+Semi+Condensed:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+  /* Visual único e deliberado: prancheta técnica clara, grafite e um laranja de sinalização. */
+  :root {
+    color-scheme: light;
+    --paper: #eef0f2;
+    --paper-2: #e3e7ea;
+    --card: #fafbfc;
+    --ink: #161d25;
+    --ink-2: #36424e;
+    --muted: #5f6b77;
+    --line: rgba(22, 29, 37, 0.13);
+    --line-strong: rgba(22, 29, 37, 0.3);
+    --accent: #d94f25;
+    --accent-ink: #b23c17;
+    --display: "Barlow Semi Condensed", "Arial Narrow", Arial, sans-serif;
+    --body: "Barlow", "Helvetica Neue", Arial, system-ui, sans-serif;
+    --mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+    --wrap: 1120px;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    background:
+      linear-gradient(rgba(22,29,37,.03) 1px, transparent 1px) 0 0 / 24px 24px,
+      linear-gradient(90deg, rgba(22,29,37,.03) 1px, transparent 1px) 0 0 / 24px 24px,
+      var(--paper);
+    color: var(--ink);
+    font: 400 17px/1.55 var(--body);
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: var(--wrap); margin: 0 auto; padding-inline: 20px; }
+  a { color: inherit; }
+  img { max-width: 100%; height: auto; display: block; }
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+
+  /* Topo */
+  .bar { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 10; background: rgba(238, 240, 242, .92); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); }
+  .bar .wrap { display: flex; align-items: center; justify-content: space-between; gap: 16px; min-height: 60px; }
+  .mark { display: grid; gap: 1px; text-decoration: none; }
+  .mark b { font: 700 21px/1 var(--display); letter-spacing: .06em; text-transform: uppercase; }
+  .mark b span { color: var(--accent); }
+  .mark small { font: 500 10.5px/1.2 var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+  nav { display: flex; gap: 22px; }
+  nav a { font: 500 14px/1 var(--body); text-decoration: none; color: var(--ink-2); }
+  nav a:hover { color: var(--accent-ink); }
+
+  /* Abertura */
+  .hero { padding-block: 56px 40px; display: grid; grid-template-columns: 1.02fr 1fr; gap: 40px; align-items: center; }
+  .eyebrow { margin: 0; font: 500 12px/1.4 var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+  .word { margin: 10px 0 0; font: 700 clamp(44px, 6.4vw, 78px)/0.9 var(--display); text-transform: uppercase; letter-spacing: .01em; }
+  .word .w { display: inline-block; white-space: nowrap; }
+  .word .w span { display: inline-block; transition: transform .9s cubic-bezier(.2,.7,.1,1); }
+  .word .o { color: var(--accent); }
+  .js .word.exploded .w span { transform: translate(var(--dx), var(--dy)) rotate(var(--r)); }
+  .hero h1 { margin: 22px 0 0; font: 600 clamp(24px, 2.9vw, 32px)/1.15 var(--display); text-wrap: balance; max-width: 22ch; }
+  .hero p.lede { margin: 12px 0 0; color: var(--ink-2); max-width: 46ch; text-wrap: pretty; }
+  .cta { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 26px; }
+  .btn { display: inline-flex; align-items: center; gap: 10px; min-height: 46px; padding: 0 20px; border-radius: 3px; font: 600 16px/1 var(--body); text-decoration: none; border: 1px solid var(--line-strong); color: var(--ink); background: rgba(255,255,255,.6); }
+  .btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .btn.primary:hover { background: #e4623a; }
+  .btn:hover { background: #fff; }
+  .btn.primary:hover { background: #e4623a; }
+  .hero figure { margin: 0; position: relative; }
+  .hero figure img { border-radius: 4px; border: 1px solid var(--line); aspect-ratio: 3 / 2; object-fit: cover; width: 100%; }
+  .hero figcaption { position: absolute; left: 12px; bottom: 12px; padding: 5px 9px; background: var(--card); border: 1px solid var(--line); border-radius: 2px; font: 500 11px/1.3 var(--mono); letter-spacing: .06em; text-transform: uppercase; color: var(--ink-2); }
+
+  .formats { display: grid; grid-template-columns: repeat(4, 1fr); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+  .formats div { padding: 18px 18px 18px 0; }
+  .formats div + div { padding-left: 18px; border-left: 1px solid var(--line); }
+  .formats b { display: block; font: 700 19px/1.2 var(--display); text-transform: uppercase; letter-spacing: .02em; }
+  .formats span { font-size: 14.5px; color: var(--muted); }
+
+  section { padding-block: 64px 8px; }
+  .head { display: grid; gap: 8px; margin-bottom: 26px; }
+  .head h2 { margin: 0; font: 700 clamp(30px, 3.6vw, 42px)/1 var(--display); text-transform: uppercase; text-wrap: balance; }
+  .head p { margin: 0; color: var(--ink-2); max-width: 60ch; }
+
+  /* Projetos */
+  .projects { display: grid; gap: 22px; }
+  .proj { display: grid; grid-template-columns: 1.25fr 1fr; background: var(--card); border: 1px solid var(--line); border-radius: 4px; overflow: hidden; }
+  .proj .shots { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--line); }
+  .proj .shots img { width: 100%; height: 100%; min-height: 220px; object-fit: cover; background: var(--paper); }
+  .proj .body { padding: 22px 24px 24px; display: flex; flex-direction: column; gap: 10px; }
+  .proj h3 { margin: 0; font: 700 28px/1 var(--display); text-transform: uppercase; }
+  .proj p { margin: 0; color: var(--ink-2); font-size: 16px; }
+  .tags { display: flex; flex-wrap: wrap; gap: 6px; margin: 4px 0 6px; padding: 0; list-style: none; }
+  .tags li { font: 500 11px/1 var(--mono); letter-spacing: .05em; text-transform: uppercase; padding: 5px 7px; border: 1px solid var(--line-strong); border-radius: 2px; color: var(--ink-2); }
+  .pill { align-self: flex-start; font: 500 11px/1 var(--mono); letter-spacing: .08em; text-transform: uppercase; padding: 5px 8px; border-radius: 99px; }
+  .pill.live { background: rgba(46, 125, 72, .12); color: #2a6d40; }
+  .pill.soon { background: rgba(22, 29, 37, .07); color: var(--muted); }
+  .proj .body .btn { margin-top: auto; align-self: flex-start; }
+  .proj.soon .placeholder { display: grid; place-items: center; min-height: 240px; background:
+      repeating-linear-gradient(135deg, transparent 0 9px, rgba(22,29,37,.05) 9px 10px), var(--paper-2); }
+  .placeholder span { font: 600 20px/1.2 var(--display); text-transform: uppercase; letter-spacing: .05em; color: var(--muted); text-align: center; padding: 0 20px; }
+
+  /* Pacotes */
+  .packs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .pack { background: var(--card); border: 1px solid var(--line); border-radius: 4px; padding: 22px; display: flex; flex-direction: column; gap: 10px; }
+  .pack.featured { border-color: var(--accent); box-shadow: inset 0 3px 0 var(--accent); }
+  .pack h3 { margin: 0; font: 700 26px/1 var(--display); text-transform: uppercase; }
+  .pack .for { margin: 0; font: 500 12px/1.4 var(--mono); letter-spacing: .06em; text-transform: uppercase; color: var(--accent-ink); }
+  .pack ul { margin: 4px 0 0; padding: 0; list-style: none; display: grid; gap: 7px; }
+  .pack li { padding-left: 20px; position: relative; font-size: 15.5px; color: var(--ink-2); }
+  .pack li::before { content: ""; position: absolute; left: 2px; top: .62em; width: 9px; height: 2px; background: var(--accent); }
+  .pack .price { margin-top: auto; padding-top: 12px; border-top: 1px solid var(--line); font: 500 13px/1.3 var(--mono); color: var(--muted); }
+
+  /* Como funciona */
+  .steps { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(5, 1fr); counter-reset: s; border-top: 2px solid var(--ink); }
+  .steps li { counter-increment: s; padding: 16px 16px 0 0; }
+  .steps li::before { content: counter(s, decimal-leading-zero); display: block; font: 700 30px/1 var(--display); color: var(--accent); margin-bottom: 8px; }
+  .steps b { display: block; font: 600 17px/1.25 var(--body); margin-bottom: 4px; }
+  .steps span { font-size: 15px; color: var(--ink-2); }
+
+  /* Sobre e contato */
+  .about { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: start; }
+  .about p { margin: 0 0 12px; color: var(--ink-2); max-width: 56ch; }
+  .contact { background: var(--ink); color: #eef1f3; border-radius: 4px; padding: 28px; display: grid; gap: 14px; }
+  .contact h3 { margin: 0; font: 700 30px/1 var(--display); text-transform: uppercase; color: #fff; }
+  .contact p { margin: 0; color: #c5ccd3; }
+  .contact .btn { border-color: rgba(255,255,255,.3); color: #fff; background: transparent; }
+  .contact .btn.primary { background: var(--accent); border-color: var(--accent); }
+  .contact .todo { font: 500 12px/1.4 var(--mono); color: #f0a582; }
+
+  footer { margin-top: 72px; border-top: 1px solid var(--line); }
+  footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; padding-block: 22px 30px; font: 500 12px/1.4 var(--mono); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+
+  @media (max-width: 900px) {
+    nav { display: none; }
+    .hero { grid-template-columns: 1fr; padding-top: 34px; gap: 28px; }
+    .formats { grid-template-columns: 1fr 1fr; }
+    .formats div:nth-child(3) { padding-left: 0; border-left: 0; }
+    .formats div:nth-child(n+3) { border-top: 1px solid var(--line); }
+    .proj { grid-template-columns: 1fr; }
+    .packs { grid-template-columns: 1fr; }
+    .steps { grid-template-columns: 1fr; border-top: 0; }
+    .steps li { padding: 14px 0; border-top: 1px solid var(--line); display: grid; grid-template-columns: 48px 1fr; }
+    .steps li::before { margin: 0; grid-row: span 2; }
+    .about { grid-template-columns: 1fr; gap: 24px; }
+  }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } .word span { transition: none; } }
+</style>
+</head>
+<body>
+<header class="bar">
+  <div class="wrap">
+    <a class="mark" href="#topo"><b>Vista <span>Explodida</span></b><small>por Marcos Felipe</small></a>
+    <nav aria-label="Seções"><a href="#projetos">Projetos</a><a href="#servicos">Serviços</a><a href="#como">Como funciona</a><a href="#contato">Contato</a></nav>
+  </div>
+</header>
+
+<main id="topo">
+  <div class="wrap hero">
+    <div>
+      <p class="eyebrow">Apresentações técnicas 3D para a indústria</p>
+      <p class="word" id="word" aria-label="Vista Explodida"></p>
+      <h1>Mostre o seu produto por dentro antes de ele chegar à mão do cliente.</h1>
+      <p class="lede">A partir do catálogo ou do arquivo 3D, eu transformo produtos e processos de usinagem em apresentações interativas, vídeos e realidade aumentada, prontas para o site, a feira e o WhatsApp do vendedor.</p>
+      <div class="cta">
+        <a class="btn primary" href="rsf63.html">Abrir a demonstração</a>
+        <a class="btn" href="#contato">Pedir uma prévia grátis</a>
+      </div>
+    </div>
+    <figure>
+      <img src="img/rsf63-corte.jpg" alt="Redutor coroa e rosca sem fim em corte de um quarto, mostrando a coroa de bronze, o sem-fim, rolamentos e retentores hachurados" width="900" height="600">
+      <figcaption>Corte ¼ · redutor RSF-63</figcaption>
+    </figure>
+  </div>
+
+  <div class="wrap">
+    <div class="formats">
+      <div><b>3D interativo</b><span>Gira, corta e desmonta no navegador, sem instalar nada</span></div>
+      <div><b>Vídeo</b><span>MP4 em Full HD para redes, feira e apresentação</span></div>
+      <div><b>Realidade aumentada</b><span>O produto no tamanho real pelo celular, via QR code</span></div>
+      <div><b>Desenho 2D</b><span>Vistas, cortes, vista explodida e lista de peças em PDF e DXF</span></div>
+    </div>
+  </div>
+
+  <section id="projetos">
+    <div class="wrap">
+      <div class="head">
+        <p class="eyebrow">Projetos de demonstração</p>
+        <h2>Exemplos para você ver funcionando</h2>
+        <p>São produtos genéricos, criados para mostrar o serviço. Com o seu produto, a apresentação sai com os seus dados, a sua marca e o seu contato.</p>
+      </div>
+      <div class="projects">
+        <article class="proj">
+          <div class="shots">
+            <img src="img/rsf63-explodida.jpg" alt="Vista explodida do redutor com a coroa de bronze, o sem-fim, rolamentos e a tampa afastados" width="900" height="600">
+            <img src="img/rsf63-corte.jpg" alt="Redutor em corte de um quarto" width="900" height="600">
+          </div>
+          <div class="body">
+            <span class="pill live">Disponível</span>
+            <h3>Redutor coroa e rosca sem fim</h3>
+            <p>Modelo RSF-63, com redução de 30:1. Tem 15 peças para desmontar passo a passo, cortes A-A e B-B hachurados, vistas técnicas com cotas e o redutor funcionando com o sem-fim e a coroa girando na relação certa.</p>
+            <ul class="tags"><li>Pacote Completo</li><li>Vista explodida</li><li>Cortes</li><li>Vistas com cotas</li></ul>
+            <a class="btn primary" href="rsf63.html">Abrir o redutor em 3D</a>
+          </div>
+        </article>
+        <article class="proj soon">
+          <div class="placeholder"><span>Em produção</span></div>
+          <div class="body">
+            <span class="pill soon">Em breve</span>
+            <h3>Fresa de topo com pastilhas</h3>
+            <p>Uma ferramenta de corte apresentada como num catálogo vivo: características, códigos das peças de reposição, vista explodida e uma usinagem curta com cavaco.</p>
+            <ul class="tags"><li>Pacote Essencial</li><li>Ferramentas de corte</li><li>Vídeo</li></ul>
+          </div>
+        </article>
+        <article class="proj soon">
+          <div class="placeholder"><span>Em produção</span></div>
+          <div class="body">
+            <span class="pill soon">Em breve</span>
+            <h3>Processo de usinagem</h3>
+            <p>A peça sendo usinada operação por operação, com as ferramentas reais, remoção de material e o perfil conferido com o desenho. É o formato para propostas técnicas.</p>
+            <ul class="tags"><li>Pacote Processo</li><li>Simulação</li><li>Realidade aumentada</li></ul>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section id="servicos">
+    <div class="wrap">
+      <div class="head">
+        <p class="eyebrow">Serviços</p>
+        <h2>Três formas de começar</h2>
+      </div>
+      <div class="packs">
+        <article class="pack">
+          <p class="for">Para distribuidores</p>
+          <h3>Essencial</h3>
+          <ul>
+            <li>1 produto em 3D interativo</li>
+            <li>Vista explodida com os códigos das peças</li>
+            <li>Ficha técnica na tela</li>
+            <li>Vídeo curto em MP4</li>
+          </ul>
+          <p class="price">Valor sob consulta</p>
+        </article>
+        <article class="pack featured">
+          <p class="for">Para fabricantes</p>
+          <h3>Completo</h3>
+          <ul>
+            <li>Tudo do Essencial</li>
+            <li>Cortes e desmontagem passo a passo</li>
+            <li>Produto funcionando</li>
+            <li>Realidade aumentada com QR code</li>
+            <li>Desenho 2D em PDF e DXF</li>
+          </ul>
+          <p class="price">Valor sob consulta</p>
+        </article>
+        <article class="pack">
+          <p class="for">Para usinagem e ferramentas</p>
+          <h3>Processo</h3>
+          <ul>
+            <li>Simulação da usinagem operação por operação</li>
+            <li>Ferramentas a partir dos arquivos do fabricante</li>
+            <li>Comparação com o perfil do desenho</li>
+            <li>Vídeo para a proposta técnica</li>
+          </ul>
+          <p class="price">Valor sob consulta</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section id="como">
+    <div class="wrap">
+      <div class="head">
+        <p class="eyebrow">Como funciona</p>
+        <h2>Tudo à distância, do pedido à entrega</h2>
+      </div>
+      <ol class="steps">
+        <li><b>Prévia grátis</b><span>Eu monto uma prévia com um produto do seu catálogo.</span></li>
+        <li><b>Proposta</b><span>Você recebe escopo, prazo e valor no mesmo dia da conversa.</span></li>
+        <li><b>Briefing</b><span>Um formulário curto e o envio do catálogo ou do arquivo 3D.</span></li>
+        <li><b>Produção e aprovação</b><span>Você revisa a prévia e pede os ajustes combinados.</span></li>
+        <li><b>Entrega</b><span>Link interativo, vídeo, QR code de AR e arquivos finais.</span></li>
+      </ol>
+    </div>
+  </section>
+
+  <section id="contato">
+    <div class="wrap about">
+      <div>
+        <div class="head">
+          <p class="eyebrow">Quem faz</p>
+          <h2>Marcos Felipe</h2>
+        </div>
+        <p>A Vista Explodida nasceu do dia a dia com ferramentas de corte e processos de usinagem. Por isso cada apresentação fala a língua de quem compra: pastilha, raio, redução, profundidade de corte.</p>
+        <p>Os seus arquivos e desenhos são tratados como confidenciais e nunca aparecem em portfólio sem a sua autorização.</p>
+      </div>
+      <div class="contact">
+        <h3>Peça uma prévia grátis</h3>
+        <p>Mande o nome da sua empresa e o produto que você quer ver em 3D. Eu monto uma prévia com base no seu catálogo.</p>
+        <div class="cta">
+          <a class="btn primary" href="#contato">WhatsApp</a>
+          <a class="btn" href="#contato">E-mail</a>
+        </div>
+        <p class="todo">Rascunho: os contatos de WhatsApp e e-mail entram aqui.</p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap"><span>Vista Explodida · por Marcos Felipe</span><span>Apresentações técnicas 3D para a indústria</span></div>
+</footer>
+
+<script>
+  // Palavra-marca: as letras começam "explodidas" e se montam no lugar.
+  (() => {
+    const el = document.getElementById('word');
+    const txt = 'Vista Explodida';
+    // cada palavra num bloco sem quebra, para a palavra não partir no meio
+    let i = 0;
+    el.innerHTML = txt.split(' ').map(w => `<span class="w" aria-hidden="true">${[...w].map(c => `<span class="${i++ >= 5 ? 'o' : ''}">${c}</span>`).join('')}</span>`).join(' ');
+    const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduce) return;
+    document.documentElement.classList.add('js');
+    el.querySelectorAll('.w span').forEach((s, i) => {
+      const a = (i * 137.5) * Math.PI / 180, r = 18 + (i % 4) * 7;
+      s.style.setProperty('--dx', `${Math.cos(a) * r}px`);
+      s.style.setProperty('--dy', `${Math.sin(a) * r * 0.6}px`);
+      s.style.setProperty('--r', `${((i % 5) - 2) * 6}deg`);
+    });
+    el.classList.add('exploded');
+    requestAnimationFrame(() => requestAnimationFrame(() => el.classList.remove('exploded')));
+    el.addEventListener('pointerenter', () => el.classList.add('exploded'));
+    el.addEventListener('pointerleave', () => el.classList.remove('exploded'));
+  })();
+</script>
+</body>
+</html>
