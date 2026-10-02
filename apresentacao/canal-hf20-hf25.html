@@ -1,0 +1,474 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Canal HF 20 / HF 25</title>
+<style>
+:root{
+  --bg:#e9edf1; --paper:#ffffff; --ink:#1b2430; --muted:#5b6876; --line:#c9d2db;
+  --accent:#0b5cad; --accent-soft:#dbe9f8; --balloon:#d6261c; --ok:#1d7a46;
+  --op10:#f29d38; --op20:#8e44ad; --op30:#1f8fd6; --op40:#14a37f;
+  --metal:#8d99a6; --cavity:#ffffff;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#11161c; --paper:#1a222b; --ink:#e7edf3; --muted:#9aa7b4; --line:#33404d;
+    --accent:#5aa7f0; --accent-soft:#1d3247; --balloon:#ff5a4e; --ok:#46c483;
+    --metal:#6f7c89; --cavity:#1a222b;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#11161c; --paper:#1a222b; --ink:#e7edf3; --muted:#9aa7b4; --line:#33404d;
+  --accent:#5aa7f0; --accent-soft:#1d3247; --balloon:#ff5a4e; --ok:#46c483;
+  --metal:#6f7c89; --cavity:#1a222b;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);
+  font-family:"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif}
+.deck{display:flex;flex-direction:column;gap:24px;padding:24px 16px;align-items:center}
+.slide{width:min(100%,1280px);aspect-ratio:16/9;background:var(--paper);
+  border-radius:10px;box-shadow:0 2px 10px rgba(0,0,0,.12);
+  container-type:inline-size;position:relative;overflow:hidden;
+  display:flex;flex-direction:column;padding:3.2cqw 3.6cqw 2.6cqw}
+.slide header{display:flex;align-items:baseline;gap:1.4cqw;border-bottom:.25cqw solid var(--accent);
+  padding-bottom:.8cqw;margin-bottom:1.6cqw}
+.slide header .tag{background:var(--accent);color:#fff;font-weight:700;font-size:1.3cqw;
+  padding:.3cqw .9cqw;border-radius:.4cqw;letter-spacing:.05em}
+.slide h1{font-size:2.6cqw;margin:0;font-weight:700}
+.slide h2{font-size:2.4cqw;margin:0;font-weight:700}
+.slide .sub{color:var(--muted);font-size:1.3cqw;margin-left:auto}
+.slide footer{position:absolute;bottom:1cqw;left:3.6cqw;right:3.6cqw;display:flex;
+  justify-content:space-between;color:var(--muted);font-size:.95cqw}
+.body{flex:1;display:grid;gap:2cqw;min-height:0}
+p,li{font-size:1.35cqw;line-height:1.45}
+ul{margin:.4cqw 0;padding-left:1.8cqw}
+table{border-collapse:collapse;width:100%;font-size:1.15cqw}
+th,td{border:1px solid var(--line);padding:.35cqw .6cqw;text-align:left;vertical-align:top}
+th{background:var(--accent-soft);font-weight:700}
+td.c,th.c{text-align:center}
+.mono{font-family:Consolas,"Roboto Mono",monospace;font-weight:600}
+.b{display:inline-flex;align-items:center;justify-content:center;width:1.7cqw;height:1.7cqw;
+  border:.15cqw solid var(--balloon);color:var(--balloon);border-radius:50%;font-weight:700;
+  font-size:.95cqw;margin:0 .1cqw}
+.pill{display:inline-block;border-radius:.4cqw;padding:.1cqw .6cqw;font-weight:700;color:#fff;font-size:1.05cqw}
+.op10{background:var(--op10)}.op20{background:var(--op20)}.op30{background:var(--op30)}.op40{background:var(--op40)}
+.box{border:1px solid var(--line);border-radius:.6cqw;padding:1cqw 1.2cqw}
+.box h3{margin:0 0 .6cqw;font-size:1.45cqw;color:var(--accent)}
+.warn{border-left:.4cqw solid var(--op10);background:color-mix(in srgb,var(--op10) 12%,transparent)}
+.out{color:var(--muted);text-decoration:line-through}
+svg{width:100%;height:100%;display:block}
+svg text{font-family:"Segoe UI",Roboto,Arial,sans-serif}
+.cover{justify-content:center;background:linear-gradient(135deg,var(--paper) 55%,var(--accent-soft))}
+.cover .kicker{color:var(--accent);font-weight:700;font-size:1.6cqw;letter-spacing:.12em}
+.cover h1{font-size:4.6cqw;line-height:1.1;margin:.8cqw 0 1.2cqw}
+.cover p{font-size:1.7cqw;color:var(--muted);margin:.2cqw 0}
+.nav{position:fixed;right:16px;bottom:16px;display:flex;gap:6px}
+.nav button{border:1px solid var(--line);background:var(--paper);color:var(--ink);border-radius:6px;padding:6px 10px;cursor:pointer}
+@media print{
+  @page{size:338.67mm 190.5mm;margin:0}
+  html,body{background:#fff}
+  .deck{padding:0;gap:0}
+  .slide{width:338.67mm;border-radius:0;box-shadow:none;break-after:page}
+  .nav{display:none}
+}
+</style>
+</head>
+<body>
+<div class="deck" id="deck">
+
+<!-- 1. CAPA -->
+<section class="slide cover">
+  <div class="kicker">PROCESSO DE USINAGEM · CANAL DE PALHETA GUIA</div>
+  <h1>Leitschaufelnut HF 20 e HF 25<br>Desenho balonado e sequência de operações</h1>
+  <p>Abertura do canal com bedame reto · raio de fundo com bedame de perfil · cantos com lâmina e pastilhas esquerda/direita</p>
+  <p style="margin-top:2cqw">Ref.: Siemens Guide Blade Groove HF 20 e HF 25 (0-2091-0054-25 Rev. B) · escala original 3:1</p>
+  <footer><span>Documento de processo — validar com o desenho original antes do uso</span><span>1</span></footer>
+</section>
+
+<!-- 2. FERRAMENTAL -->
+<section class="slide">
+  <header><span class="tag">FERRAMENTAL</span><h2>Ferramentas utilizadas e função</h2></header>
+  <div class="body" style="grid-template-columns:2.1fr 1fr">
+    <table>
+      <thead><tr><th>Item</th><th>Código</th><th>Tipo</th><th>Função no canal</th><th class="c">OP</th></tr></thead>
+      <tbody>
+        <tr><td class="c">T1</td><td class="mono">C2-RS25-LK32DB</td><td>Suporte (Capto C2)</td><td>Suporte do bedame reto e do bedame de perfil</td><td class="c"><span class="pill op10">10</span> <span class="pill op20">20</span></td></tr>
+        <tr><td class="c">T2</td><td class="mono">C2I-K2N-0714-0008-GF 1225</td><td>Bedame reto</td><td>Abrir o canal (mergulho no pescoço até o fundo)</td><td class="c"><span class="pill op10">10</span></td></tr>
+        <tr><td class="c">T3</td><td class="mono">C2I-K2N-0714-0004-RO 1225</td><td>Bedame de perfil (raio)</td><td>Raio de fundo R3 (HF 20) / R4 (HF 25)</td><td class="c"><span class="pill op20">20</span></td></tr>
+        <tr><td class="c">T4</td><td class="mono">LF123H32-25B1</td><td>Lâmina</td><td>Porta as pastilhas esquerda e direita</td><td class="c"><span class="pill op30">30</span> <span class="pill op40">40</span></td></tr>
+        <tr><td class="c">T5</td><td class="mono">LG123H1-0400-0004-GS 1205</td><td>Pastilha esquerda</td><td>Lado esquerdo: canto superior com raio e canto inferior com raio</td><td class="c"><span class="pill op30">30</span></td></tr>
+        <tr><td class="c">T6</td><td class="mono">RG123H1-0400-0004-GS 1205</td><td>Pastilha direita</td><td>Lado direito: canto superior com raio e canto inferior com raio</td><td class="c"><span class="pill op40">40</span></td></tr>
+        <tr><td class="c">?</td><td class="mono">5680 105-05</td><td>A confirmar</td><td>Função não informada (acessório da lâmina?)</td><td class="c">—</td></tr>
+        <tr><td class="c out">—</td><td class="mono out">TORQUÍMETRO</td><td class="out">Acessório</td><td class="out">Fora da apresentação, conforme pedido</td><td class="c">—</td></tr>
+      </tbody>
+    </table>
+    <div style="display:flex;flex-direction:column;gap:1.2cqw">
+      <div class="box"><h3>Mesma sequência nas 2 peças</h3>
+        <ul>
+          <li><span class="pill op10">OP10</span> Abrir canal (bedame reto)</li>
+          <li><span class="pill op20">OP20</span> Raio de fundo (bedame de perfil)</li>
+          <li><span class="pill op30">OP30</span> Lado esquerdo (pastilha LG)</li>
+          <li><span class="pill op40">OP40</span> Lado direito (pastilha RG)</li>
+        </ul></div>
+      <div class="box warn"><h3>Dados de corte</h3>
+        <p style="margin:0">Vc, avanço e profundidade de corte entram depois de consultar o catálogo.</p></div>
+    </div>
+  </div>
+  <footer><span>Canal HF 20 / HF 25</span><span>2</span></footer>
+</section>
+
+<!-- 3. HF20 BALONADO -->
+<section class="slide">
+  <header><span class="tag">HF 20</span><h2>Desenho balonado — Leitschaufelnut HF 20</h2><span class="sub">Anotação no desenho: CANAL PP.2 + PP.?</span></header>
+  <div class="body" style="grid-template-columns:1.15fr 1fr">
+    <div data-draw="hf20" data-mode="balloons"></div>
+    <div data-table="hf20"></div>
+  </div>
+  <footer><span>Esquema redesenhado (sem escala exata) — cotas conforme desenho original</span><span>3</span></footer>
+</section>
+
+<!-- 4. HF25 BALONADO -->
+<section class="slide">
+  <header><span class="tag">HF 25</span><h2>Desenho balonado — Leitschaufelnut HF 25</h2><span class="sub">0-2091-0054-25 Rev. B · Anotação: CANAL PP.3 + P.P2</span></header>
+  <div class="body" style="grid-template-columns:1.15fr 1fr">
+    <div data-draw="hf25" data-mode="balloons"></div>
+    <div data-table="hf25"></div>
+  </div>
+  <footer><span>Esquema redesenhado (sem escala exata) — cotas conforme desenho original</span><span>4</span></footer>
+</section>
+
+<!-- 5. DETALHE X -->
+<section class="slide">
+  <header><span class="tag">DETALHE X</span><h2>Transição entrada / pescoço — canto inferior com raio</h2></header>
+  <div class="body" style="grid-template-columns:1fr 1fr 1fr">
+    <div class="box"><h3>Design 1 — fabricação convencional</h3><div id="detX1" style="height:22cqw"></div>
+      <p style="margin:.4cqw 0 0"><span class="b">17</span> Raio <b>R0,2 máx.</b> no canto (HF 20 e HF 25)</p></div>
+    <div class="box"><h3>Design 2 — fabricação NC</h3><div id="detX2" style="height:22cqw"></div>
+      <p style="margin:.4cqw 0 0"><span class="b">17</span> Raio <b>R0,4 máx.</b> com alívio; HF 25: <b>0,9 máx.</b> × <b>0,2</b></p></div>
+    <div class="box"><h3>Ligação com a ferramenta</h3>
+      <ul>
+        <li>As pastilhas <span class="mono">LG/RG123H1-0400-<b>0004</b></span> têm raio de ponta de 0,4 mm, que atende o <b>Design 2 (R0,4 máx.)</b>.</li>
+        <li>O Design 1 (R0,2 máx.) <b>não</b> é atendido por raio 0,4 — confirmar qual design será seguido.</li>
+        <li>Executado na <span class="pill op30">OP30</span> (lado esq.) e <span class="pill op40">OP40</span> (lado dir.).</li>
+      </ul></div>
+  </div>
+  <footer><span>Uebergang wahlweise nach Design 1 (konv. Fertigung) / Design 2 (NC-Fertigung)</span><span>5</span></footer>
+</section>
+
+<!-- 6. SEQUÊNCIA RESUMO -->
+<section class="slide">
+  <header><span class="tag">SEQUÊNCIA</span><h2>Resumo das operações × balões</h2></header>
+  <div class="body" style="grid-template-rows:auto 1fr">
+    <table>
+      <thead><tr><th>OP</th><th>Descrição</th><th>Ferramenta</th><th>HF 20</th><th>HF 25</th><th>Balões atendidos</th></tr></thead>
+      <tbody>
+        <tr><td><span class="pill op10">OP10</span></td><td>Abrir canal — mergulho no pescoço até o fundo da câmara</td><td><span class="mono">C2-RS25-LK32DB</span><br><span class="mono">C2I-K2N-0714-0008-GF</span></td><td>2 passadas (PP.2)</td><td>3 passadas (PP.3)</td><td><span class="b">2</span><span class="b">4</span><span class="b">18</span></td></tr>
+        <tr><td><span class="pill op20">OP20</span></td><td>Raio de fundo central</td><td><span class="mono">C2-RS25-LK32DB</span><br><span class="mono">C2I-K2N-0714-0004-RO</span></td><td>R3 +0,1 · 13,7 +0,1</td><td>R4 +0,1 · 14,7 +0,1 (P.P2)</td><td><span class="b">6</span><span class="b">9</span><span class="b">18</span></td></tr>
+        <tr><td><span class="pill op30">OP30</span></td><td>Lado esquerdo: câmara, canto superior com raio, canto inferior com raio, entrada</td><td><span class="mono">LF123H32-25B1</span><br><span class="mono">LG123H1-0400-0004-GS</span></td><td>R4 · 0,5×45°</td><td>R5 · 1×45°</td><td><span class="b">1</span><span class="b">3</span><span class="b">5</span><span class="b">8</span><span class="b">10</span><span class="b">12</span><span class="b">13</span><span class="b">15</span><span class="b">17</span><span class="b">18</span></td></tr>
+        <tr><td><span class="pill op40">OP40</span></td><td>Lado direito: câmara, canto superior com raio, canto inferior com raio, entrada</td><td><span class="mono">LF123H32-25B1</span><br><span class="mono">RG123H1-0400-0004-GS</span></td><td>R4 · R0,5</td><td>R5 · R0,5</td><td><span class="b">1</span><span class="b">3</span><span class="b">5</span><span class="b">10</span><span class="b">11</span><span class="b">14</span><span class="b">16</span><span class="b">17</span><span class="b">18</span></td></tr>
+      </tbody>
+    </table>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:2cqw;min-height:0">
+      <div data-draw="hf20" data-mode="all" data-title="HF 20"></div>
+      <div data-draw="hf25" data-mode="all" data-title="HF 25"></div>
+    </div>
+  </div>
+  <footer><span>Cores = região usinada em cada operação</span><span>6</span></footer>
+</section>
+
+<!-- 7..10. OPERAÇÕES -->
+<section class="slide" data-op="op10"></section>
+<section class="slide" data-op="op20"></section>
+<section class="slide" data-op="op30"></section>
+<section class="slide" data-op="op40"></section>
+
+<!-- 11. PENDÊNCIAS -->
+<section class="slide">
+  <header><span class="tag">VALIDAR</span><h2>Pontos a confirmar antes de liberar</h2></header>
+  <div class="body" style="grid-template-columns:1fr 1fr">
+    <div class="box"><h3>Ferramental</h3>
+      <ul>
+        <li>Função do item <span class="mono">5680 105-05</span>.</li>
+        <li>Largura útil do bedame reto (<span class="mono">0714</span>) e do bedame de perfil, para confirmar o número de passadas.</li>
+        <li>Dados de corte (Vc, f, ap) de cada pastilha — <b>preencher pelo catálogo</b>.</li>
+        <li>Alcance da lâmina <span class="mono">LF123H32-25B1</span> (profundidade até 21 mm + câmara).</li>
+      </ul></div>
+    <div class="box"><h3>Desenho / processo</h3>
+      <ul>
+        <li>Anotações à mão: “PP.2 + PP.?” (HF 20) e “PP.3 + P.P2” (HF 25). Aqui foram lidas como <b>passadas do bedame reto + passadas do bedame de perfil</b>.</li>
+        <li>Detalhe X: Design 1 (R0,2 máx.) ou Design 2 (R0,4 máx.)?</li>
+        <li>Entrada 20 H8 / 25 H8 e recuo 0,3: feitos com a lâmina (OP30/40) ou com o bedame reto (OP10)?</li>
+        <li>Chanfro 0,5×45° / 1×45° × R0,5 nos cantos do piso da câmara.</li>
+      </ul></div>
+  </div>
+  <footer><span>Canal HF 20 / HF 25</span><span>11</span></footer>
+</section>
+
+</div>
+<div class="nav"><button onclick="go(-1)" aria-label="Slide anterior">▲</button><button onclick="go(1)" aria-label="Próximo slide">▼</button></div>
+
+<script>
+/* ---------- Geometria das peças (mm) ----------
+   y = profundidade a partir da linha Ø H9 (positivo para dentro do material)
+   x = 0 no plano de simetria (datum A) */
+const P = {
+  hf20:{name:"HF 20", We:20, We_t:"H8", Wn:14, Wn_t:"H11", Wc:20.6, Wc_t:"C11",
+        hN:10, hC:21, Rc:4, Rb:3, hB:13.7, ch:0.5, rf:0.5, passes:2, prof:"PP.?",
+        detX:"R0,2 máx. (D1) / R0,4 máx. (D2)"},
+  hf25:{name:"HF 25", We:25, We_t:"H8", Wn:18, Wn_t:"H11", Wc:25.8, Wc_t:"C11",
+        hN:10, hC:21, Rc:5, Rb:4, hB:14.7, ch:1, rf:0.5, passes:3, prof:"P.P2",
+        detX:"R0,2 máx. (D1) / R0,4 máx. + 0,9 máx. × 0,2 (D2)"}
+};
+const fmt = v => String(v).replace('.',',');
+
+function balloonsFor(p){
+  const top = p.hN + p.hB;
+  return [
+    [1,"Largura da câmara", `${fmt(p.Wc)} ${p.Wc_t}`, "30/40"],
+    [2,"Largura do pescoço", `${fmt(p.Wn)} ${p.Wn_t}`, "10"],
+    [3,"Largura da entrada", `${fmt(p.We)} ${p.We_t}`, "30/40"],
+    [4,"Profundidade até o teto da câmara", "21 ±0,1", "10"],
+    [5,"Altura do pescoço (piso da câmara)", "10 −0,1", "30/40"],
+    [6,"Piso da câmara → topo do raio de fundo", `${fmt(p.hB)} +0,1`, "20"],
+    [7,"Profundidade da entrada (ref.)", "(3)", "—"],
+    [8,"Recuo da entrada", "0,3", "30"],
+    [9,"Raio de fundo", `R${p.Rb} +0,1`, "20"],
+    [10,"Canto superior com raio", `R${p.Rc}`, "30/40"],
+    [11,"Canto do piso da câmara", "R0,5", "40"],
+    [12,"Chanfro do piso da câmara", `${fmt(p.ch)}×45°`, "30"],
+    [13,"Perpendicularidade parede da câmara", "⊥ 0,02 A", "30"],
+    [14,"Planeza do piso da câmara", "⏥ 0,02", "40"],
+    [15,"Perpendicularidade parede da entrada", "⊥ 0,02 A", "30"],
+    [16,"Planeza da face da entrada", "⏥ 0,02", "40"],
+    [17,"Detalhe X — canto inferior com raio", p.detX, "30/40"],
+    [18,"Rugosidade", "Rz16 / Rmax25", "todas"],
+  ];
+}
+
+/* ---------- desenho SVG ---------- */
+const NS="http://www.w3.org/2000/svg";
+function profile(p){
+  // retorna o caminho da cavidade (coordenadas SVG = mm, y invertido)
+  const Y=y=>-y, a=p.Wc/2, n=p.Wn/2, e=p.We/2, top=p.hN+p.hB, cy=top-p.Rb;
+  const bx=Math.sqrt(p.Rb*p.Rb-(p.hC-cy)**2);
+  return [
+    `M${-e},${Y(-3)}`,`L${-e},${Y(0)}`,`L${-n},${Y(0)}`,`L${-n},${Y(p.hN)}`,
+    `L${-a+p.ch},${Y(p.hN)}`,`L${-a},${Y(p.hN+p.ch)}`,`L${-a},${Y(p.hC-p.Rc)}`,
+    `A${p.Rc},${p.Rc} 0 0 1 ${-a+p.Rc},${Y(p.hC)}`,`L${-bx},${Y(p.hC)}`,
+    `A${p.Rb},${p.Rb} 0 0 1 ${bx},${Y(p.hC)}`,`L${a-p.Rc},${Y(p.hC)}`,
+    `A${p.Rc},${p.Rc} 0 0 1 ${a},${Y(p.hC-p.Rc)}`,`L${a},${Y(p.hN+p.rf)}`,
+    `A${p.rf},${p.rf} 0 0 1 ${a-p.rf},${Y(p.hN)}`,`L${n},${Y(p.hN)}`,`L${n},${Y(0)}`,
+    `L${e},${Y(0)}`,`L${e},${Y(-3)}`
+  ].join(' ');
+}
+function el(tag,attrs,parent,text){
+  const n=document.createElementNS(NS,tag);
+  for(const k in attrs) n.setAttribute(k,attrs[k]);
+  if(text!=null) n.textContent=text;
+  if(parent) parent.appendChild(n);
+  return n;
+}
+let uid=0;
+function drawPart(host,key,mode,title){
+  const p=P[key], a=p.Wc/2, n=p.Wn/2, e=p.We/2, top=p.hN+p.hB;
+  const pad = mode==="balloons"?13:5;
+  const x0=-a-pad, x1=a+pad, y0=-(top+(mode==="balloons"?8:3)), y1=(mode==="balloons"?13:6);
+  const svg=el("svg",{viewBox:`${x0} ${y0} ${x1-x0} ${y1-y0}`,preserveAspectRatio:"xMidYMid meet",role:"img",
+    "aria-label":`Perfil do canal ${p.name}`},host);
+  const id="g"+(uid++);
+  const defs=el("defs",{},svg);
+  const pat=el("pattern",{id:id+"h",width:1.6,height:1.6,patternUnits:"userSpaceOnUse",patternTransform:"rotate(45)"},defs);
+  el("line",{x1:0,y1:0,x2:0,y2:1.6,stroke:"var(--metal)","stroke-width":.12},pat);
+  const cp=el("clipPath",{id:id+"c"},defs); el("path",{d:profile(p)+" Z"},cp);
+  const mk=el("marker",{id:id+"m",viewBox:"0 0 10 10",refX:10,refY:5,markerWidth:5,markerHeight:5,orient:"auto-start-reverse"},defs);
+  el("path",{d:"M0,1 L10,5 L0,9 z",fill:"var(--ink)"},mk);
+
+  // material
+  el("rect",{x:-a-4,y:-(top+2.5),width:p.Wc+8,height:top+2.5+3,fill:`url(#${id}h)`},svg);
+  el("path",{d:profile(p)+" Z",fill:"var(--cavity)"},svg);
+
+  // regiões das operações
+  const zones={
+    op10:()=>{const g=el("g",{"clip-path":`url(#${id}c)`},svg);
+      el("rect",{x:-n,y:-p.hC,width:p.Wn,height:p.hC+3,fill:"var(--op10)",opacity:.55},g);
+      for(let i=1;i<p.passes;i++){const x=-n+i*p.Wn/p.passes;
+        el("line",{x1:x,y1:-p.hC,x2:x,y2:3,stroke:"var(--op10)","stroke-width":.18,"stroke-dasharray":".6 .4"},g);}},
+    op20:()=>{const g=el("g",{"clip-path":`url(#${id}c)`},svg);
+      el("rect",{x:-p.Rb-.1,y:-top-.5,width:2*p.Rb+.2,height:top-p.hC+.5,fill:"var(--op20)",opacity:.6},g);},
+    op30:()=>{const g=el("g",{"clip-path":`url(#${id}c)`},svg);
+      el("rect",{x:-a-1,y:-p.hC-1,width:a-n+1,height:p.hC+5,fill:"var(--op30)",opacity:.6},g);},
+    op40:()=>{const g=el("g",{"clip-path":`url(#${id}c)`},svg);
+      el("rect",{x:n,y:-p.hC-1,width:a-n+1,height:p.hC+5,fill:"var(--op40)",opacity:.6},g);},
+  };
+  if(mode==="all") ["op10","op20","op30","op40"].forEach(z=>zones[z]());
+  else if(zones[mode]) zones[mode]();
+
+  // contorno
+  el("path",{d:profile(p),fill:"none",stroke:"var(--ink)","stroke-width":.28,"stroke-linejoin":"round"},svg);
+  el("line",{x1:-a-4,y1:0,x2:-e,y2:0,stroke:"var(--ink)","stroke-width":.2},svg);
+  el("line",{x1:e,y1:0,x2:a+4,y2:0,stroke:"var(--ink)","stroke-width":.2},svg);
+  el("line",{x1:-a-4,y1:3,x2:-e,y2:3,stroke:"var(--ink)","stroke-width":.2},svg);
+  el("line",{x1:e,y1:3,x2:a+4,y2:3,stroke:"var(--ink)","stroke-width":.2},svg);
+  el("line",{x1:0,y1:-(top+1.5),x2:0,y2:5,stroke:"var(--muted)","stroke-width":.12,"stroke-dasharray":"1.6 .5 .3 .5"},svg);
+
+  // ferramenta esquemática nas telas de operação
+  const tool={
+    op10:()=>{const w=p.Wn/p.passes; el("rect",{x:-n,y:-p.hC,width:w,height:p.hC+6,fill:"none",stroke:"var(--op10)","stroke-width":.3,"stroke-dasharray":"1 .5"},svg);
+      el("text",{x:-n+w/2,y:5.3,"font-size":1.2,"text-anchor":"middle",fill:"var(--op10)","font-weight":700},svg,"T2");},
+    op20:()=>{el("path",{d:`M${-p.Rb},5 L${-p.Rb},${-(top-p.Rb)} A${p.Rb},${p.Rb} 0 0 1 ${p.Rb},${-(top-p.Rb)} L${p.Rb},5`,fill:"none",stroke:"var(--op20)","stroke-width":.3,"stroke-dasharray":"1 .5"},svg);
+      el("text",{x:0,y:5.3,"font-size":1.2,"text-anchor":"middle",fill:"var(--op20)","font-weight":700},svg,"T3");},
+    op30:()=>{const bw=2.2, x=-n+.4; el("path",{d:`M${x+bw},5 L${x+bw},${-(p.hC-1)} L${-a+.1},${-(p.hC-1)} L${-a+.1},${-(p.hC-1-1.6)} L${x},${-(p.hC-1-1.6)} L${x},5`,fill:"none",stroke:"var(--op30)","stroke-width":.3,"stroke-dasharray":"1 .5"},svg);
+      el("text",{x:x+bw/2,y:5.3,"font-size":1.2,"text-anchor":"middle",fill:"var(--op30)","font-weight":700},svg,"T4+T5");},
+    op40:()=>{const bw=2.2, x=n-.4; el("path",{d:`M${x-bw},5 L${x-bw},${-(p.hC-1)} L${a-.1},${-(p.hC-1)} L${a-.1},${-(p.hC-1-1.6)} L${x},${-(p.hC-1-1.6)} L${x},5`,fill:"none",stroke:"var(--op40)","stroke-width":.3,"stroke-dasharray":"1 .5"},svg);
+      el("text",{x:x-bw/2,y:5.3,"font-size":1.2,"text-anchor":"middle",fill:"var(--op40)","font-weight":700},svg,"T4+T6");},
+  };
+  if(tool[mode]) tool[mode]();
+  if(title) el("text",{x:x0+1,y:y0+2.4,"font-size":2,"font-weight":700,fill:"var(--ink)"},svg,title);
+  if(mode!=="balloons") return;
+
+  // ---- cotas ----
+  const dim=(x1,y1,x2,y2,txt,tx,ty,anchor="middle",rot=0)=>{
+    el("line",{x1,y1,x2,y2,stroke:"var(--ink)","stroke-width":.12,"marker-start":`url(#${id}m)`,"marker-end":`url(#${id}m)`},svg);
+    const t=el("text",{x:tx,y:ty,"font-size":1.25,"text-anchor":anchor,fill:"var(--ink)"},svg,txt);
+    if(rot) t.setAttribute("transform",`rotate(${rot} ${tx} ${ty})`);
+  };
+  const ext=(x1,y1,x2,y2)=>el("line",{x1,y1,x2,y2,stroke:"var(--ink)","stroke-width":.08},svg);
+  const yW=-(top+3.5);
+  ext(-a,-(p.hC-p.Rc),-a,yW-.6); ext(a,-(p.hC-p.Rc),a,yW-.6);
+  dim(-a,yW,a,yW,`${fmt(p.Wc)} ${p.Wc_t}`,0,yW-.5);
+  dim(-n,-5,n,-5,`${fmt(p.Wn)} ${p.Wn_t}`,0,-5.5);
+  ext(-e,3,-e,8.6); ext(e,3,e,8.6);
+  dim(-e,8,e,8,`${fmt(p.We)} ${p.We_t}`,0,7.5);
+  const xr=a+5.5; ext(a+.5,-p.hC,xr+.6,-p.hC);
+  dim(xr,0,xr,-p.hC,"21 ±0,1",xr+1.6,-p.hC/2,"middle",-90);
+  dim(xr,3,xr,0,"(3)",xr+1.6,1.5,"middle",-90);
+  const xl=-a-5.5; ext(-a-.5,-p.hN,xl-.6,-p.hN);
+  dim(xl,0,xl,-p.hN,"10 −0,1",xl-.9,-p.hN/2,"middle",-90);
+  const xl2=-a-9.5; ext(-1,-top,xl2-.6,-top); ext(xl+.6,-p.hN,xl2-.6,-p.hN);
+  dim(xl2,-p.hN,xl2,-top,`${fmt(p.hB)} +0,1`,xl2-.9,-(p.hN+p.hB/2),"middle",-90);
+  // datum A
+  el("path",{d:`M${n},-2.6 l1.2,-.7 l0,1.4 z`,fill:"var(--ink)"},svg);
+  el("line",{x1:n+1.2,y1:-2.6,x2:n+2.6,y2:-2.6,stroke:"var(--ink)","stroke-width":.12},svg);
+  el("rect",{x:n+2.6,y:-3.5,width:1.8,height:1.8,fill:"var(--paper)",stroke:"var(--ink)","stroke-width":.12},svg);
+  el("text",{x:n+3.5,y:-2.15,"font-size":1.3,"text-anchor":"middle",fill:"var(--ink)"},svg,"A");
+  // detalhe X
+  el("circle",{cx:-(n+e)/2,cy:0,r:(e-n)/2+1.3,fill:"none",stroke:"var(--ink)","stroke-width":.12},svg);
+  el("text",{x:-e-2.6,y:-2.2,"font-size":1.4,"font-weight":700,fill:"var(--ink)"},svg,"X");
+
+  // ---- balões: [nº, ponto alvo, posição do balão] ----
+  const bx=Math.sqrt(p.Rb*p.Rb-(p.hC-(top-p.Rb))**2);
+  const B=[
+    [1,[a*.55,yW],[a*.55+3,yW-3.2]],
+    [2,[n*.55,-5],[n*.55+2.2,-7.3]],
+    [3,[e*.55,8],[e*.55+3,10.6]],
+    [4,[xr,-p.hC*.3],[xr+4,-p.hC*.3]],
+    [5,[xl,-p.hN*.25],[xl-3,-p.hN*.25+3.4]],
+    [6,[xl2,-(p.hN+p.hB*.8)],[xl2-.2,-(top+3.4)]],
+    [7,[xr,2.2],[xr+4,4]],
+    [8,[-e,2.4],[-e-4,5.6]],
+    [9,[p.Rb*.7,-(top-p.Rb)-p.Rb*.71],[p.Rb+3,-(top+2)]],
+    [10,[a-p.Rc+p.Rc*.71,-(p.hC-p.Rc+p.Rc*.71)],[a+2.6,-(p.hC+1.6)]],
+    [11,[a-p.rf*.3,-(p.hN+p.rf*.3)],[a+2.6,-(p.hN-1.2)]],
+    [12,[-a+p.ch/2,-(p.hN+p.ch/2)],[-a+3.2,-(p.hN-2.2)]],
+    [13,[-a,-(p.hN+p.hB*.45)],[-a+3.6,-(p.hN+p.hB*.45)]],
+    [14,[a-2.2,-p.hN],[a-2.8,-(p.hN+2.8)]],
+    [15,[-e,1.5],[-e+2.4,5.1]],
+    [16,[e+2,0],[e+3.4,-2.8]],
+    [17,[-e+.25,.25],[-e-4.6,-4.6]],
+    [18,[-n+1.8,-p.hC],[-n+1.8,-(p.hN+4)]],
+  ];
+  const r=1.15;
+  B.forEach(([num,[tx,ty],[px,py]])=>{
+    const dx=tx-px, dy=ty-py, L=Math.hypot(dx,dy)||1;
+    el("line",{x1:px+dx/L*r,y1:py+dy/L*r,x2:tx,y2:ty,stroke:"var(--balloon)","stroke-width":.12},svg);
+    el("circle",{cx:tx,cy:ty,r:.22,fill:"var(--balloon)"},svg);
+    el("circle",{cx:px,cy:py,r,fill:"var(--paper)",stroke:"var(--balloon)","stroke-width":.2},svg);
+    el("text",{x:px,y:py+.45,"font-size":1.25,"font-weight":700,"text-anchor":"middle",fill:"var(--balloon)"},svg,num);
+  });
+}
+
+function drawDetail(host,design){
+  const svg=el("svg",{viewBox:"-7 -7 15 12",role:"img","aria-label":`Detalhe X design ${design}`},host);
+  const id="d"+(uid++);
+  const defs=el("defs",{},svg);
+  const pat=el("pattern",{id:id+"h",width:.8,height:.8,patternUnits:"userSpaceOnUse",patternTransform:"rotate(45)"},defs);
+  el("line",{x1:0,y1:0,x2:0,y2:.8,stroke:"var(--metal)","stroke-width":.06},pat);
+  // material: à esquerda do pescoço (x<0) acima de y=0 ; entrada para x<-2 abaixo de y=0
+  let d;
+  // raio no canto interno entre a face do ombro (y=0) e a parede da entrada (x=-2,5)
+  if(design===1) d="M-7,-7 L0,-7 L0,0 L-2,0 A0.5,0.5 0 0 0 -2.5,0.5 L-2.5,3 L-7,3 Z";
+  else d="M-7,-7 L0,-7 L0,0 L-1.6,0 L-1.6,-0.25 L-2.1,-0.25 A0.4,0.4 0 0 0 -2.5,0.15 L-2.5,3 L-7,3 Z";
+  el("path",{d,fill:`url(#${id}h)`,stroke:"var(--ink)","stroke-width":.1},svg);
+  el("text",{x:1.2,y:-4.5,"font-size":.75,fill:"var(--muted)"},svg,"pescoço");
+  el("text",{x:-1.8,y:2.4,"font-size":.75,fill:"var(--muted)"},svg,"entrada");
+  el("text",{x:-6.6,y:-6,"font-size":.62,fill:"var(--muted)"},svg,"material");
+  const txt=design===1?"R0,2 máx.":"R0,4 máx.";
+  el("line",{x1:design===1?-2.35:-2.4,y1:design===1?.35:0,x2:2.65,y2:2.4,stroke:"var(--balloon)","stroke-width":.06},svg);
+  el("circle",{cx:3.3,cy:2.8,r:.75,fill:"var(--paper)",stroke:"var(--balloon)","stroke-width":.1},svg);
+  el("text",{x:3.3,y:3.08,"font-size":.75,"font-weight":700,"text-anchor":"middle",fill:"var(--balloon)"},svg,"17");
+  el("text",{x:4.3,y:3.05,"font-size":.75,fill:"var(--ink)"},svg,txt);
+  if(design===2) el("text",{x:.3,y:-1.2,"font-size":.6,fill:"var(--ink)"},svg,"alívio HF25: 0,9 máx. × 0,2");
+}
+
+function table(host,key){
+  const rows=balloonsFor(P[key]).map(([n,c,s,op])=>
+    `<tr><td class="c"><span class="b">${n}</span></td><td>${c}</td><td class="mono">${s}</td><td class="c">${op}</td></tr>`).join("");
+  host.innerHTML=`<table style="font-size:1.02cqw"><thead><tr><th class="c">Nº</th><th>Característica</th><th>Especificação</th><th class="c">OP</th></tr></thead><tbody>${rows}</tbody></table>`;
+  host.querySelectorAll("td,th").forEach(c=>c.style.padding=".18cqw .5cqw");
+}
+
+/* ---------- telas de operação ---------- */
+const OPS={
+  op10:{n:"OP10",title:"Abrir o canal — bedame reto",tools:[["T1","C2-RS25-LK32DB","Suporte"],["T2","C2I-K2N-0714-0008-GF 1225","Bedame reto"]],
+    steps:["Posicionar no centro do canal (datum A).","Mergulho radial até a profundidade de 21 mm (teto da câmara), deixando sobremetal nas paredes.",
+           "Deslocar lateralmente e repetir: <b>HF 20 = 2 passadas</b> (PP.2), <b>HF 25 = 3 passadas</b> (PP.3).","Acabar a largura do pescoço em 14 H11 / 18 H11."],
+    balloons:[2,4,18]},
+  op20:{n:"OP20",title:"Raio de fundo — bedame de perfil",tools:[["T1","C2-RS25-LK32DB","Suporte"],["T3","C2I-K2N-0714-0004-RO 1225","Bedame de perfil"]],
+    steps:["Trocar o bedame reto pelo bedame de perfil no mesmo suporte.","Entrar pelo centro do canal (datum A).",
+           "Usinar o raio de fundo: <b>HF 20 R3 +0,1</b> / <b>HF 25 R4 +0,1</b>.","Controlar a cota do piso da câmara ao topo do raio: 13,7 +0,1 / 14,7 +0,1 (HF 25: P.P2)."],
+    balloons:[6,9,18]},
+  op30:{n:"OP30",title:"Lado esquerdo — lâmina + pastilha esquerda",tools:[["T4","LF123H32-25B1","Lâmina"],["T5","LG123H1-0400-0004-GS 1205","Pastilha esquerda"]],
+    steps:["Entrar pelo pescoço e abrir a câmara para o lado esquerdo.","<b>Canto superior com raio</b>: R4 (HF 20) / R5 (HF 25).",
+           "Piso da câmara em 10 −0,1 com chanfro 0,5×45° / 1×45°; parede ⊥ 0,02 A.","<b>Canto inferior com raio</b> na entrada (detalhe X) + entrada 20/25 H8 e recuo 0,3."],
+    balloons:[1,3,5,8,10,12,13,15,17,18]},
+  op40:{n:"OP40",title:"Lado direito — lâmina + pastilha direita",tools:[["T4","LF123H32-25B1","Lâmina"],["T6","RG123H1-0400-0004-GS 1205","Pastilha direita"]],
+    steps:["Entrar pelo pescoço e abrir a câmara para o lado direito.","<b>Canto superior com raio</b>: R4 (HF 20) / R5 (HF 25); canto do piso R0,5.",
+           "Piso da câmara com planeza 0,02; fechar a largura 20,6 C11 / 25,8 C11.","<b>Canto inferior com raio</b> na entrada (detalhe X); face da entrada com planeza 0,02."],
+    balloons:[1,3,5,10,11,14,16,17,18]},
+};
+document.querySelectorAll("[data-op]").forEach((s,i)=>{
+  const k=s.dataset.op, o=OPS[k];
+  s.innerHTML=`<header><span class="tag ${k}" style="background:var(--${k})">${o.n}</span><h2>${o.title}</h2></header>
+  <div class="body" style="grid-template-columns:1fr 1fr 1.05fr">
+    <div data-draw="hf20" data-mode="${k}" data-title="HF 20"></div>
+    <div data-draw="hf25" data-mode="${k}" data-title="HF 25"></div>
+    <div style="display:flex;flex-direction:column;gap:1cqw">
+      <div class="box"><h3>Ferramentas</h3>
+        <table><tbody>${o.tools.map(t=>`<tr><td class="c">${t[0]}</td><td class="mono">${t[1]}</td><td>${t[2]}</td></tr>`).join("")}</tbody></table></div>
+      <div class="box"><h3>Passo a passo</h3><ol style="margin:0;padding-left:1.6cqw">${o.steps.map(x=>`<li>${x}</li>`).join("")}</ol></div>
+      <div class="box"><h3>Balões atendidos</h3>${o.balloons.map(b=>`<span class="b">${b}</span>`).join("")}</div>
+      <div class="box warn" style="padding:.6cqw 1cqw"><p style="margin:0;font-size:1.15cqw">Vc / f / ap: <b>preencher pelo catálogo</b></p></div>
+    </div>
+  </div>
+  <footer><span>Área colorida = material removido nesta operação · tracejado = ferramenta</span><span>${7+i}</span></footer>`;
+});
+
+document.querySelectorAll("[data-draw]").forEach(h=>{h.style.minHeight="0";drawPart(h,h.dataset.draw,h.dataset.mode,h.dataset.title)});
+document.querySelectorAll("[data-table]").forEach(h=>table(h,h.dataset.table));
+drawDetail(document.getElementById("detX1"),1);
+drawDetail(document.getElementById("detX2"),2);
+
+function go(d){
+  const slides=[...document.querySelectorAll(".slide")];
+  const cur=slides.findIndex(s=>s.getBoundingClientRect().top>-10);
+  const t=slides[Math.max(0,Math.min(slides.length-1,(cur<0?0:cur)+d))];
+  t.scrollIntoView({behavior:"smooth",block:"center"});
+}
+document.addEventListener("keydown",e=>{
+  if(["ArrowDown","ArrowRight","PageDown"].includes(e.key)){e.preventDefault();go(1)}
+  if(["ArrowUp","ArrowLeft","PageUp"].includes(e.key)){e.preventDefault();go(-1)}
+});
+</script>
+</body>
+</html>
