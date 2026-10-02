@@ -41,14 +41,13 @@ Depths are measured from the Ø H9 line, with the mouth (3 or 4 mm) below it.
    - Missing per side: HF20 ≈ 3.3 mm, HF25 ≈ 3.9 mm, HF32 ≈ 5.4 mm, plus the R4/R5/R6 corners, the R0.5 corners and the 1x45°.
    - The LF123 blades with LG/RG123 inserts are straight too, so they don't solve it.
    - They work for **detail X (Design 2, R0.4 max, relief 0.9 × 0.2)** at the mouth.
-   - **A hook tool (left and right) is needed for the undercut.**
+   - **A hook tool (left and right) is needed for the undercut.** Resolved in rev. 2 by the LG/RG123H1.
 4. Quote: the LF123H32-25B1 / LF123G33-25B1 blades need a **blade holder** (25 mm blade height). It isn't in quote I9_26-21080.
 
 ## Open items
 
 - Real diameter of the bore / slots (for the curvature correction).
-- Which tool makes the T head (C11 width), the R0.5 corners and the R4/R5/R6 corners.
-- STEP files of the other assemblies (LF123H32 + LG/RG123H1, LF123G33 + C2I-G2N).
+- STEP files of the LF123G33 + C2I-G2N assembly and of the blade holder. Confirm the blade thickness.
 
 ## Rev. 2: LF123H32-25B1 + LG123H1 / RG123H1-0400-0004-GS (hook)
 
