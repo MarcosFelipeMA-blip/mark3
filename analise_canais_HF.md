@@ -1,6 +1,6 @@
 # Analysis: HF20 / HF25 / HF32 guide blade grooves (Siemens 0-2091-0054-xx), Mazak Mega Turn 1600
 
-Status: **preliminary**. Covers assemblies 2 and 4 only. More assemblies still to come.
+Status: **preliminary, rev. 2**. Covers assemblies 2 and 4 plus the LF123H32-25B1 blade with LG/RG123H1-0400-0004-GS inserts.
 
 ## Data taken from the STEP files (CoroPlus)
 
@@ -49,3 +49,41 @@ Depths are measured from the Ø H9 line, with the mouth (3 or 4 mm) below it.
 - Real diameter of the bore / slots (for the curvature correction).
 - Which tool makes the T head (C11 width), the R0.5 corners and the R4/R5/R6 corners.
 - STEP files of the other assemblies (LF123H32 + LG/RG123H1, LF123G33 + C2I-G2N).
+
+## Rev. 2: LF123H32-25B1 + LG123H1 / RG123H1-0400-0004-GS (hook)
+
+Geometry from the STEP files:
+
+- The insert is L-shaped: a 3.2 mm shank, and a hook that sticks out **6.8 mm** sideways (LG to one side, RG to the other).
+- Cutting width 4 mm (radial), rε 0.4.
+- Total width at the hook is 10.0 mm, so it passes through the 14 / 18 / 22 necks.
+- Hook reach beyond the neck wall is 6.8 mm. Needed: 3.3 / 3.9 / 5.4. **OK on all three.**
+- Radial depth needed for the hook (head floor, from the bore) is 24 / 24 / 29 against the blade's CDX 32. **OK.** HF32 has 3 mm of margin.
+- rε 0.4 is at most R0.5 (lower corners) and at most R0.4 (detail X Design 2). **OK.**
+
+Combined simulation, in `alcance_conjunto.png`:
+
+![combined](alcance_conjunto.png)
+
+- Only slivers under 0.1 mm remain on the walls and corners. That's the simulation's step size.
+- **Real leftover: the HF20 R3 center radius.** Neither the K 7.14 nor the hook gets in there, so it needs the 4 mm G insert on the LF123G33.
+- Assumption: blade thickness at most 3.2 mm (the insert shank). Check against the catalog.
+
+## Proposed sequence (per slot)
+
+| Op | Tool | What it does |
+|---|---|---|
+| 10 | C2R-LK32 + K2N-0714-0008-GF | Open the mouth (H8) and neck. Plunge in steps of about 6.5 mm down to the head floor. Leave 0.2–0.3 mm on the walls. |
+| 20 | LF123H32 + RG123H1 | Rough the left undercut. Enter through the neck, then move axially in radial bands of at most 3.5 mm. Leave allowance. |
+| 30 | LF123H32 + LG123H1 | Rough the right undercut (mirror of op 20). |
+| 40 | RG / LG | Finish the head: C11 wall, R4/R5/R6, R0.5 at the lip underside (back-cut), 1x45°, floor at the sides. |
+| 50 | C2R-LK32 + K2N-0714-RO | Center radius R4 (HF25 / HF32) and the floor in the center region. |
+| 55 | LF123G33 + C2I-G2N-0400 (radius) | HF20 R3 center radius, by interpolation. Also the HF32 depth, if the C2R touches the bore edge. |
+| 60 | C2R-LK32 + K2N-0714-0008-GF | Finish the neck walls (H11) and the mouth (H8). |
+| 70 | LF123H32 + LG/RG | Detail X, Design 2 (relief 0.9 × 0.2, R0.4). |
+
+Cutting notes for the hook:
+
+- The cutting edge is offset 6.8 mm from the blade axis, so the cutting force twists the blade.
+- Use a low feed on the axial move (f ≈ 0.05–0.08 mm/rev to start) and stable Vc.
+- Check chip evacuation inside the head. Use high-pressure coolant if the machine has it.
