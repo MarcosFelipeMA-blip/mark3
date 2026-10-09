@@ -1,0 +1,1260 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Fresa MS20-R016A16-10L</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+  /* Visual único e deliberado: estúdio fotográfico claro, como foto de catálogo. */
+  :root {
+    color-scheme: light;
+    --studio-1: #f1f2f3;
+    --studio-2: #cfd3d7;
+    --ink: #121416;
+    --ink-2: #2b3035;
+    --muted: #5b646c;
+    --line: rgba(18, 20, 22, 0.14);
+    --line-strong: rgba(18, 20, 22, 0.3);
+    --panel: rgba(250, 251, 251, 0.84);
+    --panel-solid: #fafbfb;
+    --gold: #c8962a;
+    --gold-ink: #7a5712;
+    --cool: #1f78c8;
+    --dark: #16181a;
+    --display: "Archivo", "Arial Narrow", "Helvetica Neue", Arial, sans-serif;
+    --body: "Archivo", "Helvetica Neue", Arial, system-ui, sans-serif;
+    --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+    --gutter: 16px;
+    --panel-w: 340px;
+  }
+  [hidden] { display: none !important; }
+  * { box-sizing: border-box; }
+  html, body { height: 100%; }
+  body {
+    margin: 0;
+    background: radial-gradient(110% 80% at 42% 35%, var(--studio-1) 0%, #e3e6e8 45%, var(--studio-2) 100%) fixed, var(--studio-1);
+    color: var(--ink);
+    font: 400 14px/1.5 var(--body);
+    overflow: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+  #app { position: fixed; inset: 0; }
+  #c { position: absolute; inset: 0; width: 100%; height: 100%; display: block; touch-action: none; outline: none; }
+
+  .brand {
+    position: absolute;
+    top: calc(env(safe-area-inset-top, 0px) + 18px);
+    left: calc(var(--gutter) + 8px);
+    pointer-events: none;
+    max-width: min(520px, calc(100% - var(--panel-w) - 64px));
+  }
+  .eyebrow {
+    margin: 0;
+    font: 500 11px/1.4 var(--mono);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .brand h1 {
+    margin: 4px 0 2px;
+    font: 800 46px/0.92 var(--display);
+    font-stretch: 68%;
+    letter-spacing: 0.005em;
+    text-transform: uppercase;
+  }
+  .brand h1 span { color: var(--gold-ink); }
+  .partners {
+    display: flex; flex-wrap: wrap; align-items: center; gap: 4px 10px;
+    margin: 0 0 10px;
+    font: 700 15px/1.2 var(--display); font-stretch: 85%; letter-spacing: 0.04em; text-transform: uppercase;
+  }
+  .partners .sep { width: 1px; height: 16px; background: var(--line-strong); }
+  .partners small {
+    font: 500 10px/1.2 var(--mono); letter-spacing: 0.08em; color: var(--gold-ink);
+    padding: 3px 6px; border: 1px solid var(--gold); border-radius: 99px;
+  }
+  #credit {
+    position: absolute; margin: 0;
+    right: calc(var(--gutter) + var(--panel-w) + 16px);
+    bottom: calc(env(safe-area-inset-bottom, 0px) + 96px);
+    font: 500 11px/1.3 var(--mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted);
+    pointer-events: none;
+  }
+  #credit b { color: var(--ink); font-weight: 500; }
+  .brand p.sub { margin: 4px 0 0; font-size: 15px; color: var(--ink-2); }
+
+  /* Painel do capítulo */
+  #panel {
+    position: absolute;
+    right: var(--gutter);
+    top: calc(env(safe-area-inset-top, 0px) + 16px);
+    bottom: calc(env(safe-area-inset-bottom, 0px) + 88px);
+    width: var(--panel-w);
+    overflow-y: auto;
+    padding: 18px 20px 20px;
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+  }
+  #panel h2 {
+    margin: 6px 0 8px;
+    font: 800 30px/1 var(--display);
+    font-stretch: 72%;
+    text-transform: uppercase;
+    text-wrap: balance;
+  }
+  #panel p.text { margin: 0 0 14px; color: var(--ink-2); text-wrap: pretty; }
+  #panel h3 {
+    margin: 18px 0 6px;
+    font: 500 11px/1.4 var(--mono);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .specs { margin: 0; display: grid; grid-template-columns: 1fr auto; border-top: 1px solid var(--line); }
+  .specs dt, .specs dd { margin: 0; padding: 6px 0; border-bottom: 1px solid var(--line); }
+  .specs dt { color: var(--ink-2); }
+  .specs dt small { font: 500 10px/1 var(--mono); color: var(--muted); letter-spacing: 0.06em; margin-left: 6px; }
+  .specs dd { text-align: right; font-variant-numeric: tabular-nums; font-weight: 600; }
+  .code {
+    display: flex; flex-wrap: wrap; gap: 4px;
+    margin: 4px 0 0;
+    padding: 0; list-style: none;
+  }
+  .code li {
+    display: grid; gap: 2px;
+    padding: 6px 8px;
+    border: 1px solid var(--line);
+    border-radius: 3px;
+    background: rgba(255, 255, 255, 0.55);
+    min-width: 0;
+  }
+  .code b { font: 600 15px/1 var(--mono); }
+  .code span { font-size: 11px; line-height: 1.25; color: var(--muted); }
+  .drawing { color: var(--ink); background: #fff; border: 1px solid var(--line); border-radius: 3px; padding: 6px; }
+  .drawing svg { display: block; width: 100%; height: auto; }
+  .note { margin: 14px 0 0; font-size: 11.5px; line-height: 1.45; color: var(--muted); }
+  .parts { list-style: none; margin: 0; padding: 0; display: grid; }
+  .parts li {
+    display: grid; grid-template-columns: 26px 1fr; gap: 2px 10px;
+    padding: 9px 0; border-bottom: 1px solid var(--line);
+  }
+  .parts li:first-child { border-top: 1px solid var(--line); }
+  .parts .n {
+    grid-row: span 2;
+    width: 22px; height: 22px; border-radius: 50%;
+    border: 1.5px solid var(--ink); display: grid; place-items: center;
+    font: 600 11px/1 var(--mono);
+  }
+  .parts .n.dim { border-style: dashed; border-color: var(--muted); color: var(--muted); }
+  .parts b { font-weight: 600; }
+  .parts code { font: 500 12px/1.4 var(--mono); color: var(--ink-2); }
+  .pill { white-space: nowrap; font: 500 10px/1 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; padding: 3px 6px; border-radius: 99px; border: 1px solid currentColor; margin-left: 6px; vertical-align: 1px; }
+  .pill.in { color: #2d7a3c; }
+  .pill.out { color: #9a5b12; }
+  .steps { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; counter-reset: s; }
+  .steps li {
+    counter-increment: s;
+    display: grid; grid-template-columns: 26px 1fr; gap: 10px; align-items: start;
+    padding: 8px 8px; border-radius: 3px; color: var(--muted);
+    transition: background-color .25s, color .25s;
+  }
+  .steps li::before { content: counter(s, decimal-leading-zero); font: 500 11px/1.6 var(--mono); }
+  .steps li.on { background: rgba(200, 150, 42, 0.16); color: var(--ink); }
+  .steps li.done { color: var(--ink-2); }
+  .controls { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+  button.btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    min-height: 34px; padding: 0 12px;
+    border: 1px solid var(--line-strong); border-radius: 3px;
+    background: rgba(255, 255, 255, 0.6); color: var(--ink);
+    font: 500 13px/1 var(--body); cursor: pointer; white-space: nowrap;
+  }
+  button.btn:hover { background: #fff; }
+  button.btn:focus-visible, .chap:focus-visible, #play:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+  button.btn[aria-pressed="true"] { background: var(--dark); border-color: var(--dark); color: #fff; }
+  button.btn.primary { background: var(--dark); border-color: var(--dark); color: #fff; }
+  .range { display: grid; gap: 6px; margin-top: 12px; font-size: 12px; color: var(--muted); }
+  .range input { width: 100%; accent-color: var(--gold); }
+  .data { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1px; background: var(--line); border: 1px solid var(--line); }
+  .data div { background: var(--panel-solid); padding: 8px 10px; }
+  .data small { display: block; font: 500 10px/1.3 var(--mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+  .data b { font: 700 22px/1.1 var(--display); font-stretch: 80%; font-variant-numeric: tabular-nums; }
+  .data b i { font-style: normal; font-weight: 500; font-size: 12px; color: var(--muted); margin-left: 3px; font-family: var(--body); }
+
+  /* Linha do tempo */
+  #timeline {
+    position: absolute;
+    left: var(--gutter);
+    right: var(--gutter);
+    bottom: calc(env(safe-area-inset-bottom, 0px) + 16px);
+    display: flex;
+    align-items: stretch;
+    gap: 8px;
+  }
+  #play {
+    flex: none; width: 56px;
+    border: 0; border-radius: 3px;
+    background: var(--dark); color: #fff;
+    display: grid; place-items: center; cursor: pointer;
+  }
+  #play svg { width: 18px; height: 18px; fill: currentColor; }
+  #chapters { list-style: none; margin: 0; padding: 0; flex: 1; display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px; }
+  .chap {
+    width: 100%; height: 100%;
+    display: grid; grid-template-columns: auto 1fr; align-items: center; gap: 2px 10px;
+    padding: 9px 12px 11px;
+    border: 1px solid var(--line); border-radius: 3px;
+    background: var(--panel); color: var(--muted);
+    font: 500 13px/1.2 var(--body); text-align: left; cursor: pointer; position: relative; overflow: hidden;
+    backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+  }
+  .chap .n { font: 500 11px/1 var(--mono); }
+  .chap .nm { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .chap .bar { position: absolute; left: 0; right: 0; bottom: 0; height: 3px; background: transparent; }
+  .chap .bar b { display: block; height: 100%; width: 0; background: var(--gold); }
+  .chap.on { color: var(--ink); border-color: var(--line-strong); background: var(--panel-solid); }
+  .chap.on .nm { font-weight: 600; }
+
+  #caption {
+    position: absolute;
+    left: calc(var(--gutter) + 8px);
+    bottom: calc(env(safe-area-inset-bottom, 0px) + 92px);
+    max-width: min(560px, calc(100% - var(--panel-w) - 64px));
+    font: 700 26px/1.1 var(--display);
+    font-stretch: 78%;
+    text-wrap: balance;
+    transition: opacity .35s;
+  }
+  #caption small { display: block; margin-bottom: 6px; font: 500 11px/1.3 var(--mono); letter-spacing: 0.1em; text-transform: uppercase; color: var(--gold-ink); }
+
+  /* Chamadas 3D */
+  #leaders { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; overflow: visible; }
+  #leaders line { stroke: var(--ink); stroke-width: 1; }
+  #leaders circle { fill: var(--panel-solid); stroke: var(--ink); stroke-width: 1.5; }
+  #labels { position: absolute; inset: 0; pointer-events: none; }
+  .lbl {
+    position: absolute; left: 0; top: 0;
+    padding: 5px 8px 6px;
+    background: var(--panel-solid);
+    border: 1px solid var(--line-strong);
+    border-radius: 2px;
+    font: 500 12px/1.25 var(--body);
+    white-space: nowrap;
+    opacity: 0;
+    transition: opacity .35s;
+    will-change: transform;
+  }
+  .lbl.show { opacity: 1; }
+  .lbl b { display: block; font: 600 13px/1.2 var(--body); }
+  .lbl code { font: 500 11px/1.3 var(--mono); color: var(--muted); }
+  .lbl.dim { background: transparent; border: 0; padding: 0 4px; font: 600 13px/1 var(--mono); }
+  .lbl.cool { border-color: var(--cool); color: var(--cool); }
+  #tip {
+    position: absolute; pointer-events: none;
+    padding: 5px 9px; background: var(--dark); color: #fff; border-radius: 3px;
+    font: 500 12px/1.2 var(--body); white-space: nowrap; transform: translate(14px, 14px);
+  }
+  #flash {
+    position: absolute; left: 50%; top: 40%;
+    transform: translate(-50%, -50%);
+    padding: 10px 16px; background: var(--dark); color: #fff; border-radius: 3px;
+    font: 700 18px/1 var(--display); font-stretch: 80%; letter-spacing: 0.04em; text-transform: uppercase;
+    pointer-events: none;
+  }
+
+  @media (max-width: 1100px) { :root { --panel-w: 300px; } .brand h1 { font-size: 38px; } }
+  @media (max-width: 820px) {
+    .brand h1 { font-size: 30px; }
+    .partners {
+    display: flex; flex-wrap: wrap; align-items: center; gap: 4px 10px;
+    margin: 0 0 10px;
+    font: 700 15px/1.2 var(--display); font-stretch: 85%; letter-spacing: 0.04em; text-transform: uppercase;
+  }
+  .partners .sep { width: 1px; height: 16px; background: var(--line-strong); }
+  .partners small {
+    font: 500 10px/1.2 var(--mono); letter-spacing: 0.08em; color: var(--gold-ink);
+    padding: 3px 6px; border: 1px solid var(--gold); border-radius: 99px;
+  }
+  #credit {
+    position: absolute; margin: 0;
+    right: calc(var(--gutter) + var(--panel-w) + 16px);
+    bottom: calc(env(safe-area-inset-bottom, 0px) + 96px);
+    font: 500 11px/1.3 var(--mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted);
+    pointer-events: none;
+  }
+  #credit b { color: var(--ink); font-weight: 500; }
+  .brand p.sub { font-size: 13px; }
+    .brand { max-width: calc(100% - 2 * var(--gutter)); }
+    #panel {
+      top: auto; left: var(--gutter); right: var(--gutter);
+      bottom: calc(env(safe-area-inset-bottom, 0px) + 76px);
+      width: auto; max-height: 34%;
+      padding: 12px 14px 14px;
+    }
+    #panel h2 { font-size: 22px; }
+    #chapters { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+    .chap { grid-template-columns: 1fr; padding: 8px 6px 10px; justify-items: center; }
+    .chap .nm { display: none; }
+    .chap.on .nm { display: none; }
+    #play { width: 48px; }
+    #caption {
+      left: var(--gutter); right: var(--gutter); max-width: none;
+      top: calc(env(safe-area-inset-top, 0px) + 146px); bottom: auto;
+      font-size: 18px;
+    }
+    .lbl { font-size: 11px; padding: 3px 6px 4px; }
+    .lbl b { font-size: 11.5px; }
+    .lbl.minor { display: none; }
+    #flash { font-size: 14px; white-space: nowrap; }
+    .partners { font-size: 12px; margin-bottom: 6px; }
+    #credit { left: var(--gutter); right: auto; bottom: calc(env(safe-area-inset-bottom, 0px) + 58px); font-size: 9px; }
+    #caption small { display: none; }
+  }
+  .capture .lbl, .capture #caption, .capture .steps li { transition: none; }
+  @media (prefers-reduced-motion: reduce) {
+    .lbl, #caption, .steps li { transition: none; }
+  }
+</style>
+</head>
+<body>
+<div id="app">
+  <canvas id="c" tabindex="0" aria-label="Modelo 3D da fresa MS20-R016A16-10L"></canvas>
+  <svg id="leaders" aria-hidden="true"></svg>
+  <div id="labels" aria-hidden="true"></div>
+
+  <header class="brand">
+    <p class="partners"><b>Sandvik Coromant</b><span class="sep" aria-hidden="true"></span><b>i9 Ferramentas</b><small>distribuidor autorizado</small></p>
+    <p class="eyebrow">CoroMill® MS20</p>
+    <h1>MS20-R016A16-<span>10L</span></h1>
+    <p class="sub">Fresa de topo para rebaixo a 90°</p>
+  </header>
+  <p id="credit">Projeto <b>Marcos Felipe</b></p>
+
+  <div id="caption" aria-live="polite"></div>
+  <aside id="panel" aria-live="polite"></aside>
+
+  <nav id="timeline" aria-label="Capítulos da apresentação">
+    <button id="play" type="button" aria-label="Pausar"></button>
+    <ol id="chapters"></ol>
+  </nav>
+
+  <div id="tip" hidden></div>
+  <div id="flash" hidden></div>
+</div>
+
+<template id="drawing-src"><!--DRAWING--></template>
+
+<script>/*MESH*/</script>
+<script type="importmap">
+{ "imports": {
+  "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+} }
+</script>
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+
+const TAU = Math.PI * 2;
+const V = (x, y, z) => new THREE.Vector3(x, y, z);
+const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
+const ease = x => { x = clamp(x); return x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2; };
+const seg = (t, a, b) => clamp((t - a) / (b - a));
+const lerp = (a, b, t) => a + (b - a) * t;
+const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const $ = id => document.getElementById(id);
+
+/* ---------- Renderizador ---------- */
+const canvas = $('c');
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.0;
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+renderer.localClippingEnabled = true;
+
+const scene = new THREE.Scene();
+const pmrem = new THREE.PMREMGenerator(renderer);
+scene.environment = pmrem.fromScene(new RoomEnvironment(renderer), 0.03).texture;
+
+const keyLight = new THREE.DirectionalLight(0xffffff, 2.4);
+keyLight.position.set(110, 230, 150);
+keyLight.castShadow = true;
+keyLight.shadow.mapSize.set(2048, 2048);
+Object.assign(keyLight.shadow.camera, { left: -140, right: 140, top: 140, bottom: -140, near: 20, far: 700 });
+keyLight.shadow.bias = -0.0004;
+keyLight.shadow.normalBias = 0.4;
+scene.add(keyLight);
+scene.add(new THREE.HemisphereLight(0xffffff, 0xaeb4ba, 0.5));
+const rimLight = new THREE.DirectionalLight(0xdfe8ff, 1.1);
+rimLight.position.set(-160, 80, -140);
+scene.add(rimLight);
+
+const ground = new THREE.Mesh(new THREE.PlaneGeometry(3000, 3000).rotateX(-Math.PI / 2), new THREE.ShadowMaterial({ opacity: 0.16 }));
+ground.position.y = -26;
+ground.receiveShadow = true;
+scene.add(ground);
+
+const camera = new THREE.PerspectiveCamera(30, 1, 1, 5000);
+const controls = new OrbitControls(camera, canvas);
+controls.enableDamping = true;
+controls.dampingFactor = 0.08;
+controls.minDistance = 25;
+controls.maxDistance = 900;
+
+function isNarrow() { return innerWidth <= 820; }
+function resize() {
+  renderer.setSize(innerWidth, innerHeight, false);
+  camera.aspect = innerWidth / innerHeight;
+  // desloca o centro óptico para a área que o painel deixa livre
+  const w = innerWidth, h = innerHeight, r = $('panel').getBoundingClientRect();
+  let dx = 0, dy = 0;
+  if (isNarrow()) dy = h / 2 - (170 + r.top) / 2;
+  else dx = (r.width + 16) / 2;
+  camera.setViewOffset(w, h, dx, dy, w, h);
+  camera.updateProjectionMatrix();
+}
+addEventListener('resize', resize);
+
+/* ---------- Malhas do arquivo STEP ---------- */
+const STEP_TO_WORLD = new THREE.Matrix4().makeTranslation(0, 100, 0).multiply(new THREE.Matrix4().makeRotationX(-Math.PI / 2));
+function decodeMesh(d) {
+  const buf = s => Uint8Array.from(atob(s), c => c.charCodeAt(0)).buffer;
+  const q = new Int16Array(buf(d.p)), n = new Int8Array(buf(d.n));
+  const idx = d.i32 ? new Uint32Array(buf(d.i)) : new Uint16Array(buf(d.i));
+  const pos = new Float32Array(q.length), nor = new Float32Array(n.length);
+  for (let k = 0; k < q.length; k++) {
+    const j = k % 3;
+    pos[k] = d.mn[j] + ((q[k] + 32768) / 65535) * (d.mx[j] - d.mn[j]);
+    nor[k] = n[k] / 127;
+  }
+  const g = new THREE.BufferGeometry();
+  g.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+  g.setAttribute('normal', new THREE.BufferAttribute(nor, 3));
+  g.setIndex(new THREE.BufferAttribute(idx, 1));
+  g.applyMatrix4(STEP_TO_WORLD);
+  g.normalizeNormals();
+  return g;
+}
+
+/* ---------- Materiais ---------- */
+const MAT = {
+  body: new THREE.MeshPhysicalMaterial({ color: 0x1b1d20, metalness: 0.55, roughness: 0.36, clearcoat: 0.35, clearcoatRoughness: 0.35 }),
+  insert: new THREE.MeshPhysicalMaterial({ color: 0xd9ab45, metalness: 1, roughness: 0.27, clearcoat: 0.2 }),
+  screw: new THREE.MeshStandardMaterial({ color: 0x3b3f44, metalness: 1, roughness: 0.32 }),
+  recess: new THREE.MeshStandardMaterial({ color: 0x0c0d0e, metalness: 0.6, roughness: 0.6, side: THREE.DoubleSide }),
+  bit: new THREE.MeshStandardMaterial({ color: 0xa4aab0, metalness: 1, roughness: 0.22 }),
+  yellow: new THREE.MeshPhysicalMaterial({ color: 0xf1bf12, metalness: 0, roughness: 0.42, clearcoat: 0.6, clearcoatRoughness: 0.25 }),
+  grip: new THREE.MeshStandardMaterial({ color: 0x17181a, metalness: 0, roughness: 0.78 }),
+  chrome: new THREE.MeshStandardMaterial({ color: 0xd6d9dc, metalness: 1, roughness: 0.12 }),
+  holder: new THREE.MeshStandardMaterial({ color: 0xb3b8bd, metalness: 1, roughness: 0.28 }),
+  coolant: new THREE.MeshBasicMaterial({ color: 0x2b8ce0, transparent: true, opacity: 0, depthWrite: false }),
+};
+MAT.body.transparent = false;
+
+/* ---------- Ferramenta ---------- */
+const M = window.MS20_MESH;
+const tool = new THREE.Group();
+scene.add(tool);
+
+const body = new THREE.Mesh(decodeMesh(M.body), MAT.body);
+body.castShadow = true; body.receiveShadow = true;
+tool.add(body);
+
+// Pastilhas: dados do furo do parafuso medidos no STEP (centro e eixo em coordenadas do mundo)
+const SEATS = {
+  B: { c: V(4.288, 5.063, -1.152), a: V(0.288, 0.105, 0.952).normalize(), mesh: M.insB },
+  A: { c: V(-4.288, 5.063, 1.152), a: V(-0.288, 0.105, -0.952).normalize(), mesh: M.insA },
+};
+const TORX = (() => {
+  const s = new THREE.Shape(), n = 96, R = 0.82;
+  for (let i = 0; i <= n; i++) {
+    const th = (i / n) * TAU;
+    const k = Math.pow(0.5 - 0.5 * Math.cos(6 * th), 1.4);
+    const r = R * (1 - 0.3 * k);
+    i ? s.lineTo(r * Math.cos(th), r * Math.sin(th)) : s.moveTo(r * Math.cos(th), r * Math.sin(th));
+  }
+  return s;
+})();
+class Helix extends THREE.Curve {
+  constructor(r, y0, y1, pitch) { super(); Object.assign(this, { r, y0, y1, pitch }); }
+  getPoint(t, target = new THREE.Vector3()) {
+    const y = lerp(this.y0, this.y1, t), th = ((this.y0 - y) / this.pitch) * TAU;
+    return target.set(this.r * Math.cos(th), y, this.r * Math.sin(th));
+  }
+}
+function flatShape(shape, y, mat, holes) {
+  const g = new THREE.ShapeGeometry(shape, 24).rotateX(-Math.PI / 2);
+  g.translate(0, y, 0);
+  return new THREE.Mesh(g, mat);
+}
+// Parafuso da pastilha 5513 020-90 (Torx Plus). Topo da cabeça em y = 0, ponta para -y.
+function buildScrew() {
+  const g = new THREE.Group();
+  const head = new THREE.LatheGeometry([
+    [0.83, 0], [1.95, 0], [2.06, -0.12], [1.64, -1.55], [1.22, -1.7], [1.22, -7.3], [0.95, -7.75], [0.001, -7.8],
+  ].map(([r, y]) => new THREE.Vector2(r, y)), 48);
+  g.add(new THREE.Mesh(head, MAT.screw));
+  const ring = new THREE.Shape(); ring.absarc(0, 0, 0.84, 0, TAU); ring.holes.push(new THREE.Path(TORX.getPoints(96).reverse()));
+  g.add(flatShape(ring, 0, MAT.screw));
+  const wall = new THREE.ExtrudeGeometry(TORX, { depth: 0.95, bevelEnabled: false, curveSegments: 48 }).rotateX(-Math.PI / 2);
+  wall.translate(0, -0.95, 0);
+  g.add(new THREE.Mesh(wall, MAT.recess));
+  g.add(new THREE.Mesh(new THREE.TubeGeometry(new Helix(1.2, -2.0, -7.3, 0.45), 320, 0.15, 6), MAT.screw));
+  g.traverse(o => { if (o.isMesh) o.castShadow = true; });
+  return g;
+}
+// Bit 5680 084-05. Ponta Torx Plus em y = 0, sextavado para +y.
+const BIT_LEN = 30;
+function buildBit() {
+  const g = new THREE.Group();
+  const tip = new THREE.ExtrudeGeometry(TORX, { depth: 1.6, bevelEnabled: false, curveSegments: 48 }).rotateX(-Math.PI / 2);
+  g.add(new THREE.Mesh(tip, MAT.bit));
+  g.add(new THREE.Mesh(new THREE.LatheGeometry([[0.001, 1.6], [0.72, 1.6], [0.72, 9], [1.55, 11], [1.55, 15.5], [0.001, 15.5]].map(([r, y]) => new THREE.Vector2(r, y)), 32), MAT.bit));
+  const hex = new THREE.CylinderGeometry(2.31, 2.31, 14.5, 6); hex.translate(0, 15.5 + 7.25, 0);
+  g.add(new THREE.Mesh(hex, MAT.bit));
+  const groove = new THREE.TorusGeometry(2.05, 0.35, 8, 6); groove.rotateX(Math.PI / 2); groove.translate(0, 25.5, 0);
+  g.add(new THREE.Mesh(groove, MAT.recess));
+  g.traverse(o => { if (o.isMesh) o.castShadow = true; });
+  return g;
+}
+// Chave de torque 5680 105-02. Boca em y = 0, cabo para +y.
+const WRENCH_GRIP_BIT = 11;
+function buildWrench() {
+  const g = new THREE.Group();
+  const lathe = (pts, mat, seg = 64) => {
+    const m = new THREE.Mesh(new THREE.LatheGeometry(pts.map(([r, y]) => new THREE.Vector2(r, y)), seg), mat);
+    m.castShadow = true; g.add(m); return m;
+  };
+  lathe([[2.4, 0], [3.4, 0.4], [3.6, 6], [4.4, 9], [4.4, 11]], MAT.chrome);
+  lathe([[4.4, 11], [6.6, 13], [7.2, 20], [7.4, 21]], MAT.grip);
+  lathe([[7.4, 21], [9.6, 27], [10.4, 38], [10.6, 44]], MAT.yellow);
+  lathe([[10.6, 44], [11.6, 50], [11.9, 62], [11.5, 78], [10.7, 90]], MAT.grip);
+  lathe([[10.7, 90], [10.0, 98], [8.6, 104], [5.5, 107.4], [0.001, 108]], MAT.yellow);
+  // escala de torque no colar
+  for (let i = 0; i < 24; i++) {
+    const a = (i / 24) * TAU, tick = new THREE.Mesh(new THREE.BoxGeometry(0.35, i % 6 ? 1.2 : 2.4, 0.3), MAT.chrome);
+    tick.position.set(Math.cos(a) * 7.3, 17, Math.sin(a) * 7.3); tick.rotation.y = -a; g.add(tick);
+  }
+  // etiqueta "Nm"
+  const cv = document.createElement('canvas'); cv.width = 128; cv.height = 64;
+  const x = cv.getContext('2d'); x.fillStyle = '#16181a'; x.fillRect(0, 0, 128, 64);
+  x.fillStyle = '#f1bf12'; x.font = '700 40px Archivo, Arial, sans-serif'; x.textAlign = 'center'; x.textBaseline = 'middle'; x.fillText('Nm', 64, 34);
+  const tex = new THREE.CanvasTexture(cv); tex.colorSpace = THREE.SRGBColorSpace;
+  const tag = new THREE.Mesh(new THREE.CylinderGeometry(10.46, 10.46, 5, 32, 1, true, -0.45, 0.9), new THREE.MeshStandardMaterial({ map: tex, roughness: 0.5 }));
+  tag.position.y = 34; tag.rotation.y = Math.PI / 2; g.add(tag);
+  return g;
+}
+
+const parts = {};
+for (const k of ['A', 'B']) {
+  const s = SEATS[k];
+  const ins = new THREE.Group();
+  const im = new THREE.Mesh(decodeMesh(s.mesh), MAT.insert);
+  im.castShadow = true; ins.add(im);
+  tool.add(ins);
+  const scr = new THREE.Group(), scrInner = buildScrew();
+  scr.quaternion.setFromUnitVectors(V(0, 1, 0), s.a);
+  scr.add(scrInner); tool.add(scr);
+  parts['ins' + k] = { group: ins, anchor: s.c.clone().addScaledVector(s.a, 1.2) };
+  parts['scr' + k] = { group: scr, inner: scrInner, anchor: V(0, -3.5, 0) };
+}
+const bit = new THREE.Group(), bitInner = buildBit();
+bit.quaternion.setFromUnitVectors(V(0, 1, 0), SEATS.B.a); bit.add(bitInner); tool.add(bit);
+const wrench = new THREE.Group(), wrenchInner = buildWrench();
+wrench.quaternion.setFromUnitVectors(V(0, 1, 0), SEATS.B.a); wrench.add(wrenchInner); tool.add(wrench);
+parts.bit = { group: bit, inner: bitInner, anchor: V(0, 20, 0) };
+parts.wrench = { group: wrench, inner: wrenchInner, anchor: V(0, 62, 0) };
+parts.body = { group: body, anchor: V(0, 60, 0) };
+
+// Canal interno de refrigeração (traçado ilustrativo, visível no raio-X)
+const coolExit = {};
+{
+  const g = new THREE.Group();
+  const main = new THREE.CylinderGeometry(1.0, 1.0, 82, 20); main.translate(0, 59, 0);
+  g.add(new THREE.Mesh(main, MAT.coolant));
+  for (const k of ['A', 'B']) {
+    const s = SEATS[k];
+    const exit = s.c.clone().addScaledVector(s.a, 2.4).add(V(0, 3.2, 0)).multiplyScalar(0.92);
+    coolExit[k] = exit;
+    const curve = new THREE.CatmullRomCurve3([V(0, 20, 0), V(exit.x * 0.35, 14, exit.z * 0.35), exit]);
+    g.add(new THREE.Mesh(new THREE.TubeGeometry(curve, 32, 0.6, 12), MAT.coolant));
+  }
+  g.renderOrder = 2;
+  tool.add(g);
+}
+
+/* ---------- Poses: montado ⇄ explodido ---------- */
+const EXPLODED = { ins: 12, scr: 26, bit: 18, wr: 12 };
+const pose = { insA: 0, insB: 0, scrA: 0, scrB: 0, spinA: 0, spinB: 0, bit: EXPLODED.bit, wr: EXPLODED.wr, wrSpin: 0, tools: false };
+function applyPose(p) {
+  for (const k of ['A', 'B']) {
+    const s = SEATS[k];
+    parts['ins' + k].group.position.copy(s.a).multiplyScalar(p['ins' + k]);
+    parts['scr' + k].group.position.copy(s.c).addScaledVector(s.a, 1.0 + p['scr' + k]);
+    parts['scr' + k].inner.rotation.y = p['spin' + k];
+  }
+  const s = SEATS.B;
+  bit.position.copy(s.c).addScaledVector(s.a, 1.0 + p.scrB - 0.8 + p.bit);
+  wrench.position.copy(bit.position).addScaledVector(s.a, BIT_LEN - WRENCH_GRIP_BIT + p.wr);
+  bitInner.rotation.y = wrenchInner.rotation.y = p.wrSpin;
+  bit.visible = wrench.visible = p.tools;
+}
+function explodedPose(e) {
+  return {
+    insA: EXPLODED.ins * e, insB: EXPLODED.ins * e, scrA: EXPLODED.scr * e, scrB: EXPLODED.scr * e,
+    spinA: -e * 6 * TAU, spinB: -e * 6 * TAU,
+    bit: EXPLODED.bit * e, wr: EXPLODED.wr * e + 30 * (1 - e), wrSpin: 0, tools: e > 0.04,
+  };
+}
+
+/* ---------- Porta-ferramenta e peça (capítulo de usinagem) ---------- */
+const machine = new THREE.Group();
+scene.add(machine);
+{
+  const chuck = new THREE.Mesh(new THREE.LatheGeometry([
+    [8.2, 51], [12.5, 51], [13.5, 53], [16.5, 64], [19, 70], [19, 108], [24, 110], [28, 112], [28, 118], [25, 121], [28, 124], [28, 130], [22, 134], [18, 160], [0.001, 160],
+  ].map(([r, y]) => new THREE.Vector2(r, y)), 96), MAT.holder);
+  chuck.castShadow = true;
+  machine.add(chuck);
+}
+const WP = { x0: -55, x1: 55, back: -40, edge: -2, wall: -8, top: 9, bottom: -25 };
+function feedMarks() {
+  const cv = document.createElement('canvas'); cv.width = cv.height = 512;
+  const x = cv.getContext('2d');
+  x.fillStyle = '#d7dadd'; x.fillRect(0, 0, 512, 512);
+  x.lineWidth = 1.2;
+  for (let i = -4; i < 40; i++) {
+    x.strokeStyle = i % 2 ? 'rgba(90,96,102,0.16)' : 'rgba(255,255,255,0.5)';
+    x.beginPath(); x.arc(i * 16, 256, 250, -0.6, 0.6); x.stroke();
+  }
+  const t = new THREE.CanvasTexture(cv);
+  t.wrapS = t.wrapT = THREE.RepeatWrapping; t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 8;
+  return t;
+}
+const raw = new THREE.MeshStandardMaterial({ color: 0xa7abb0, metalness: 1, roughness: 0.52 });
+const floorTex = feedMarks(); floorTex.repeat.set(3.4, 1.1);
+const machinedFloor = new THREE.MeshStandardMaterial({ color: 0xe2e5e8, map: floorTex, metalness: 1, roughness: 0.2 });
+const machinedWall = new THREE.MeshStandardMaterial({ color: 0xd4d8dc, metalness: 1, roughness: 0.18 });
+function wpBox(x0, x1, y0, y1, z0, z1, mats) {
+  const g = new THREE.BoxGeometry(x1 - x0, y1 - y0, z1 - z0);
+  g.translate((x0 + x1) / 2, (y0 + y1) / 2, (z0 + z1) / 2);
+  const m = new THREE.Mesh(g, mats);
+  m.castShadow = m.receiveShadow = true;
+  machine.add(m);
+  return m;
+}
+// [+x, -x, +y, -y, +z, -z]
+wpBox(WP.x0, WP.x1, WP.bottom, 0, WP.back, WP.edge, [raw, raw, machinedFloor, raw, raw, raw]);
+wpBox(WP.x0, WP.x1, 0, WP.top, WP.back, WP.wall, [raw, raw, raw, raw, machinedWall, raw]);
+// Faixa de material ainda não cortada: acompanha a fresa, com a frente em arco do raio de corte
+const stripClip = [new THREE.Plane(V(1, 0, 0), -WP.x0), new THREE.Plane(V(-1, 0, 0), WP.x1)];
+const stripMat = raw.clone(); stripMat.clippingPlanes = stripClip;
+const strip = (() => {
+  const s = new THREE.Shape(), R = 8, L = 400;
+  const e = -WP.edge, xe = Math.sqrt(R * R - e * e);
+  s.moveTo(xe, e); s.lineTo(L, e); s.lineTo(L, 8); s.lineTo(0, 8);
+  s.absarc(0, 0, R, Math.PI / 2, Math.asin(e / R), true);
+  const g = new THREE.ExtrudeGeometry(s, { depth: WP.top, bevelEnabled: false, curveSegments: 48 }).rotateX(-Math.PI / 2);
+  const m = new THREE.Mesh(g, stripMat);
+  m.castShadow = m.receiveShadow = true;
+  machine.add(m);
+  return m;
+})();
+
+/* ---------- Cavacos ---------- */
+function chipGeometry(turns, r0, r1, width, rng) {
+  const nu = 30, nw = 5, pos = [], idx = [];
+  for (let i = 0; i <= nu; i++) {
+    const u = i / nu, th = u * turns * TAU, r = lerp(r0, r1, u);
+    const w = width * (0.35 + 0.65 * Math.sin(Math.PI * Math.min(1, 0.15 + u * 0.95)));
+    for (let j = 0; j <= nw; j++) {
+      const s = j / nw - 0.5;
+      pos.push(r * Math.cos(th), s * w + u * rng, r * Math.sin(th));
+    }
+  }
+  for (let i = 0; i < nu; i++) for (let j = 0; j < nw; j++) {
+    const a = i * (nw + 1) + j, b = a + nw + 1;
+    idx.push(a, b, a + 1, b, b + 1, a + 1);
+  }
+  const g = new THREE.BufferGeometry();
+  g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
+  g.setIndex(idx); g.computeVertexNormals();
+  return g;
+}
+const CHIP_GEOS = [chipGeometry(1.8, 1.3, 0.5, 2.6, 1.4), chipGeometry(2.4, 1.1, 0.45, 3.2, 2.2), chipGeometry(1.3, 1.5, 0.8, 2.2, 0.8), chipGeometry(2.8, 1.0, 0.4, 2.8, 2.8)];
+const CHIP_MATS = [0xc3c7cb, 0xb5a27a, 0x9a8a6a, 0x6f6f98, 0x5a74a8, 0xd0d3d6].map(c => new THREE.MeshStandardMaterial({ color: c, metalness: 1, roughness: 0.3, side: THREE.DoubleSide }));
+const chips = [];
+const chipGroup = new THREE.Group(); machine.add(chipGroup);
+function spawnChip(p, v) {
+  let c;
+  if (chips.length < 110) {
+    c = { mesh: new THREE.Mesh(CHIP_GEOS[chips.length % 4], CHIP_MATS[(Math.random() * CHIP_MATS.length) | 0]) };
+    c.mesh.castShadow = true; chipGroup.add(c.mesh); chips.push(c);
+  } else {
+    c = chips.reduce((a, b) => (a.born < b.born ? a : b));
+  }
+  c.mesh.position.copy(p);
+  c.mesh.rotation.set(Math.random() * TAU, Math.random() * TAU, Math.random() * TAU);
+  c.mesh.scale.setScalar(0.8 + Math.random() * 0.45);
+  c.v = v.clone(); c.w = V(Math.random() - 0.5, Math.random() - 0.5, Math.random() - 0.5).multiplyScalar(26);
+  c.rest = false; c.born = performance.now(); c.mesh.visible = true;
+}
+function clearChips() { chips.forEach(c => (c.mesh.visible = false, c.rest = true)); }
+let toolX = -72, toolY = 0;
+function floorAt(x, z) {
+  if (x > WP.x0 && x < WP.x1 && z > WP.back && z < WP.edge) {
+    if (z < WP.wall) return WP.top;
+    return x > toolX + 5 ? WP.top : 0;
+  }
+  return WP.bottom - 1;
+}
+function updateChips(dt) {
+  for (const c of chips) {
+    if (!c.mesh.visible || c.rest) continue;
+    c.v.y -= 1600 * dt;
+    c.mesh.position.addScaledVector(c.v, dt);
+    c.mesh.rotation.x += c.w.x * dt; c.mesh.rotation.y += c.w.y * dt; c.mesh.rotation.z += c.w.z * dt;
+    const f = floorAt(c.mesh.position.x, c.mesh.position.z) + 0.7;
+    if (c.mesh.position.y < f) {
+      c.mesh.position.y = f;
+      c.v.y *= -0.28; c.v.x *= 0.5; c.v.z *= 0.5; c.w.multiplyScalar(0.5);
+      if (Math.abs(c.v.y) < 40) c.rest = true;
+    }
+  }
+}
+
+/* ---------- Fluido refrigerante ---------- */
+const COOL_N = 700;
+const coolGeo = new THREE.BufferGeometry();
+const coolPos = new Float32Array(COOL_N * 3).fill(-9999);
+coolGeo.setAttribute('position', new THREE.BufferAttribute(coolPos, 3));
+const coolDrops = Array.from({ length: COOL_N }, () => ({ life: 0, v: V(0, 0, 0), p: V(0, -9999, 0) }));
+const coolPts = new THREE.Points(coolGeo, new THREE.PointsMaterial({ color: 0x8cc6f5, size: 0.9, transparent: true, opacity: 0.75, depthWrite: false }));
+coolPts.frustumCulled = false;
+machine.add(coolPts);
+let coolCursor = 0;
+function emitCoolant(dt) {
+  for (const k of ['A', 'B']) {
+    const s = SEATS[k];
+    const n = Math.round(260 * dt + Math.random());
+    for (let i = 0; i < n; i++) {
+      const d = coolDrops[coolCursor]; coolCursor = (coolCursor + 1) % COOL_N;
+      d.p.copy(coolExit[k]); tool.localToWorld(d.p);
+      const dir = s.a.clone().multiplyScalar(0.55).add(V(0, -1, 0)).applyQuaternion(tool.quaternion).normalize();
+      d.v.copy(dir).multiplyScalar(120 + Math.random() * 60).add(V((Math.random() - 0.5) * 24, (Math.random() - 0.5) * 12, (Math.random() - 0.5) * 24));
+      d.life = 0.16 + Math.random() * 0.14;
+    }
+  }
+}
+function updateCoolant(dt, on) {
+  if (on) emitCoolant(dt);
+  for (let i = 0; i < COOL_N; i++) {
+    const d = coolDrops[i];
+    if (d.life > 0) {
+      d.life -= dt; d.v.y -= 900 * dt; d.p.addScaledVector(d.v, dt);
+      const f = floorAt(d.p.x, d.p.z);
+      if (d.p.y < f) { d.p.y = f + 0.2; d.v.y = Math.abs(d.v.y) * 0.25; d.v.x *= 0.6; d.v.z *= 0.6; }
+      if (d.life <= 0) d.p.y = -9999;
+    }
+    coolPos[i * 3] = d.p.x; coolPos[i * 3 + 1] = d.p.y; coolPos[i * 3 + 2] = d.p.z;
+  }
+  coolGeo.attributes.position.needsUpdate = true;
+}
+
+/* ---------- Cotas e chamadas ---------- */
+const dims = new THREE.Group();
+scene.add(dims);
+const dimMat = new THREE.LineBasicMaterial({ color: 0x121416 });
+function dimLine(y0, y1, x) {
+  const pts = [V(x, y0, 0), V(x, y1, 0), V(x - 3, y0, 0), V(x + 3, y0, 0), V(x - 3, y1, 0), V(x + 3, y1, 0)];
+  const g = new THREE.BufferGeometry().setFromPoints([pts[0], pts[1], pts[2], pts[3], pts[4], pts[5]]);
+  const l = new THREE.LineSegments(g, dimMat);
+  dims.add(l);
+  return l;
+}
+dimLine(0, 100, -24);
+dimLine(0, 51, -15);
+dimLine(0, 9, 13);
+const labels = [];
+const labelsEl = $('labels'), leaders = $('leaders');
+function label(html, obj, local, dx, dy, opts = {}) {
+  const el = document.createElement('div');
+  el.className = 'lbl' + (opts.cls ? ' ' + opts.cls : '');
+  el.innerHTML = html;
+  labelsEl.appendChild(el);
+  const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+  const dot = document.createElementNS('http://www.w3.org/2000/svg', 'circle'); dot.setAttribute('r', 3);
+  if (!opts.noLeader) leaders.append(line, dot);
+  const L = { el, line, dot, obj, local, dx, dy, on: false, group: opts.group, noLeader: opts.noLeader };
+  labels.push(L);
+  return L;
+}
+const tmpV = new THREE.Vector3();
+function updateLabels() {
+  const w = innerWidth, h = innerHeight, narrow = isNarrow();
+  for (const L of labels) {
+    L.el.classList.toggle('show', L.on);
+    const show = L.on || L.el.style.opacity !== '';
+    tmpV.copy(L.local);
+    if (L.obj) L.obj.localToWorld(tmpV);
+    tmpV.project(camera);
+    const vis = L.on && tmpV.z < 1;
+    const x = (tmpV.x * 0.5 + 0.5) * w, y = (-tmpV.y * 0.5 + 0.5) * h;
+    const s = narrow ? 0.6 : 1;
+    const ddx = narrow && L.dx < 0 && !L.noLeader ? -L.dx : L.dx; // no celular, chamadas sempre para a direita
+    const lx = x + ddx * s, ly = y + L.dy * s;
+    const bw = L.el.offsetWidth, bh = L.el.offsetHeight;
+    const left = ddx < 0 ? lx - bw : ddx === 0 ? lx - bw / 2 : lx;
+    L.el.style.transform = `translate(${left.toFixed(1)}px, ${(ly - bh / 2).toFixed(1)}px)`;
+    const o = vis ? 1 : 0;
+    L.line.setAttribute('x1', x); L.line.setAttribute('y1', y); L.line.setAttribute('x2', lx); L.line.setAttribute('y2', ly);
+    L.dot.setAttribute('cx', x); L.dot.setAttribute('cy', y);
+    L.line.style.opacity = L.dot.style.opacity = o;
+    L.line.style.transition = L.dot.style.transition = 'opacity .35s';
+  }
+}
+// Capítulo 1
+const LB_INTRO = [
+  label('<b>2 pastilhas MS20 tamanho 10</b><code>passo largo (L)</code>', parts.insB.group, parts.insB.anchor, 130, -70, { group: 'intro' }),
+  label('<b>Refrigeração interna</b><code>saída direto na aresta</code>', tool, V(0, 40, 0), -150, -40, { group: 'xray', cls: 'cool' }),
+  label('<b>Haste cilíndrica Ø16</b><code>DCON · A16</code>', tool, V(0, 88, 8), 110, 0, { group: 'intro' }),
+  label('<b>Ø16 mm</b><code>DC · diâmetro de corte</code>', tool, V(8, 1, 0), 120, 12, { group: 'intro', cls: 'minor' }),
+  label('100', dims, V(-24, 50, 0), -8, 0, { group: 'dims', cls: 'dim', noLeader: true }),
+  label('OHX 51', dims, V(-15, 30, 0), -8, 0, { group: 'dims', cls: 'dim', noLeader: true }),
+  label('APMX 9', dims, V(13, 4.5, 0), 8, 0, { group: 'dims', cls: 'dim', noLeader: true }),
+];
+// Capítulo 3
+const LB_PARTS = [
+  label('<b>(1) Parafuso da pastilha</b><code>5513 020-90 · 2 un. · incluído</code>', parts.scrB.group, V(0, -4, 0), -40, -70, { group: 'parts' }),
+  label('<b>(2) Bit</b><code>5680 084-05 · 1 un. · incluído</code>', bit, V(0, 18, 0), -30, 80, { group: 'parts' }),
+  label('<b>(3) Chave de torque para bits</b><code>5680 105-02 · não incluída</code>', wrench, V(0, 30, 0), 0, -90, { group: 'parts' }),
+  label('<b>Pastilha MS20-10</b><code>vendida separadamente</code>', parts.insB.group, parts.insB.anchor, 70, 70, { group: 'parts' }),
+  label('<b>Corpo MS20-R016A16-10L</b><code>aço, acabamento preto</code>', tool, V(0, 62, 0), -90, -10, { group: 'parts', cls: 'minor' }),
+];
+function showLabels(groups) {
+  for (const L of labels) L.on = groups.includes(L.group);
+  dims.visible = groups.includes('dims');
+}
+
+/* ---------- Capítulos ---------- */
+const CHAPTERS = [
+  { id: 'intro', name: 'A ferramenta', dur: 16 },
+  { id: 'cut', name: 'Usinagem', dur: 15 },
+  { id: 'explode', name: 'Vista explodida', dur: 11 },
+  { id: 'assembly', name: 'Montagem', dur: 20 },
+  { id: 'explore', name: 'Explorar', dur: 0 },
+];
+const state = {
+  ch: 0, t: 0, playing: true, autoplay: true, userCam: false,
+  coolant: true, slow: 20, sound: false, xray: false, spin: false, explode: 0,
+  selected: null, audio: null,
+};
+const drawingSVG = $('drawing-src').innerHTML;
+
+const ASSEMBLY_STEPS = [
+  [0, 'Limpe o alojamento e encaixe a pastilha'],
+  [3, 'Rosqueie o parafuso 5513 020-90 com a mão'],
+  [6.5, 'Encaixe o bit 5680 084-05 na chave de torque'],
+  [9, 'Aperte até a chave desarmar com um clique'],
+  [12.2, 'Retire a chave e repita na segunda pastilha'],
+  [15.5, 'Ferramenta pronta para usinar'],
+];
+
+function renderPanel() {
+  const c = CHAPTERS[state.ch].id, P = $('panel');
+  if (c === 'intro') {
+    P.innerHTML = `
+      <p class="eyebrow">Capítulo 01 · a ferramenta</p>
+      <h2>Rebaixo a 90° de verdade</h2>
+      <p class="text">Fresa de topo com pastilhas intercambiáveis para desbaste e acabamento em aço inoxidável e superligas resistentes ao calor. Faz rebaixo, faceamento, rampa linear e helicoidal, canal cheio e mergulho.</p>
+      <dl class="specs">
+        <dt>Diâmetro de corte<small>DC</small></dt><dd>16 mm</dd>
+        <dt>Haste cilíndrica<small>DCON</small></dt><dd>Ø 16 mm</dd>
+        <dt>Comprimento total<small>LF</small></dt><dd>100 mm</dd>
+        <dt>Comprimento útil<small>LU</small></dt><dd>25 mm</dd>
+        <dt>Prof. de corte máx.<small>APMX</small></dt><dd>9 mm</dd>
+        <dt>Balanço máx.<small>OHX</small></dt><dd>51 mm</dd>
+        <dt>Ângulo de posição<small>KAPR</small></dt><dd>90°</dd>
+        <dt>Pastilhas</dt><dd>2</dd>
+        <dt>Refrigeração</dt><dd>Interna</dd>
+        <dt>Materiais</dt><dd>ISO M · ISO S</dd>
+      </dl>
+      <h3>O que diz o código</h3>
+      <ul class="code">
+        <li><b>MS20</b><span>família</span></li>
+        <li><b>R</b><span>corte à direita</span></li>
+        <li><b>016</b><span>Ø 16 mm</span></li>
+        <li><b>A16</b><span>haste cilíndrica Ø16</span></li>
+        <li><b>10</b><span>pastilha tam. 10</span></li>
+        <li><b>L</b><span>passo largo</span></li>
+      </ul>
+      <h3>Desenho técnico</h3>
+      <div class="drawing">${drawingSVG}</div>
+      <p class="note">Corpo e pastilhas vêm do arquivo STEP oficial da ferramenta, e as cotas vêm do desenho DXF. Parafuso, bit e chave foram modelados a partir das imagens do catálogo, e o canal de refrigeração é ilustrativo. Apresentação da i9 Ferramentas, distribuidor autorizado Sandvik Coromant. Projeto e animação: Marcos Felipe. CoroMill é marca registrada da Sandvik Coromant.</p>`;
+  } else if (c === 'cut') {
+    const n = Math.round((1000 * 180) / (Math.PI * 16));
+    const vf = Math.round(0.1 * 2 * n);
+    P.innerHTML = `
+      <p class="eyebrow">Capítulo 02 · usinagem</p>
+      <h2>Rebaixo em aço inox</h2>
+      <p class="text">A fresa entra com os 9 mm de profundidade máxima e deixa uma parede a 90° com fundo plano. O fluido sai pelos canais internos direto na aresta e ajuda a expulsar o cavaco.</p>
+      <div class="data">
+        <div><small>vc</small><b>180<i>m/min</i></b></div>
+        <div><small>n</small><b>${n.toLocaleString('pt-BR')}<i>rpm</i></b></div>
+        <div><small>fz</small><b>0,10<i>mm</i></b></div>
+        <div><small>vf</small><b>${vf}<i>mm/min</i></b></div>
+        <div><small>ap</small><b>9<i>mm</i></b></div>
+        <div><small>ae</small><b>6<i>mm</i></b></div>
+      </div>
+      <div class="controls">
+        <button class="btn" type="button" data-act="coolant" aria-pressed="${state.coolant}">Fluido</button>
+        <button class="btn" type="button" data-act="slow" aria-pressed="${state.slow === 60}">Câmera lenta 1:${state.slow}</button>
+        <button class="btn" type="button" data-act="sound" aria-pressed="${state.sound}">Som</button>
+      </div>
+      <p class="note">Dados de corte de exemplo para aço inoxidável. Use as recomendações do fabricante para a sua pastilha e classe. A rotação na animação está desacelerada para os dentes ficarem visíveis.</p>`;
+  } else if (c === 'explode') {
+    P.innerHTML = `
+      <p class="eyebrow">Capítulo 03 · componentes</p>
+      <h2>Vista explodida</h2>
+      <p class="text">A numeração segue o catálogo de peças de reposição.</p>
+      <ul class="parts">
+        <li><span class="n">1</span><b>Parafuso da pastilha <span class="pill in">incluído</span></b><code>5513 020-90 · 2 unidades · Torx Plus</code></li>
+        <li><span class="n">2</span><b>Bit <span class="pill in">incluído</span></b><code>5680 084-05 · 1 unidade</code></li>
+        <li><span class="n">3</span><b>Chave de torque para bits <span class="pill out">não incluída</span></b><code>5680 105-02 · 1 unidade</code></li>
+        <li><span class="n dim">–</span><b>Pastilha MS20 tamanho 10</b><code>2 por ferramenta · vendida à parte</code></li>
+        <li><span class="n dim">–</span><b>Corpo da fresa</b><code>MS20-R016A16-10L</code></li>
+      </ul>`;
+  } else if (c === 'assembly') {
+    P.innerHTML = `
+      <p class="eyebrow">Capítulo 04 · montagem</p>
+      <h2>Troca da pastilha</h2>
+      <ol class="steps">${ASSEMBLY_STEPS.map(([, s]) => `<li>${s}</li>`).join('')}</ol>
+      <p class="note">Use a chave de torque para não apertar demais nem de menos. A chave desarma com um clique no torque certo, o que protege o parafuso e o assento da pastilha.</p>`;
+  } else {
+    P.innerHTML = `
+      <p class="eyebrow">Capítulo 05 · explorar</p>
+      <h2 id="exTitle">Explore a fresa</h2>
+      <p class="text" id="exText">Arraste para girar, role para aproximar e clique numa peça para ver o que ela é.</p>
+      <label class="range" for="ex">Vista explodida<input id="ex" type="range" min="0" max="100" value="${Math.round(state.explode * 100)}"></label>
+      <div class="controls">
+        <button class="btn" type="button" data-act="xray" aria-pressed="${state.xray}">Raio-X</button>
+        <button class="btn" type="button" data-act="spin" aria-pressed="${state.spin}">Girar</button>
+        <button class="btn primary" type="button" data-act="replay">Ver apresentação de novo</button>
+      </div>`;
+  }
+  resize();
+}
+const PART_INFO = {
+  body: ['Corpo MS20-R016A16-10L', 'Haste cilíndrica Ø16 mm, comprimento de 100 mm e 2 alojamentos para pastilhas tamanho 10. Tem refrigeração interna.'],
+  insA: ['Pastilha MS20 tamanho 10', 'Pastilha intercambiável com geometria otimizada para inox e superligas. Profundidade de corte máxima de 9 mm.'],
+  insB: ['Pastilha MS20 tamanho 10', 'Pastilha intercambiável com geometria otimizada para inox e superligas. Profundidade de corte máxima de 9 mm.'],
+  scrA: ['(1) Parafuso 5513 020-90', 'Parafuso Torx Plus que prende a pastilha no alojamento. Vêm 2 com a ferramenta.'],
+  scrB: ['(1) Parafuso 5513 020-90', 'Parafuso Torx Plus que prende a pastilha no alojamento. Vêm 2 com a ferramenta.'],
+  bit: ['(2) Bit 5680 084-05', 'Ponta Torx Plus que encaixa na chave de torque. Vem 1 com a ferramenta.'],
+  wrench: ['(3) Chave de torque 5680 105-02', 'Chave para bits com limitador de torque. Não vem com a ferramenta.'],
+};
+
+const chapEl = $('chapters');
+chapEl.innerHTML = CHAPTERS.map((c, i) => `<li><button class="chap" type="button" data-ch="${i}"><span class="n">${String(i + 1).padStart(2, '0')}</span><span class="nm">${c.name}</span><i class="bar"><b></b></i></button></li>`).join('');
+const ICON_PAUSE = '<svg viewBox="0 0 24 24"><path d="M6 4h4v16H6zM14 4h4v16h-4z"/></svg>';
+const ICON_PLAY = '<svg viewBox="0 0 24 24"><path d="M7 4l13 8-13 8z"/></svg>';
+function renderTimeline() {
+  chapEl.querySelectorAll('.chap').forEach((b, i) => {
+    b.classList.toggle('on', i === state.ch);
+    b.setAttribute('aria-current', i === state.ch ? 'step' : 'false');
+  });
+  $('play').innerHTML = state.playing ? ICON_PAUSE : ICON_PLAY;
+  $('play').setAttribute('aria-label', state.playing ? 'Pausar' : 'Reproduzir');
+}
+let lastCaption = '';
+function caption(small, text) {
+  const html = text ? `<small>${small}</small>${text}` : '';
+  if (html === lastCaption) return;
+  lastCaption = html;
+  $('caption').innerHTML = html;
+}
+
+function goTo(i, auto = false) {
+  state.ch = i; state.t = 0; state.userCam = false; state.autoplay = auto;
+  state.selected = null;
+  if (CHAPTERS[i].id === 'cut') resetCut();
+  renderPanel(); renderTimeline();
+}
+
+/* ---------- Câmera por capítulo ---------- */
+const desired = { pos: V(0, 0, 0), target: V(0, 0, 0) };
+function orbit(target, az, el, dist) {
+  const f = isNarrow() ? 2.2 : 1;
+  desired.target.copy(target);
+  desired.pos.set(target.x + Math.sin(az) * Math.cos(el) * dist * f, target.y + Math.sin(el) * dist * f, target.z + Math.cos(az) * Math.cos(el) * dist * f);
+}
+function chainView(center, dist, lift, along) {
+  const a = SEATS.B.a, side = V(a.z, 0, -a.x).normalize();
+  const f = isNarrow() ? 1.9 : 1;
+  desired.target.copy(center);
+  desired.pos.copy(center).addScaledVector(side, dist * f).add(V(0, lift * f, 0)).addScaledVector(a, along * f);
+}
+
+/* ---------- Som (sintetizado) ---------- */
+function setSound(on) {
+  state.sound = on;
+  try {
+    if (on && !state.audio) {
+      const ctx = new (window.AudioContext || window.webkitAudioContext)();
+      const len = ctx.sampleRate * 2, buf = ctx.createBuffer(1, len, ctx.sampleRate), d = buf.getChannelData(0);
+      for (let i = 0; i < len; i++) d[i] = Math.random() * 2 - 1;
+      const noise = ctx.createBufferSource(); noise.buffer = buf; noise.loop = true;
+      const bp = ctx.createBiquadFilter(); bp.type = 'bandpass'; bp.frequency.value = 2400; bp.Q.value = 1.2;
+      const ng = ctx.createGain(); ng.gain.value = 0.12;
+      const tone = ctx.createOscillator(); tone.type = 'sawtooth'; tone.frequency.value = 119; // passagem dos dentes: 3.581 rpm × 2 / 60
+      const lp = ctx.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 900;
+      const tg = ctx.createGain(); tg.gain.value = 0.08;
+      const master = ctx.createGain(); master.gain.value = 0;
+      noise.connect(bp).connect(ng).connect(master);
+      tone.connect(lp).connect(tg).connect(master);
+      master.connect(ctx.destination);
+      noise.start(); tone.start();
+      state.audio = { ctx, master };
+    }
+    if (state.audio) state.audio.ctx.resume();
+  } catch (e) { state.sound = false; }
+}
+function soundLevel(v) {
+  if (!state.audio) return;
+  const { ctx, master } = state.audio;
+  master.gain.setTargetAtTime(state.sound ? v : 0, ctx.currentTime, 0.08);
+}
+
+/* ---------- Usinagem ---------- */
+let lastExit = { A: null, B: null };
+function resetCut() {
+  toolX = -72; toolY = 0; clearChips(); lastExit = { A: null, B: null };
+}
+const EXIT_ANGLE = Math.asin(WP.edge / 8); // saída do engajamento, na borda da peça
+function toothAngle(k) {
+  const s = SEATS[k];
+  return Math.atan2(s.c.z, s.c.x) - tool.rotation.y;
+}
+function cutStep(t, dt) {
+  const T = t % 15;
+  if (T < 12) { toolX = lerp(-72, 72, T / 12); toolY = 0; }
+  else if (T < 13) { toolX = 72; toolY = 26 * ease(T - 12); }
+  else if (T < 14.2) { toolX = lerp(72, -72, ease((T - 13) / 1.2)); toolY = 26; if (toolX < 0 && chips.some(c => c.mesh.visible)) clearChips(); }
+  else { toolX = -72; toolY = 26 * (1 - ease((T - 14.2) / 0.8)); }
+  tool.position.set(toolX, toolY, 0);
+  machine.children[0].position.set(toolX, toolY, 0);
+  strip.position.x = T < 13 || T >= 14.2 ? toolX : 400;
+  if (T >= 13 && T < 14.2) strip.position.x = -200; // peça nova
+  const omega = (3581 / 60) * TAU / state.slow;
+  tool.rotation.y -= omega * dt;
+  const engaged = toolY < 0.5 && toolX > WP.x0 - 7 && toolX < WP.x1;
+  for (const k of ['A', 'B']) {
+    const a = ((toothAngle(k) - EXIT_ANGLE) % TAU + TAU) % TAU;
+    if (lastExit[k] !== null && a < lastExit[k] && engaged && dt > 0) {
+      const n = 1 + (Math.random() < 0.4 ? 1 : 0);
+      for (let i = 0; i < n; i++) {
+        const p = V(toolX + 8 * Math.cos(EXIT_ANGLE), 1 + Math.random() * 7, WP.edge);
+        const v = V(-Math.sin(EXIT_ANGLE), 0, Math.cos(EXIT_ANGLE)).multiplyScalar(260 + Math.random() * 200).add(V((Math.random() - 0.3) * 80, 120 + Math.random() * 180, (Math.random() - 0.5) * 60));
+        spawnChip(p, v);
+      }
+    }
+    lastExit[k] = a;
+  }
+  updateChips(dt);
+  updateCoolant(dt, state.coolant && toolY < 20);
+  soundLevel(engaged ? 0.5 : 0.12);
+}
+
+/* ---------- Laço principal ---------- */
+const clock = new THREE.Clock();
+let flashUntil = 0;
+// Modo captura (#captura): o tempo avança por window.step(dt), quadro a quadro, para gravar vídeo.
+const CAPTURE = location.hash === '#captura';
+let simNow = 0;
+function frame(fixedDt) {
+  const dt = fixedDt ?? Math.min(clock.getDelta(), 0.05);
+  simNow += dt;
+  const now = simNow;
+  const ch = CHAPTERS[state.ch];
+  const id = ch.id;
+  if (state.playing) state.t += dt;
+  const t = state.t;
+
+  machine.visible = id === 'cut';
+  ground.position.y = id === 'cut' ? WP.bottom - 0.01 : -30;
+  if (id !== 'cut') { tool.position.set(0, 0, 0); soundLevel(0); }
+
+  let xray = 0;
+  if (id === 'intro') {
+    applyPose(explodedPose(0));
+    tool.rotation.y = 0;
+    const p = ease(seg(t, 3, 7));
+    const az = lerp(0.45, 1.05, p) + t * 0.025, el = lerp(0.3, 0.2, p);
+    orbit(V(0, lerp(9, 50, p), lerp(0, 0, p)), az, el, lerp(80, 250, p));
+    xray = ease(seg(t, 9.5, 10.5)) * (1 - ease(seg(t, 13.5, 14.5)));
+    const groups = [];
+    if (t > 7 && t < 9.5 || t > 14.5) groups.push('intro', 'dims');
+    if (t >= 9.5 && t <= 14.5) groups.push('xray', 'dims');
+    if (t < 7) caption('Sandvik Coromant · i9 Ferramentas, distribuidor autorizado', 'Pastilhas trocáveis, rebaixo a 90°');
+    else if (t < 9.5) caption('Dimensões do desenho técnico', 'Ø16 × 100 mm, até 9 mm de profundidade');
+    else if (t < 14.5) caption('Por dentro', 'O fluido chega direto na aresta de corte');
+    else caption('', '');
+    showLabels(groups);
+    dims.rotation.y = Math.atan2(camera.position.x, camera.position.z);
+    if (t >= ch.dur) state.autoplay ? goTo(1, true) : (state.t = 7.2);
+  } else if (id === 'cut') {
+    applyPose(explodedPose(0));
+    cutStep(t, state.playing ? dt : 0);
+    orbit(V(toolX * 0.5 - 8, 3, -8), 0.34 + Math.sin(t * 0.2) * 0.08, 0.36, 150);
+    showLabels([]);
+    caption(`Aço inoxidável · câmera lenta 1:${state.slow}`, t < 12 ? 'Rebaixo com 9 mm de profundidade' : 'Próxima peça');
+    if (t >= ch.dur && state.autoplay) goTo(2, true);
+  } else if (id === 'explode') {
+    // volta a ferramenta para a posição de referência sem pular
+    tool.rotation.y = lerp(tool.rotation.y, Math.round(tool.rotation.y / TAU) * TAU, 1 - Math.exp(-dt * 4));
+    const e = ease(seg(t, 0.4, 3));
+    applyPose(explodedPose(e));
+    chainView(SEATS.B.c.clone().addScaledVector(SEATS.B.a, 78), 330 - t * 3, 90, 10);
+    showLabels(t > 2.8 ? ['parts'] : []);
+    caption('Peças incluídas e acessórios', t < 3 ? 'Cada peça no seu lugar' : 'Parafuso, bit e chave de torque');
+    if (t >= ch.dur && state.autoplay) goTo(3, true);
+  } else if (id === 'assembly') {
+    tool.rotation.y = lerp(tool.rotation.y, Math.round(tool.rotation.y / TAU) * TAU, 1 - Math.exp(-dt * 4));
+    const pIns = 1 - ease(seg(t, 0.6, 3));
+    const approach = 1 - ease(seg(t, 3, 4.2));
+    const thread = 1 - seg(t, 4.2, 6.5);
+    const scr = approach * 20 + (approach > 0 ? 6 : 6 * thread);
+    const spin = -((6 - (approach > 0 ? 6 : 6 * thread)) / 0.45) * TAU - ease(seg(t, 9.2, 11.4)) * (Math.PI / 2);
+    const wr = EXPLODED.wr * (1 - ease(seg(t, 6.5, 7.5))) + 40 * (1 - ease(seg(t, 5.5, 6.8)));
+    const bitGap = EXPLODED.bit * (1 - ease(seg(t, 7.5, 9))) + 26 * ease(seg(t, 12.2, 14));
+    const wrSpin = -ease(seg(t, 9.2, 11.4)) * (Math.PI / 2);
+    applyPose({
+      insA: EXPLODED.ins * pIns, insB: EXPLODED.ins * pIns, scrA: scr, scrB: scr, spinA: spin, spinB: spin,
+      bit: bitGap, wr, wrSpin, tools: t > 5.5 && t < 14.6,
+    });
+    if (t > 11.4 && !state.flashed) { state.flashed = true; flashUntil = now + 1.3; }
+    if (t < 11.4) state.flashed = false;
+    const step = ASSEMBLY_STEPS.reduce((acc, [s], i) => (t >= s ? i : acc), 0);
+    document.querySelectorAll('.steps li').forEach((li, i) => { li.classList.toggle('on', i === step); li.classList.toggle('done', i < step); });
+    caption(`Passo ${String(step + 1).padStart(2, '0')}`, ASSEMBLY_STEPS[step][1]);
+    const far = ease(seg(t, 6, 7.5)) * (1 - ease(seg(t, 13, 15)));
+    const out = ease(seg(t, 14.5, 17));
+    const near = SEATS.B.c.clone().addScaledVector(SEATS.B.a, 5);
+    const mid = SEATS.B.c.clone().addScaledVector(SEATS.B.a, 45);
+    const c = near.clone().lerp(mid, far).lerp(V(0, 40, 0), out);
+    chainView(c, lerp(lerp(70, 210, far), 240, out), lerp(lerp(26, 60, far), 70, out), lerp(lerp(40, 20, far), 0, out));
+    showLabels([]);
+    if (t >= ch.dur) state.autoplay ? goTo(4, true) : (state.t = 0);
+  } else {
+    if (state.spin) tool.rotation.y -= dt * 0.8;
+    applyPose(explodedPose(state.explode));
+    orbit(V(0, 45, 20 * state.explode), 0.9, 0.22, 260 + state.explode * 80);
+    xray = state.xray ? 1 : 0;
+    showLabels(state.explode > 0.6 ? ['parts'] : []);
+    caption('', '');
+  }
+  $('flash').hidden = !(now < flashUntil);
+  $('flash').textContent = 'Clique · torque atingido';
+
+  // raio-X
+  MAT.body.transparent = xray > 0.01;
+  MAT.body.opacity = 1 - xray * 0.78;
+  MAT.body.depthWrite = xray < 0.5;
+  MAT.coolant.opacity = xray * 0.95;
+
+  // progresso na linha do tempo
+  chapEl.querySelectorAll('.chap .bar b').forEach((b, i) => {
+    b.style.width = i < state.ch ? '100%' : i === state.ch && ch.dur ? `${clamp(t / ch.dur) * 100}%` : '0%';
+  });
+
+  if (!state.userCam) {
+    const k = 1 - Math.exp(-dt * (id === 'cut' ? 5 : 2.6));
+    camera.position.lerp(desired.pos, k);
+    controls.target.lerp(desired.target, k);
+  }
+  controls.update();
+  keyLight.target.position.copy(controls.target);
+  keyLight.target.updateMatrixWorld();
+  renderer.render(scene, camera);
+  updateLabels();
+  if (!CAPTURE) requestAnimationFrame(() => frame());
+}
+
+/* ---------- Eventos ---------- */
+controls.addEventListener('start', () => { state.userCam = true; });
+chapEl.addEventListener('click', e => {
+  const b = e.target.closest('[data-ch]');
+  if (b) { goTo(+b.dataset.ch, false); state.playing = true; renderTimeline(); }
+});
+$('play').onclick = () => { state.playing = !state.playing; renderTimeline(); };
+$('panel').addEventListener('click', e => {
+  const act = e.target.closest('[data-act]')?.dataset.act;
+  if (!act) return;
+  if (act === 'coolant') state.coolant = !state.coolant;
+  if (act === 'slow') state.slow = state.slow === 20 ? 60 : 20;
+  if (act === 'sound') setSound(!state.sound);
+  if (act === 'xray') state.xray = !state.xray;
+  if (act === 'spin') state.spin = !state.spin;
+  if (act === 'replay') { goTo(0, true); state.playing = true; renderTimeline(); return; }
+  renderPanel();
+});
+$('panel').addEventListener('input', e => {
+  if (e.target.id === 'ex') { state.explode = e.target.value / 100; state.userCam = true; }
+});
+addEventListener('keydown', e => {
+  if (e.target.matches('input:not([type=range]), textarea')) return;
+  if (e.key === ' ') { e.preventDefault(); state.playing = !state.playing; renderTimeline(); }
+  if (e.key === 'ArrowRight') goTo(Math.min(4, state.ch + 1), false);
+  if (e.key === 'ArrowLeft') goTo(Math.max(0, state.ch - 1), false);
+});
+
+// Seleção de peças (capítulo Explorar)
+const raycaster = new THREE.Raycaster(), ndc = new THREE.Vector2();
+const PICKABLE = Object.entries(parts).map(([k, p]) => [k, p.group]);
+function pick(ev) {
+  const r = canvas.getBoundingClientRect();
+  ndc.set(((ev.clientX - r.left) / r.width) * 2 - 1, -((ev.clientY - r.top) / r.height) * 2 + 1);
+  raycaster.setFromCamera(ndc, camera);
+  const hits = raycaster.intersectObjects(PICKABLE.map(([, g]) => g).filter(g => g.visible !== false), true);
+  if (!hits.length) return null;
+  let o = hits[0].object;
+  while (o) { const f = PICKABLE.find(([, g]) => g === o); if (f) return f[0]; o = o.parent; }
+  return null;
+}
+let down = null;
+canvas.addEventListener('pointerdown', e => { down = { x: e.clientX, y: e.clientY }; });
+canvas.addEventListener('pointerup', e => {
+  if (!down) return;
+  const moved = Math.hypot(e.clientX - down.x, e.clientY - down.y); down = null;
+  if (moved > 6 || CHAPTERS[state.ch].id !== 'explore') return;
+  const k = pick(e);
+  const [title, text] = k ? PART_INFO[k] : ['Explore a fresa', 'Arraste para girar, role para aproximar e clique numa peça para ver o que ela é.'];
+  $('exTitle').textContent = title; $('exText').textContent = text;
+});
+canvas.addEventListener('pointermove', e => {
+  if (CHAPTERS[state.ch].id !== 'explore' || e.pointerType !== 'mouse' || down) { $('tip').hidden = true; return; }
+  const k = pick(e);
+  canvas.style.cursor = k ? 'pointer' : 'grab';
+  if (k) { $('tip').textContent = PART_INFO[k][0]; $('tip').style.left = e.clientX + 'px'; $('tip').style.top = e.clientY + 'px'; }
+  $('tip').hidden = !k;
+});
+
+// atalho para testes: window.seek(capítulo, segundos)
+window.seek = (i, t) => { goTo(i, false); state.t = t; state.userCam = false; };
+goTo(0, true);
+orbit(V(0, 9, 0), 0.45, 0.3, 80);
+camera.position.copy(desired.pos); controls.target.copy(desired.target);
+resize();
+if (CAPTURE) { window.step = dt => frame(dt); document.documentElement.classList.add('capture'); } else frame();
+</script>
+</body>
+</html>

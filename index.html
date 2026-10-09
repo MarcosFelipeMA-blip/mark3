@@ -1,0 +1,1138 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Raptor 3 Desmontável</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+  /* Visual único e deliberado: bancada de testes à noite. */
+  :root {
+    color-scheme: dark;
+    --bg: #0d1115;
+    --bg-2: #151c23;
+    --panel: rgba(17, 22, 28, 0.88);
+    --panel-solid: #11161c;
+    --line: rgba(164, 180, 196, 0.16);
+    --line-strong: rgba(164, 180, 196, 0.32);
+    --ink: #e6eaed;
+    --muted: #8e9aa6;
+    --copper: #e0915a;
+    --copper-ink: #1a0f08;
+    --lox: #86c8e6;
+    --ch4: #d9b06a;
+    --core: #b8c0c8;
+    --flame: #9a9cff;
+    --display: "Barlow Condensed", "Arial Narrow", "Roboto Condensed", sans-serif;
+    --body: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+    --mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+    --gutter: 16px;
+  }
+  [hidden] { display: none !important; }
+  * { box-sizing: border-box; }
+  html, body { height: 100%; }
+  body {
+    margin: 0;
+    background: radial-gradient(120% 90% at 50% 38%, var(--bg-2) 0%, var(--bg) 62%) fixed, var(--bg);
+    color: var(--ink);
+    font: 14px/1.5 var(--body);
+    overflow: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+  #app { position: fixed; inset: 0; }
+  #c { position: absolute; inset: 0; width: 100%; height: 100%; display: block; touch-action: none; outline: none; }
+
+  .brand {
+    position: absolute;
+    top: calc(env(safe-area-inset-top, 0px) + 18px);
+    left: calc(var(--gutter) + 8px);
+    pointer-events: none;
+    max-width: 300px;
+  }
+  .eyebrow {
+    margin: 0;
+    font: 500 11px/1.4 var(--mono);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .brand h1 {
+    margin: 2px 0 4px;
+    font: 700 52px/0.9 var(--display);
+    letter-spacing: 0.01em;
+    text-transform: uppercase;
+    text-wrap: balance;
+  }
+  .brand h1 span { color: var(--copper); }
+  .brand .lede { margin: 0; color: var(--muted); font-size: 13px; text-wrap: pretty; }
+
+  .panel {
+    position: absolute;
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+  }
+
+  /* Sequência */
+  #seq {
+    left: var(--gutter);
+    top: calc(env(safe-area-inset-top, 0px) + 150px);
+    width: 272px;
+    max-height: calc(100% - 150px - 96px - env(safe-area-inset-top, 0px));
+    display: flex;
+    flex-direction: column;
+  }
+  .panel-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 12px 14px 10px;
+    border-bottom: 1px solid var(--line);
+  }
+  .panel-head h2 {
+    margin: 0;
+    font: 600 15px/1.2 var(--display);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  #count { font: 500 11px/1 var(--mono); color: var(--muted); font-variant-numeric: tabular-nums; }
+  #list { list-style: none; margin: 0; padding: 6px; overflow-y: auto; display: grid; gap: 1px; }
+  .step {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 22px 8px 1fr auto;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 8px;
+    border: 0;
+    border-radius: 4px;
+    background: transparent;
+    color: var(--ink);
+    font: 400 13px/1.25 var(--body);
+    text-align: left;
+    cursor: pointer;
+  }
+  .step:hover { background: rgba(164, 180, 196, 0.08); }
+  .step:focus-visible { outline: 2px solid var(--copper); outline-offset: -2px; }
+  .step .n { font: 500 11px/1 var(--mono); color: var(--muted); font-variant-numeric: tabular-nums; }
+  .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--core); }
+  .dot.lox { background: var(--lox); }
+  .dot.ch4 { background: var(--ch4); }
+  .step .st { font: 500 10px/1 var(--mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+  .step.is-out .nm { color: var(--muted); text-decoration: line-through; text-decoration-color: rgba(164,180,196,.45); }
+  .step.is-next .st { color: var(--copper); }
+  .step.is-sel { background: rgba(224, 145, 90, 0.14); box-shadow: inset 2px 0 0 var(--copper); }
+  .legend {
+    display: flex; flex-wrap: wrap; gap: 4px 12px;
+    padding: 9px 14px 11px;
+    border-top: 1px solid var(--line);
+    font: 400 11px/1.3 var(--mono); color: var(--muted);
+  }
+  .legend span { display: inline-flex; align-items: center; gap: 6px; }
+
+  /* Ficha */
+  #info {
+    right: var(--gutter);
+    top: calc(env(safe-area-inset-top, 0px) + 16px);
+    width: 330px;
+    max-height: calc(100% - 16px - 96px - env(safe-area-inset-top, 0px));
+    overflow-y: auto;
+    padding: 16px 18px 18px;
+  }
+  #info h2 {
+    margin: 4px 0 8px;
+    font: 700 30px/1 var(--display);
+    text-transform: uppercase;
+    letter-spacing: 0.01em;
+    text-wrap: balance;
+  }
+  #info .kind { display: flex; align-items: center; gap: 8px; }
+  #info p.text { margin: 0 0 14px; color: #c9d0d6; text-wrap: pretty; }
+  .facts { margin: 0 0 14px; display: grid; grid-template-columns: auto 1fr; border-top: 1px solid var(--line); }
+  .facts dt, .facts dd { margin: 0; padding: 7px 0; border-bottom: 1px solid var(--line); }
+  .facts dt { font: 500 11px/1.5 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); padding-right: 14px; }
+  .facts dd { text-align: right; font-variant-numeric: tabular-nums; }
+  .facts dd b { font: 600 18px/1 var(--display); letter-spacing: 0.02em; }
+  .actions { display: flex; flex-wrap: wrap; gap: 8px; }
+  .note { margin: 14px 0 0; font-size: 11.5px; color: var(--muted); }
+
+  /* Barra de ferramentas */
+  #toolbar {
+    position: absolute;
+    left: 50%;
+    bottom: calc(env(safe-area-inset-bottom, 0px) + 16px);
+    transform: translateX(-50%);
+    width: max-content;
+    max-width: calc(100% - 2 * var(--gutter));
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 8px;
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+  }
+  .sep { width: 1px; align-self: stretch; background: var(--line); }
+  button.btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    min-height: 36px;
+    padding: 0 12px;
+    border: 1px solid var(--line-strong);
+    border-radius: 5px;
+    background: transparent;
+    color: var(--ink);
+    font: 500 13px/1 var(--body);
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background-color .15s, border-color .15s;
+  }
+  button.btn:hover { background: rgba(164, 180, 196, 0.1); }
+  button.btn:focus-visible { outline: 2px solid var(--copper); outline-offset: 2px; }
+  button.btn.primary { background: var(--copper); border-color: var(--copper); color: var(--copper-ink); font-weight: 600; }
+  button.btn.primary:hover { background: #eca173; }
+  button.btn[aria-pressed="true"] { border-color: var(--copper); color: var(--copper); background: rgba(224, 145, 90, 0.12); }
+  button.btn.fire[aria-pressed="true"] { border-color: var(--flame); color: #d9dbff; background: rgba(154, 156, 255, 0.16); }
+  kbd {
+    font: 500 10px/1 var(--mono);
+    padding: 3px 5px;
+    border: 1px solid currentColor;
+    border-radius: 3px;
+    opacity: 0.6;
+  }
+  .slider { display: inline-flex; align-items: center; gap: 10px; padding: 0 6px; color: var(--muted); font-size: 12px; white-space: nowrap; }
+  .slider input { width: 120px; accent-color: var(--copper); }
+  #bParts { display: none; }
+
+  /* Telemetria da ignição */
+  #readout {
+    position: absolute;
+    left: 50%;
+    top: calc(env(safe-area-inset-top, 0px) + 16px);
+    transform: translateX(-50%);
+    display: grid;
+    grid-template-columns: repeat(4, auto);
+    gap: 0;
+    background: var(--panel);
+    border: 1px solid rgba(154, 156, 255, 0.4);
+    border-radius: 6px;
+  }
+  #readout div { padding: 8px 16px; border-left: 1px solid var(--line); }
+  #readout div:first-child { border-left: 0; }
+  #readout small { display: block; font: 500 10px/1.3 var(--mono); letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
+  #readout b { font: 600 24px/1.1 var(--display); font-variant-numeric: tabular-nums; letter-spacing: 0.02em; }
+  #readout b i { font-style: normal; font-size: 14px; color: var(--muted); margin-left: 3px; }
+
+  #tip {
+    position: absolute;
+    pointer-events: none;
+    padding: 5px 9px;
+    background: var(--panel-solid);
+    border: 1px solid var(--line-strong);
+    border-radius: 4px;
+    font: 500 12px/1.2 var(--body);
+    white-space: nowrap;
+    transform: translate(14px, 14px);
+  }
+  #toast {
+    position: absolute;
+    left: 50%;
+    bottom: calc(env(safe-area-inset-bottom, 0px) + 84px);
+    transform: translateX(-50%);
+    max-width: calc(100% - 2 * var(--gutter));
+    padding: 9px 14px;
+    background: var(--panel-solid);
+    border: 1px solid var(--line-strong);
+    border-radius: 5px;
+    font-size: 13px;
+    text-align: center;
+  }
+  #loading {
+    position: absolute; inset: 0;
+    display: grid; place-items: center;
+    font: 500 12px/1 var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--muted);
+  }
+
+  @media (max-width: 1100px) {
+    #seq { width: 240px; }
+    #info { width: 290px; }
+  }
+  @media (max-width: 820px) {
+    .brand h1 { font-size: 38px; }
+    .brand .lede { display: none; }
+    #seq {
+      display: none;
+      top: calc(env(safe-area-inset-top, 0px) + 96px);
+      right: var(--gutter);
+      width: auto;
+      max-height: calc(100% - 96px - 150px - env(safe-area-inset-top, 0px));
+      z-index: 3;
+    }
+    #seq.open { display: flex; }
+    #info {
+      top: auto;
+      left: var(--gutter);
+      right: var(--gutter);
+      bottom: calc(env(safe-area-inset-bottom, 0px) + 24px + var(--tb, 104px));
+      width: auto;
+      max-height: 32%;
+      padding: 12px 14px 14px;
+    }
+    #info h2 { font-size: 24px; }
+    #info .note { display: none; }
+    #toolbar { width: calc(100% - 2 * var(--gutter)); }
+    #bParts { display: inline-flex; }
+    kbd { display: none; }
+    .slider input { width: 96px; }
+    .sep { display: none; }
+    #readout { top: calc(env(safe-area-inset-top, 0px) + 92px); grid-template-columns: repeat(2, auto); }
+    #readout div:nth-child(3) { border-left: 0; }
+    #readout div:nth-child(n+3) { border-top: 1px solid var(--line); }
+    #toast { bottom: auto; top: calc(env(safe-area-inset-top, 0px) + 92px); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    button.btn { transition: none; }
+  }
+</style>
+</head>
+<body>
+<div id="app">
+  <canvas id="c" tabindex="0" aria-label="Modelo 3D do motor Raptor 3. Arraste para girar, role para aproximar, clique numa peça para selecionar."></canvas>
+  <div id="loading">Carregando motor…</div>
+
+  <header class="brand">
+    <p class="eyebrow">SpaceX · metano / oxigênio</p>
+    <h1>Raptor <span>3</span></h1>
+    <p class="lede">Desmonte o motor peça por peça. Clique em qualquer componente para ver o que ele faz; clique duas vezes para tirá-lo.</p>
+  </header>
+
+  <aside id="seq" class="panel" aria-label="Sequência de desmontagem">
+    <div class="panel-head">
+      <h2>Sequência de desmontagem</h2>
+      <span id="count">0/14</span>
+    </div>
+    <ol id="list"></ol>
+    <div class="legend">
+      <span><i class="dot lox"></i>Oxigênio</span>
+      <span><i class="dot ch4"></i>Metano</span>
+      <span><i class="dot"></i>Estrutura / núcleo</span>
+    </div>
+  </aside>
+
+  <aside id="info" class="panel" aria-live="polite"></aside>
+
+  <div id="readout" hidden>
+    <div><small>T+</small><b id="rT">0,0<i>s</i></b></div>
+    <div><small>Pressão câmara</small><b id="rPc">0<i>bar</i></b></div>
+    <div><small>Empuxo</small><b id="rF">0<i>tf</i></b></div>
+    <div><small>Razão O/F</small><b id="rOF">3,6</b></div>
+  </div>
+
+  <nav id="toolbar" aria-label="Controles">
+    <button class="btn" id="bParts" type="button" aria-pressed="false">Peças</button>
+    <button class="btn primary" id="bNext" type="button">Desmontar próxima <kbd>D</kbd></button>
+    <button class="btn" id="bUndo" type="button">Recolocar <kbd>R</kbd></button>
+    <button class="btn" id="bAll" type="button">Montar tudo <kbd>M</kbd></button>
+    <span class="sep"></span>
+    <label class="slider" for="explode">Vista explodida <input id="explode" type="range" min="0" max="100" value="0"></label>
+    <span class="sep"></span>
+    <button class="btn" id="bCut" type="button" aria-pressed="false">Corte <kbd>C</kbd></button>
+    <button class="btn fire" id="bFire" type="button" aria-pressed="false">Ignição <kbd>I</kbd></button>
+  </nav>
+
+  <div id="tip" hidden></div>
+  <div id="toast" hidden role="status"></div>
+</div>
+
+<script type="importmap">
+{ "imports": {
+  "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+} }
+</script>
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+
+const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* ---------- Renderizador, cena, câmera ---------- */
+const canvas = document.getElementById('c');
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.05;
+renderer.localClippingEnabled = true;
+
+const scene = new THREE.Scene();
+scene.fog = new THREE.Fog(0x0d1115, 10, 24);
+const pmrem = new THREE.PMREMGenerator(renderer);
+scene.environment = pmrem.fromScene(new RoomEnvironment(renderer), 0.04).texture;
+
+const key = new THREE.DirectionalLight(0xfff0e0, 1.4);
+key.position.set(4, 6, 3);
+scene.add(key);
+const rim = new THREE.DirectionalLight(0x8fb0ff, 0.9);
+rim.position.set(-4, 2, -5);
+scene.add(rim);
+
+const camera = new THREE.PerspectiveCamera(38, 1, 0.05, 100);
+const HOME = new THREE.Vector3(0, 1.45, 0);
+const controls = new OrbitControls(camera, canvas);
+controls.enableDamping = true;
+controls.dampingFactor = 0.08;
+controls.minDistance = 1.2;
+controls.maxDistance = 14;
+controls.target.copy(HOME);
+
+function frameCamera() {
+  const narrow = innerWidth / innerHeight < 0.85;
+  const dir = new THREE.Vector3(3.3, 1.5, 4.8).normalize();
+  const dist = narrow ? 10.5 : 7.2;
+  camera.position.copy(HOME).addScaledVector(dir, dist);
+  if (narrow) camera.position.y += 0.6;
+  controls.target.copy(HOME);
+}
+function resize() {
+  renderer.setSize(innerWidth, innerHeight, false);
+  camera.aspect = innerWidth / innerHeight;
+  camera.updateProjectionMatrix();
+}
+addEventListener('resize', resize);
+resize();
+frameCamera();
+
+const grid = new THREE.PolarGridHelper(3.4, 16, 8, 96, 0x2c3845, 0x1b232b);
+grid.position.y = -2.2;
+scene.add(grid);
+
+/* ---------- Geometria auxiliar ---------- */
+const V = (x, y, z) => new THREE.Vector3(x, y, z);
+const TAU = Math.PI * 2;
+
+function lathe(pts, segs = 96) {
+  return new THREE.LatheGeometry(pts.map(([r, y]) => new THREE.Vector2(r, y)), segs);
+}
+function cyl(rt, rb, h, y = 0, x = 0, z = 0, seg = 48) {
+  const g = new THREE.CylinderGeometry(rt, rb, h, seg);
+  g.translate(x, y, z);
+  return g;
+}
+function ring(R, r, y, x = 0, z = 0) {
+  const g = new THREE.TorusGeometry(R, r, 16, 96);
+  g.rotateX(Math.PI / 2);
+  g.translate(x, y, z);
+  return g;
+}
+function between(a, b, r, seg = 24) {
+  a = V(...a); b = V(...b);
+  const d = b.clone().sub(a);
+  const g = new THREE.CylinderGeometry(r, r, d.length(), seg);
+  g.applyQuaternion(new THREE.Quaternion().setFromUnitVectors(V(0, 1, 0), d.clone().normalize()));
+  const m = a.clone().add(b).multiplyScalar(0.5);
+  g.translate(m.x, m.y, m.z);
+  return g;
+}
+function sphere(r, x, y, z, sy = 1) {
+  const g = new THREE.SphereGeometry(r, 32, 16);
+  g.scale(1, sy, 1);
+  g.translate(x, y, z);
+  return g;
+}
+function dome(r, y, x = 0, z = 0, sy = 1) {
+  const g = new THREE.SphereGeometry(r, 48, 16, 0, TAU, 0, Math.PI / 2);
+  g.scale(1, sy, 1);
+  g.translate(x, y, z);
+  return g;
+}
+function box(w, h, d, x, y, z) {
+  const g = new THREE.BoxGeometry(w, h, d);
+  g.translate(x, y, z);
+  return g;
+}
+// Tubo ao longo de uma curva, com flanges nas duas pontas.
+function pipe(add, pts, r, mat, flangeMat = 'bolt') {
+  const curve = new THREE.CatmullRomCurve3(pts.map(p => V(...p)));
+  add(new THREE.TubeGeometry(curve, 96, r, 20, false), mat);
+  for (const u of [0, 1]) {
+    const p = curve.getPointAt(u), t = curve.getTangentAt(u).multiplyScalar(0.014);
+    add(between(p.clone().sub(t).toArray(), p.clone().add(t).toArray(), r * 1.4, 32), flangeMat);
+  }
+  return curve;
+}
+
+/* ---------- Materiais ---------- */
+const MATS = {
+  steel:   { color: 0xb9c0c7, metalness: 0.9,  roughness: 0.3 },
+  nozzle:  { color: 0x6e6964, metalness: 0.85, roughness: 0.42 },
+  copper:  { color: 0xc0703f, metalness: 1.0,  roughness: 0.28 },
+  inconel: { color: 0x90969d, metalness: 0.9,  roughness: 0.36 },
+  hot:     { color: 0x7d7a77, metalness: 0.8,  roughness: 0.48 },
+  dark:    { color: 0x2b2f34, metalness: 0.5,  roughness: 0.55 },
+  bolt:    { color: 0xd3d7db, metalness: 1.0,  roughness: 0.22 },
+  lox:     { color: 0xa9c3cf, metalness: 0.85, roughness: 0.3 },
+  ch4:     { color: 0xc4b08e, metalness: 0.85, roughness: 0.32 },
+};
+const ACCENT = new THREE.Color(0xe0915a);
+
+/* ---------- Dados das peças (ordem = sequência de desmontagem) ---------- */
+const PARTS = [
+  {
+    id: 'act', name: 'Atuadores de TVC', side: 'core', kind: 'Controle do vetor de empuxo',
+    out: [0, 0.3, -2.0],
+    text: 'Dois atuadores eletromecânicos, montados a 90° um do outro, empurram o motor em torno do gimbal para apontar o jato. Assim o veículo controla arfagem e guinada. A Starship trocou os atuadores hidráulicos por elétricos.',
+    facts: [['Acionamento', 'Elétrico'], ['Eixos', '2 (arfagem e guinada)'], ['Fixação', 'Estrutura de empuxo do veículo']],
+    build(add) {
+      add(ring(0.268, 0.02, 1.8), 'steel');
+      for (const s of [-1, 1]) {
+        const A = [s * 0.39, 3.08, -0.39], B = [s * 0.2, 1.8, -0.2];
+        const M = A.map((a, i) => a + (B[i] - a) * 0.55);
+        add(between(A, M, 0.045), 'dark');
+        add(between(M, B, 0.022), 'bolt');
+        const C = A.map((a, i) => a + (B[i] - a) * 0.12);
+        add(between(A, C, 0.062), 'steel');
+        add(sphere(0.034, ...A), 'bolt');
+        add(sphere(0.03, ...B), 'bolt');
+      }
+    },
+  },
+  {
+    id: 'loxline', name: 'Linha de admissão de LOX', side: 'lox', kind: 'Alimentação · oxigênio',
+    out: [-1.0, 1.1, 0.9],
+    text: 'Traz oxigênio líquido do tanque até a turbobomba de oxigênio. A válvula principal de oxigênio fica nesta linha e abre numa sequência controlada durante a partida.',
+    facts: [['Fluido', 'Oxigênio líquido'], ['Temperatura', '≈ −183 °C'], ['Parcela da vazão', '≈ 78%']],
+    build(add) {
+      pipe(add, [[-0.22, 3.04, 0.28], [-0.34, 2.72, 0.46], [-0.62, 2.25, 0.42], [-0.6, 1.98, 0.25], [-0.5, 1.88, 0.15]], 0.07, 'lox');
+      add(cyl(0.11, 0.11, 0.07, 3.06, -0.22, 0.28), 'bolt');
+      // válvula principal de oxigênio
+      add(sphere(0.105, -0.45, 2.52, 0.46), 'steel');
+      add(box(0.12, 0.1, 0.1, -0.52, 2.62, 0.56), 'dark');
+    },
+  },
+  {
+    id: 'ch4line', name: 'Linha de admissão de metano', side: 'ch4', kind: 'Alimentação · metano',
+    out: [1.0, 1.1, 0.9],
+    text: 'Leva metano líquido até a turbobomba de combustível. O metano queima limpo e não deixa fuligem nas turbinas, o que facilita reutilizar o motor voo após voo.',
+    facts: [['Fluido', 'Metano líquido'], ['Temperatura', '≈ −162 °C'], ['Parcela da vazão', '≈ 22%']],
+    build(add) {
+      pipe(add, [[0.22, 3.04, 0.28], [0.34, 2.72, 0.46], [0.62, 2.25, 0.42], [0.6, 1.98, 0.25], [0.5, 1.88, 0.15]], 0.06, 'ch4');
+      add(cyl(0.095, 0.095, 0.07, 3.06, 0.22, 0.28), 'bolt');
+      add(sphere(0.095, 0.45, 2.52, 0.46), 'steel');
+      add(box(0.12, 0.1, 0.1, 0.52, 2.62, 0.56), 'dark');
+    },
+  },
+  {
+    id: 'oxduct', name: 'Duto de gás rico em oxigênio', side: 'lox', kind: 'Gás quente · lado do oxigênio',
+    out: [-1.0, 0.4, 1.4],
+    text: 'Depois de girar a turbina da bomba de oxigênio, o gás quente e rico em oxigênio desce por este duto até o injetor principal. Oxigênio quente sob pressão ataca quase qualquer metal, por isso esse lado usa superligas desenvolvidas pela própria SpaceX.',
+    facts: [['Conteúdo', 'O₂ gasoso + H₂O + CO₂'], ['Origem', 'Turbina da bomba de LOX'], ['Destino', 'Injetor principal']],
+    build(add) {
+      pipe(add, [[-0.5, 2.4, 0.16], [-0.42, 2.38, 0.27], [-0.2, 2.26, 0.24], [-0.06, 2.2, 0.12]], 0.055, 'hot');
+    },
+  },
+  {
+    id: 'fuelduct', name: 'Duto de gás rico em metano', side: 'ch4', kind: 'Gás quente · lado do metano',
+    out: [1.0, 0.4, 1.4],
+    text: 'Leva o gás rico em metano que sai da turbina de combustível até o injetor. No Raptor 3 esses dutos foram integrados ao corpo do motor, o que eliminou flanges, vedações e o escudo térmico externo.',
+    facts: [['Conteúdo', 'CH₄ gasoso + H₂O + CO₂'], ['Origem', 'Turbina da bomba de CH₄'], ['Destino', 'Injetor principal']],
+    build(add) {
+      pipe(add, [[0.5, 2.4, 0.16], [0.42, 2.38, 0.27], [0.2, 2.26, 0.24], [0.06, 2.2, 0.12]], 0.055, 'hot');
+    },
+  },
+  {
+    id: 'oxpb', name: 'Pré-queimador rico em oxigênio', side: 'lox', kind: 'Combustão preliminar',
+    out: [-1.5, 0.8, -0.5],
+    text: 'Queima todo o oxigênio com uma pequena fração do metano. O gás sai muito rico em oxigênio e frio o bastante para não destruir a turbina da bomba de oxigênio, que ele aciona logo abaixo.',
+    facts: [['Mistura', 'Muito rica em O₂'], ['Aciona', 'Turbina da bomba de LOX'], ['Ignição', 'Ignitor por centelha']],
+    build(add) { preburner(add, -1); },
+  },
+  {
+    id: 'fuelpb', name: 'Pré-queimador rico em metano', side: 'ch4', kind: 'Combustão preliminar',
+    out: [1.5, 0.8, -0.5],
+    text: 'Queima todo o metano com uma pequena fração do oxigênio. O gás rico em combustível aciona a turbina da bomba de metano. Nenhum propelente sai do motor sem passar pela câmara principal: é o ciclo de fluxo total.',
+    facts: [['Mistura', 'Muito rica em CH₄'], ['Aciona', 'Turbina da bomba de CH₄'], ['Ignição', 'Ignitor por centelha']],
+    build(add) { preburner(add, 1); },
+  },
+  {
+    id: 'loxtp', name: 'Turbobomba de oxigênio', side: 'lox', kind: 'Pressurização · oxigênio',
+    out: [-1.8, -0.3, 0],
+    text: 'Turbina e bomba no mesmo eixo. A bomba eleva a pressão do oxigênio líquido bem acima da pressão da câmara e o envia ao pré-queimador. Ative o Corte para ver o eixo, os rotores da bomba e o disco da turbina.',
+    facts: [['Tipo', 'Bomba centrífuga + turbina'], ['Acionada por', 'Gás rico em O₂'], ['Descarga', 'Pré-queimador de O₂']],
+    build(add) { turbopump(add, -1); },
+  },
+  {
+    id: 'ch4tp', name: 'Turbobomba de metano', side: 'ch4', kind: 'Pressurização · metano',
+    out: [1.8, -0.3, 0],
+    text: 'Pressuriza o metano, que primeiro circula pelos canais de arrefecimento da câmara e do bocal e depois alimenta o pré-queimador rico em combustível.',
+    facts: [['Tipo', 'Bomba centrífuga + turbina'], ['Acionada por', 'Gás rico em CH₄'], ['Descarga', 'Canais de arrefecimento']],
+    build(add) { turbopump(add, 1); },
+  },
+  {
+    id: 'puck', name: 'Bloco de empuxo e gimbal', side: 'core', kind: 'Estrutura',
+    out: [0, 1.3, 0],
+    text: 'Transmite toda a força do motor ao veículo por uma junta esférica. É a peça que carrega as cerca de 280 toneladas-força de empuxo e permite que o motor gire para os lados.',
+    facts: [['Carga', '≈ 2,75 MN'], ['Junta', 'Esférica (gimbal)'], ['Liga', 'Aço / superliga']],
+    build(add) {
+      add(cyl(0.34, 0.2, 0.42, 2.51), 'steel');
+      add(cyl(0.37, 0.37, 0.06, 2.75), 'steel');
+      for (let i = 0; i < 16; i++) {
+        const a = (i / 16) * TAU;
+        add(cyl(0.013, 0.013, 0.03, 2.79, Math.cos(a) * 0.34, Math.sin(a) * 0.34, 10), 'bolt');
+      }
+      add(box(0.05, 0.14, 0.2, -0.1, 2.85, 0), 'dark');
+      add(box(0.05, 0.14, 0.2, 0.1, 2.85, 0), 'dark');
+      add(sphere(0.085, 0, 2.87, 0), 'bolt');
+      add(cyl(0.2, 0.2, 0.05, 2.97), 'steel');
+    },
+  },
+  {
+    id: 'injector', name: 'Injetor principal', side: 'core', kind: 'Mistura dos propelentes',
+    out: [0, 1.0, 1.5],
+    text: 'Recebe os dois gases quentes que vêm dos pré-queimadores e os mistura na face do injetor, por um padrão de elementos coaxiais. Como os dois propelentes já chegam em forma de gás, a mistura é rápida e a combustão, estável.',
+    facts: [['Entradas', 'Gás rico em O₂ e em CH₄'], ['Elementos', 'Coaxiais'], ['Estado dos propelentes', 'Gás–gás']],
+    build(add, p) {
+      add(cyl(0.275, 0.275, 0.1, 2.03), 'steel');
+      add(dome(0.25, 2.08, 0, 0, 0.6), 'steel');
+      for (let i = 0; i < 24; i++) {
+        const a = (i / 24) * TAU;
+        add(cyl(0.011, 0.011, 0.03, 2.095, Math.cos(a) * 0.258, Math.sin(a) * 0.258, 10), 'bolt');
+      }
+      const face = new THREE.CircleGeometry(0.244, 64);
+      face.rotateX(Math.PI / 2);
+      face.translate(0, 1.979, 0);
+      add(face, 'copper');
+      // elementos do injetor em anéis concêntricos
+      const pts = [];
+      for (const [r, n] of [[0, 1], [0.05, 8], [0.095, 14], [0.14, 20], [0.185, 26], [0.225, 32]])
+        for (let i = 0; i < n; i++) pts.push([Math.cos((i / n) * TAU) * r, Math.sin((i / n) * TAU) * r]);
+      const el = new THREE.CylinderGeometry(0.009, 0.009, 0.012, 10);
+      const inst = new THREE.InstancedMesh(el, p.mat('bolt'), pts.length);
+      const m = new THREE.Matrix4();
+      pts.forEach(([x, z], i) => inst.setMatrixAt(i, m.makeTranslation(x, 1.974, z)));
+      add(inst);
+    },
+  },
+  {
+    id: 'manifold', name: 'Coletor de arrefecimento', side: 'ch4', kind: 'Arrefecimento regenerativo',
+    out: [0, -1.0, -1.4],
+    text: 'Distribui metano frio pelos canais nas paredes do bocal e da câmara. O propelente absorve o calor da parede antes de ser queimado, o chamado arrefecimento regenerativo.',
+    facts: [['Fluido', 'Metano'], ['Função', 'Distribuir o fluxo nos canais'], ['Posição', 'Junção câmara–bocal']],
+    build(add) {
+      add(ring(0.262, 0.045, 1.13), 'ch4');
+      for (const a of [0.4, 2.5, 4.6]) {
+        const c = Math.cos(a), s = Math.sin(a);
+        add(between([c * 0.3, 1.13, s * 0.3], [c * 0.4, 1.13, s * 0.4], 0.028), 'ch4');
+        add(between([c * 0.4, 1.13, s * 0.4], [c * 0.42, 1.13, s * 0.42], 0.04), 'bolt');
+      }
+    },
+  },
+  {
+    id: 'chamber', name: 'Câmara de combustão principal', side: 'core', kind: 'Combustão',
+    out: [0, -0.2, 1.8],
+    text: 'Onde os dois gases se encontram e queimam. A garganta, o ponto mais estreito, acelera o escoamento até a velocidade do som. A parede interna é uma liga de cobre com canais de arrefecimento usinados.',
+    facts: [['Pressão', '≈ 350 bar'], ['Gases', '> 3.000 °C'], ['Parede interna', 'Liga de cobre']],
+    build(add) {
+      const pts = [];
+      for (let i = 0; i <= 14; i++) { const s = i / 14; pts.push([0.14 + 0.095 * (0.5 + 0.5 * Math.cos(Math.PI * s)), 1.15 + 0.21 * s]); }
+      for (let i = 1; i <= 14; i++) { const s = i / 14; pts.push([0.14 + 0.105 * (0.5 - 0.5 * Math.cos(Math.PI * s)), 1.36 + 0.2 * s]); }
+      pts.push([0.245, 1.98]);
+      add(lathe(pts, 128), 'copper');
+      add(ring(0.25, 0.012, 1.7), 'steel');
+      add(ring(0.25, 0.012, 1.88), 'steel');
+      add(ring(0.25, 0.014, 1.97), 'steel');
+    },
+  },
+  {
+    id: 'nozzle', name: 'Bocal', side: 'core', kind: 'Expansão dos gases',
+    out: [0, -1.45, 0],
+    text: 'Expande o gás quente e converte pressão em velocidade. Este é o bocal de nível do mar; o Raptor 3 de vácuo usa um bocal bem maior. As nervuras verticais são os canais de arrefecimento na parede.',
+    facts: [['Diâmetro de saída', '≈ 1,3 m'], ['Arrefecimento', 'Regenerativo'], ['Versão', 'Nível do mar']],
+    build(add) {
+      const R = s => 0.235 + 0.415 * Math.sin((s * Math.PI) / 2); // s = 0 no topo, 1 na saída
+      const pts = [];
+      for (let i = 0; i <= 44; i++) { const y = (1.15 * i) / 44; pts.push([R(1 - y / 1.15), y]); }
+      const g = lathe(pts, 288);
+      const pos = g.attributes.position;
+      for (let i = 0; i < pos.count; i++) {
+        const x = pos.getX(i), z = pos.getZ(i);
+        const k = 1 + 0.007 * Math.abs(Math.sin(Math.atan2(z, x) * 72));
+        pos.setXYZ(i, x * k, pos.getY(i), z * k);
+      }
+      g.computeVertexNormals();
+      add(g, 'nozzle');
+      for (const s of [0.35, 0.7]) add(ring(R(s) + 0.008, 0.012, 1.15 * (1 - s)), 'hot');
+      add(ring(0.655, 0.014, 0.0), 'hot');
+    },
+  },
+];
+
+function preburner(add, sx) {
+  const x = sx * 0.5;
+  add(cyl(0.115, 0.115, 0.3, 2.62, x), 'inconel');
+  add(dome(0.115, 2.77, x), 'inconel');
+  add(ring(0.12, 0.014, 2.5, x), 'bolt');
+  add(ring(0.12, 0.014, 2.74, x), 'bolt');
+  add(cyl(0.022, 0.022, 0.1, 2.92, x), 'dark');
+  add(cyl(0.032, 0.032, 0.025, 2.97, x), 'bolt');
+}
+
+function turbopump(add, sx) {
+  const x = sx * 0.5, fluid = sx < 0 ? 'lox' : 'ch4';
+  add(cyl(0.13, 0.13, 0.55, 2.055, x), 'inconel');
+  add(ring(0.14, 0.066, 1.86, x), fluid);
+  add(cyl(0.165, 0.165, 0.14, 2.4, x), 'hot');
+  add(ring(0.168, 0.012, 2.33, x), 'bolt');
+  add(ring(0.168, 0.012, 2.47, x), 'bolt');
+  // descarga da bomba até o pré-queimador
+  pipe(add, [[x + sx * 0.2, 1.86, 0], [x + sx * 0.3, 2.1, 0], [x + sx * 0.28, 2.6, 0], [x + sx * 0.12, 2.7, 0]], 0.04, fluid);
+  // interior, visível no modo Corte
+  add(cyl(0.024, 0.024, 0.68, 2.12, x, 0, 16), 'bolt');
+  add(cyl(0.1, 0.1, 0.02, 1.87, x), 'copper');
+  add(cyl(0.09, 0.09, 0.02, 1.96, x), 'copper');
+  add(cyl(0.14, 0.14, 0.022, 2.4, x), 'copper');
+}
+
+/* ---------- Monta o motor ---------- */
+const engine = new THREE.Group();
+scene.add(engine);
+const parts = [];
+
+for (const def of PARTS) {
+  const group = new THREE.Group();
+  const p = {
+    ...def, group, mats: [], t: 0, removed: false,
+    out: V(...def.out),
+    plane: new THREE.Plane(V(0, 0, -1), 1e3),
+  };
+  p.mat = key => {
+    const m = new THREE.MeshStandardMaterial({ ...MATS[key], side: THREE.DoubleSide, clippingPlanes: [p.plane] });
+    p.mats.push(m);
+    return m;
+  };
+  const add = (geo, key) => {
+    const mesh = geo.isMesh ? geo : new THREE.Mesh(geo, p.mat(key));
+    mesh.userData.pid = p.id;
+    group.add(mesh);
+    return mesh;
+  };
+  def.build(add, p);
+  engine.add(group);
+  parts.push(p);
+}
+const byId = Object.fromEntries(parts.map(p => [p.id, p]));
+
+/* ---------- Chama ---------- */
+const flameVert = `
+  varying vec2 vUv; varying vec3 vN; varying vec3 vV;
+  void main() {
+    vUv = uv;
+    vec4 wp = modelMatrix * vec4(position, 1.0);
+    vN = normalize(mat3(modelMatrix) * normal);
+    vV = normalize(cameraPosition - wp.xyz);
+    gl_Position = projectionMatrix * viewMatrix * wp;
+  }`;
+const flameFrag = `
+  uniform float uTime, uPower, uDiamonds, uGain;
+  uniform vec3 uCore, uEdge;
+  varying vec2 vUv; varying vec3 vN; varying vec3 vV;
+  float hash(vec2 p) { return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
+  float noise(vec2 p) {
+    vec2 i = floor(p), f = fract(p); f = f * f * (3.0 - 2.0 * f);
+    return mix(mix(hash(i), hash(i + vec2(1, 0)), f.x), mix(hash(i + vec2(0, 1)), hash(i + vec2(1, 1)), f.x), f.y);
+  }
+  void main() {
+    float v = 1.0 - vUv.y;
+    float rimF = pow(abs(dot(normalize(vN), vV)), 1.7);
+    float fall = pow(1.0 - v, 1.6) * smoothstep(0.0, 0.03, v + 0.01);
+    float n = noise(vec2(vUv.x * 10.0, v * 7.0 - uTime * 11.0));
+    float d = uDiamonds * smoothstep(0.6, 1.0, 0.5 + 0.5 * cos(v * 34.0)) * pow(1.0 - v, 2.0);
+    float a = (rimF * fall * (0.6 + 0.4 * n) + d * rimF) * uPower * uGain;
+    vec3 col = mix(uEdge, uCore, clamp(rimF * fall * 1.2 + d, 0.0, 1.0));
+    gl_FragColor = vec4(col * a, a);
+  }`;
+function flameMat(core, edge, diamonds, gain) {
+  return new THREE.ShaderMaterial({
+    uniforms: {
+      uTime: { value: 0 }, uPower: { value: 0 }, uDiamonds: { value: diamonds }, uGain: { value: gain },
+      uCore: { value: new THREE.Color(core) }, uEdge: { value: new THREE.Color(edge) },
+    },
+    vertexShader: flameVert, fragmentShader: flameFrag,
+    transparent: true, depthWrite: false, blending: THREE.AdditiveBlending,
+  });
+}
+const flame = new THREE.Group();
+flame.visible = false;
+engine.add(flame);
+const flameMats = [];
+function flameCone(rTop, rBot, h, core, edge, diamonds, gain) {
+  const g = new THREE.CylinderGeometry(rTop, rBot, h, 64, 40, true);
+  g.translate(0, -h / 2, 0);
+  const m = flameMat(core, edge, diamonds, gain);
+  flameMats.push(m);
+  const mesh = new THREE.Mesh(g, m);
+  flame.add(mesh);
+  return mesh;
+}
+const plumeOuter = flameCone(0.63, 1.15, 4.6, 0x9fb4ff, 0x4b36d8, 0.0, 1.4);
+const plumeCore = flameCone(0.5, 0.26, 2.4, 0xf1f4ff, 0x8a86ff, 1.0, 1.8);
+// brilho dentro do bocal
+const innerGlow = new THREE.Mesh(
+  lathe([[0.13, 1.36], [0.3, 0.9], [0.5, 0.4], [0.6, 0.02]], 64),
+  new THREE.MeshBasicMaterial({ color: 0x7c86ff, transparent: true, opacity: 0, side: THREE.BackSide, blending: THREE.AdditiveBlending, depthWrite: false })
+);
+flame.add(innerGlow);
+// discos de choque (diamantes de Mach)
+const spriteTex = (() => {
+  const c = document.createElement('canvas'); c.width = c.height = 64;
+  const x = c.getContext('2d');
+  const gr = x.createRadialGradient(32, 32, 0, 32, 32, 32);
+  gr.addColorStop(0, 'rgba(255,255,255,1)'); gr.addColorStop(0.35, 'rgba(200,205,255,0.6)'); gr.addColorStop(1, 'rgba(120,110,255,0)');
+  x.fillStyle = gr; x.fillRect(0, 0, 64, 64);
+  return new THREE.CanvasTexture(c);
+})();
+const diamonds = [-0.5, -1.05, -1.6, -2.1].map((y, i) => {
+  const s = new THREE.Sprite(new THREE.SpriteMaterial({ map: spriteTex, color: 0xdfe3ff, transparent: true, blending: THREE.AdditiveBlending, depthWrite: false, opacity: 0 }));
+  s.position.y = y;
+  s.scale.set(0.42 - i * 0.05, 0.62 - i * 0.07, 1);
+  s.userData.k = 1 - i * 0.2;
+  flame.add(s);
+  return s;
+});
+const plumeLight = new THREE.PointLight(0x8f9cff, 0, 9, 1.6);
+plumeLight.position.y = -0.6;
+engine.add(plumeLight);
+
+/* ---------- Estado ---------- */
+const state = { explode: 0, cut: false, selected: null, hovered: null, stack: [], firing: false, pendingFire: false, power: 0, fireStart: 0, sound: null };
+let focusTo = null;
+
+const $ = id => document.getElementById(id);
+const listEl = $('list'), infoEl = $('info'), tipEl = $('tip'), toastEl = $('toast');
+const fmt = (n, d = 0) => n.toLocaleString('pt-BR', { minimumFractionDigits: d, maximumFractionDigits: d });
+
+let toastTimer;
+function toast(msg) {
+  toastEl.textContent = msg;
+  toastEl.hidden = false;
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => (toastEl.hidden = true), 2600);
+}
+
+function renderList() {
+  const next = parts.find(p => !p.removed);
+  listEl.innerHTML = parts.map((p, i) => `
+    <li><button type="button" class="step${p.removed ? ' is-out' : ''}${p === next ? ' is-next' : ''}${p === state.selected ? ' is-sel' : ''}" data-id="${p.id}">
+      <span class="n">${String(i + 1).padStart(2, '0')}</span><span class="dot ${p.side}"></span>
+      <span class="nm">${p.name}</span><span class="st">${p.removed ? 'fora' : p === next ? 'próxima' : ''}</span>
+    </button></li>`).join('');
+  $('count').textContent = `${parts.filter(p => p.removed).length}/${parts.length} fora`;
+}
+
+const SIDE = { lox: 'Lado do oxigênio', ch4: 'Lado do metano', core: 'Núcleo / estrutura' };
+function renderInfo() {
+  const p = state.selected;
+  if (!p) {
+    infoEl.innerHTML = `
+      <p class="eyebrow">Motor completo · nível do mar</p>
+      <h2>Raptor 3</h2>
+      <p class="text">Motor de combustão em estágios de fluxo total. Cada propelente passa pelo seu próprio pré-queimador e chega à câmara principal já em forma de gás. A terceira versão integrou tubulações e sensores ao corpo do motor e dispensou o escudo térmico que o Raptor 2 precisava.</p>
+      <dl class="facts">
+        <dt>Empuxo</dt><dd><b>280</b> tf</dd>
+        <dt>Impulso específico</dt><dd><b>350</b> s</dd>
+        <dt>Pressão na câmara</dt><dd><b>≈ 350</b> bar</dd>
+        <dt>Massa do motor</dt><dd><b>1.525</b> kg</dd>
+        <dt>Com itens do veículo</dt><dd><b>1.720</b> kg</dd>
+        <dt>Propelentes</dt><dd>CH₄ + LOX, O/F ≈ 3,6</dd>
+      </dl>
+      <div class="actions">
+        <button class="btn primary" type="button" data-act="next">Começar a desmontar</button>
+      </div>
+      <p class="note">Geometria estilizada para fins didáticos. Números aproximados, com base nos dados públicos divulgados pela SpaceX em 2024.</p>`;
+    return;
+  }
+  const idx = parts.indexOf(p) + 1;
+  infoEl.innerHTML = `
+    <p class="eyebrow kind"><span class="dot ${p.side}"></span>Peça ${String(idx).padStart(2, '0')} · ${p.kind}</p>
+    <h2>${p.name}</h2>
+    <p class="text">${p.text}</p>
+    <dl class="facts">
+      ${p.facts.map(([k, v]) => `<dt>${k}</dt><dd>${v}</dd>`).join('')}
+      <dt>Circuito</dt><dd>${SIDE[p.side]}</dd>
+    </dl>
+    <div class="actions">
+      <button class="btn primary" type="button" data-act="toggle">${p.removed ? 'Recolocar peça' : 'Remover peça'}</button>
+      <button class="btn" type="button" data-act="overview">Ver motor inteiro</button>
+    </div>`;
+}
+function renderAll() { renderList(); renderInfo(); }
+
+function partCenter(p) {
+  return new THREE.Box3().setFromObject(p.group).getCenter(new THREE.Vector3());
+}
+function select(p, focus = false) {
+  state.selected = p;
+  if (focus && p) {
+    // mira onde a peça vai estar quando terminar de se mover
+    const target = p.removed ? 1.3 : state.explode;
+    focusTo = partCenter(p).sub(p.group.position).addScaledVector(p.out, target);
+  }
+  renderAll();
+}
+function removePart(p) {
+  if (p.removed) return;
+  p.removed = true;
+  state.stack.push(p);
+  if (state.firing || state.pendingFire) shutdown('Motor desligado: peça removida.');
+}
+function restorePart(p) {
+  p.removed = false;
+  state.stack = state.stack.filter(x => x !== p);
+}
+function togglePart(p) {
+  p.removed ? restorePart(p) : removePart(p);
+  renderAll();
+}
+function nextStep() {
+  const p = parts.find(x => !x.removed);
+  if (!p) return toast('O motor já está totalmente desmontado. Use “Montar tudo” para recomeçar.');
+  removePart(p);
+  select(p);
+}
+function undoStep() {
+  const p = state.stack.pop();
+  if (!p) return toast('Nenhuma peça fora do motor.');
+  p.removed = false;
+  select(p);
+}
+function assembleAll() {
+  parts.forEach(p => (p.removed = false));
+  state.stack = [];
+  setExplode(0);
+  renderAll();
+}
+function setExplode(v) {
+  state.explode = v;
+  $('explode').value = Math.round(v * 100);
+  if (v > 0.01 && (state.firing || state.pendingFire)) shutdown('Motor desligado: vista explodida.');
+}
+function setCut(on) {
+  state.cut = on;
+  $('bCut').setAttribute('aria-pressed', String(on));
+}
+
+/* ---------- Ignição e som ---------- */
+function isAssembled() {
+  return parts.every(p => !p.removed && p.t < 0.01) && state.explode === 0;
+}
+function ignite() {
+  if (state.firing || state.pendingFire) return shutdown();
+  $('bFire').setAttribute('aria-pressed', 'true');
+  if (!isAssembled()) {
+    assembleAll();
+    toast('Montando o motor para a ignição…');
+  }
+  state.pendingFire = true;
+  startSound();
+}
+function startFiring() {
+  state.pendingFire = false;
+  state.firing = true;
+  state.fireStart = clock.elapsedTime;
+  $('readout').hidden = false;
+  focusTo = V(0, 0.25, 0); // baixa a câmera para mostrar a pluma
+  if (state.sound) {
+    const { ctx, master } = state.sound;
+    master.gain.cancelScheduledValues(ctx.currentTime);
+    master.gain.setTargetAtTime(0.55, ctx.currentTime, 0.35);
+  }
+}
+function shutdown(msg) {
+  const was = state.firing || state.pendingFire;
+  state.firing = false;
+  state.pendingFire = false;
+  $('bFire').setAttribute('aria-pressed', 'false');
+  $('readout').hidden = true;
+  if (state.sound) {
+    const { ctx, master } = state.sound;
+    master.gain.cancelScheduledValues(ctx.currentTime);
+    master.gain.setTargetAtTime(0, ctx.currentTime, 0.18);
+  }
+  if (msg && was) toast(msg);
+}
+function startSound() {
+  try {
+    if (!state.sound) {
+      const ctx = new (window.AudioContext || window.webkitAudioContext)();
+      const len = ctx.sampleRate * 2, buf = ctx.createBuffer(1, len, ctx.sampleRate), d = buf.getChannelData(0);
+      let last = 0;
+      for (let i = 0; i < len; i++) { const w = Math.random() * 2 - 1; last = (last + 0.02 * w) / 1.02; d[i] = last * 3.2 + w * 0.06; }
+      const src = ctx.createBufferSource(); src.buffer = buf; src.loop = true;
+      const low = ctx.createBiquadFilter(); low.type = 'lowpass'; low.frequency.value = 420;
+      const crackle = ctx.createBiquadFilter(); crackle.type = 'bandpass'; crackle.frequency.value = 1400; crackle.Q.value = 0.8;
+      const cg = ctx.createGain(); cg.gain.value = 0.5;
+      const master = ctx.createGain(); master.gain.value = 0;
+      src.connect(low).connect(master);
+      src.connect(crackle).connect(cg).connect(master);
+      master.connect(ctx.destination);
+      src.start();
+      state.sound = { ctx, master };
+    }
+    state.sound.ctx.resume();
+  } catch (e) { state.sound = null; }
+}
+
+/* ---------- Interação no canvas ---------- */
+const raycaster = new THREE.Raycaster();
+const ndc = new THREE.Vector2();
+function pick(ev) {
+  const r = canvas.getBoundingClientRect();
+  ndc.set(((ev.clientX - r.left) / r.width) * 2 - 1, -((ev.clientY - r.top) / r.height) * 2 + 1);
+  raycaster.setFromCamera(ndc, camera);
+  const hits = raycaster.intersectObjects(parts.map(p => p.group), true);
+  for (const h of hits) {
+    const p = byId[h.object.userData.pid];
+    if (!p) continue;
+    if (state.cut && h.point.z > p.plane.constant + 1e-3) continue; // parte cortada, invisível
+    return p;
+  }
+  return null;
+}
+let down = null;
+canvas.addEventListener('pointerdown', e => { down = { x: e.clientX, y: e.clientY }; });
+canvas.addEventListener('pointerup', e => {
+  if (!down) return;
+  const moved = Math.hypot(e.clientX - down.x, e.clientY - down.y);
+  down = null;
+  if (moved > 6) return;
+  const p = pick(e);
+  select(p);
+});
+canvas.addEventListener('dblclick', e => {
+  const p = pick(e);
+  if (p) { togglePart(p); select(p); }
+});
+canvas.addEventListener('pointermove', e => {
+  if (e.pointerType !== 'mouse' || down) { tipEl.hidden = true; return; }
+  const p = pick(e);
+  state.hovered = p;
+  canvas.style.cursor = p ? 'pointer' : 'grab';
+  if (p) {
+    tipEl.textContent = p.name + (p.removed ? ' · fora' : '');
+    tipEl.style.left = e.clientX + 'px';
+    tipEl.style.top = e.clientY + 'px';
+    tipEl.hidden = false;
+  } else tipEl.hidden = true;
+});
+canvas.addEventListener('pointerleave', () => { state.hovered = null; tipEl.hidden = true; });
+
+listEl.addEventListener('click', e => {
+  const b = e.target.closest('[data-id]');
+  if (b) select(byId[b.dataset.id], true);
+});
+infoEl.addEventListener('click', e => {
+  const act = e.target.closest('[data-act]')?.dataset.act;
+  if (act === 'toggle' && state.selected) togglePart(state.selected);
+  if (act === 'overview') { select(null); focusTo = HOME.clone(); }
+  if (act === 'next') nextStep();
+});
+$('bNext').onclick = nextStep;
+$('bUndo').onclick = undoStep;
+$('bAll').onclick = () => { assembleAll(); focusTo = HOME.clone(); };
+$('bCut').onclick = () => setCut(!state.cut);
+$('bFire').onclick = ignite;
+$('explode').addEventListener('input', e => setExplode(e.target.value / 100));
+$('bParts').onclick = () => {
+  const open = $('seq').classList.toggle('open');
+  $('bParts').setAttribute('aria-pressed', String(open));
+};
+addEventListener('keydown', e => {
+  if (e.target.matches('input:not([type=range]), textarea') || e.metaKey || e.ctrlKey || e.altKey) return;
+  const k = e.key.toLowerCase();
+  if (k === 'd') nextStep();
+  else if (k === 'r') undoStep();
+  else if (k === 'm') { assembleAll(); focusTo = HOME.clone(); }
+  else if (k === 'c') setCut(!state.cut);
+  else if (k === 'i') ignite();
+  else if (k === 'escape') select(null);
+});
+
+/* ---------- Laço de animação ---------- */
+const clock = new THREE.Clock();
+function animate() {
+  const dt = Math.min(clock.getDelta(), 0.05);
+  const time = clock.elapsedTime;
+  const ease = 1 - Math.exp(-dt * (reduceMotion ? 14 : 5));
+
+  for (const p of parts) {
+    const target = p.removed ? 1.3 : state.explode;
+    p.t += (target - p.t) * ease;
+    if (Math.abs(target - p.t) < 1e-4) p.t = target;
+    p.group.position.copy(p.out).multiplyScalar(p.t);
+    // plano de corte acompanha a peça: mantém z <= deslocamento da peça
+    p.plane.constant = state.cut ? p.group.position.z + engine.position.z : 1e3;
+    const hl = p === state.selected ? 0.5 : p === state.hovered ? 0.28 : 0;
+    for (const m of p.mats) {
+      m.emissive.copy(ACCENT);
+      m.emissiveIntensity = hl;
+    }
+  }
+
+  if (state.pendingFire && isAssembled()) startFiring();
+
+  // potência da chama: partida em ~1,5 s, corte em ~0,4 s
+  const goal = state.firing ? 1 : 0;
+  state.power += (goal - state.power) * (1 - Math.exp(-dt * (state.firing ? 2.4 : 7)));
+  if (state.power < 0.002 && !state.firing) state.power = 0;
+  const pw = state.power;
+  flame.visible = pw > 0;
+  if (pw > 0) {
+    const flick = 1 + 0.03 * Math.sin(time * 47) + 0.02 * Math.sin(time * 91);
+    for (const m of flameMats) { m.uniforms.uTime.value = time; m.uniforms.uPower.value = pw * flick; }
+    plumeOuter.scale.set(1, 0.4 + 0.6 * pw * flick, 1);
+    plumeCore.scale.set(1, 0.3 + 0.7 * pw, 1);
+    innerGlow.material.opacity = 0.55 * pw;
+    diamonds.forEach(s => (s.material.opacity = Math.max(0, pw * 1.3 - 0.3) * s.userData.k * flick));
+    plumeLight.intensity = 22 * pw * flick;
+    if (!reduceMotion) engine.position.set((Math.random() - 0.5) * 0.006 * pw, (Math.random() - 0.5) * 0.004 * pw, (Math.random() - 0.5) * 0.006 * pw);
+  } else {
+    plumeLight.intensity = 0;
+    engine.position.set(0, 0, 0);
+  }
+  if (state.firing) {
+    const T = time - state.fireStart;
+    const j = 1 + (Math.random() - 0.5) * 0.004;
+    $('rT').innerHTML = `${fmt(T, 1)}<i>s</i>`;
+    $('rPc').innerHTML = `${fmt(350 * pw * j)}<i>bar</i>`;
+    $('rF').innerHTML = `${fmt(280 * pw * j)}<i>tf</i>`;
+  }
+
+  if (focusTo) {
+    const before = controls.target.clone();
+    controls.target.lerp(focusTo, 1 - Math.exp(-dt * 4));
+    camera.position.add(controls.target.clone().sub(before));
+    if (controls.target.distanceTo(focusTo) < 1e-3) focusTo = null;
+  }
+  controls.update();
+  renderer.render(scene, camera);
+  requestAnimationFrame(animate);
+}
+// interromper o foco se o usuário arrastar
+controls.addEventListener('start', () => (focusTo = null));
+
+renderAll();
+// a ficha no celular fica logo acima da barra de ferramentas, qualquer que seja a altura dela
+new ResizeObserver(([e]) => document.documentElement.style.setProperty('--tb', e.target.offsetHeight + 'px')).observe($('toolbar'));
+$('loading').hidden = true;
+animate();
+</script>
+</body>
+</html>
