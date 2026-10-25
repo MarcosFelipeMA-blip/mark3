@@ -1,0 +1,11 @@
+{
+  "name": "redutor-nmrv063",
+  "private": true,
+  "scripts": { "build": "node build.mjs" },
+  "devDependencies": {
+    "esbuild": "0.24.0",
+    "three": "0.160.0",
+    "three-bvh-csg": "0.0.16",
+    "three-mesh-bvh": "0.7.8"
+  }
+}
